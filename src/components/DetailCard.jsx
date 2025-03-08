@@ -2,22 +2,19 @@ import React from "react";
 
 function DetailCard({ img, title, requirement }) {
   return (
-    <>
-      <div className="shadow-md shadow-gray-300 mx-auto flex flex-row items-center justify-start gap-8 w-[100%] lg:w-[70%] md:w-[70%] rounded-3xl relative">
-        <div
-          className="w-[40px] h-[100px] bg-[#C17D3C] rounded-l-3xl  "
-        ></div>{" "}
+    <div className="bg-white shadow-lg rounded-lg p-4 flex items-center space-x-4 hover:shadow-xl transition-all">
+      <div className="w-12 h-12 flex items-center justify-center bg-[#C17D3C] rounded-lg">
         <img
           src={`/src/assets/requirements/${img}.png`}
-          className="absolute left-1 h-[80px] top-4"
-          alt=""
+          className="w-8 h-8"
+          alt={title}
         />
-        <div className="pl-4 ">
-          <h1 className="text-xl py-3 font-bold">{title}</h1>
-          <p className="text-xs text-gray-500">{requirement}</p>
-        </div>
       </div>
-    </>
+      <div>
+        <h2 className="text-lg font-bold text-gray-800">{title}</h2>
+        <p className="text-xs text-gray-500">{requirement}</p>
+      </div>
+    </div>
   );
 }
 
