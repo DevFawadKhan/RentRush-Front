@@ -68,9 +68,19 @@ const Navbar = () => {
               >
                 <Calendar className="mr-2" /> Your Bookings
               </Link>
+              {/* Add Invoice Link */}
               <Link
-                to=""
-                className="flex items-center px-4 py-2 hover:bg-gray-100"
+                to="/customer/invoice"
+                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
+              >
+                <FileText className="mr-3 text-gray-600" size={18} /> {/* Invoice icon */}
+                <span className="text-gray-700">Invoices</span>
+              </Link>
+              <div className="border-t border-gray-100 my-1"></div>
+              <div className="border-t border-gray-100 my-1"></div>
+              <Link
+                to="/"
+                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
               >
                 <LogOut className="mr-2" /> Logout
               </Link>
