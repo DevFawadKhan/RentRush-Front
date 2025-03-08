@@ -1,64 +1,59 @@
-// import React from "react";
+import React from "react";
 import DetailCard from "./DetailCard";
+
 function Detail() {
   const items = [
     {
-      title: "Car Passport (PVC)",
-      requirements: "Optional",
+      title: "Proof of Identity",
+      requirements: "Required",
       img: "img1",
     },
     {
-      title: "Car Registration",
+      title: "Car Registration Book",
       requirements: "Required",
       img: "img2",
-    },
-    {
-      title: "Car keys",
-      requirements: "Optional",
-      img: "img3",
-    },
-    {
-      title: "Car Owner's Passport",
-      requirements: "Required",
-      img: "img4",
     },
     {
       title: "License",
       requirements: "Required",
       img: "img5",
     },
+    {
+      title: "Reservation Confirmation",
+      requirements: "Required",
+      img: "img3",
+    },
   ];
 
   return (
-    <>
-      <div className="flex flex-row justify-center items-center" id="requirements">
-        <div className="hidden md:flex w-[40%] h-screen bg flex-col justify-center items-center">
-          <h1 className="text-3xl font-bold w-[80%] mx-auto py-6 pl-24">
-            Necessary Documents for Renting
-          </h1>
-          <img
-            src="/src/assets/aboutcar.png"
-            className="hidden sm:block lg:mx-[100px] md:mx-[100px] py-10"
-            alt=""
-          />{" "}
-        </div>
-        <div className="w-[70%] my-6 flex flex-col gap-2 items-center justify-center">
-          <h1 className="text-md font-bold w-[100%] mx-auto py-6 pl-24 lg:hidden">
-            Necessary Documents for Renting
-          </h1>
-          {items.map((item) => {
-            return (
-              <DetailCard
-                title={item.title}
-                requirement={item.requirements}
-                img={item.img}
-                key={item.img}
-              />
-            );
-          })}
-        </div>
+    <div className="bg-gray-100 py-12 flex flex-col lg:flex-row justify-center items-center">
+      {/* Left Section (Image and Title) */}
+      <div className="hidden lg:flex w-[40%] flex-col justify-center items-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Necessary Documents for Renting
+        </h1>
+        <img
+          src="/src/assets/aboutcar.png"
+          className="w-full max-w-sm"
+          alt="Car"
+        />
       </div>
-    </>
+
+      {/* Right Section (Cards) */}
+      <div className="w-full lg:w-[50%] flex flex-col space-y-4 px-6">
+        <h1 className="text-2xl font-bold text-gray-800 text-center lg:hidden mb-6">
+          Necessary Documents for Renting
+        </h1>
+        {items.map((item) => (
+          <DetailCard
+            key={item.img}
+            title={item.title}
+            requirement={item.requirements}
+            img={item.img}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
