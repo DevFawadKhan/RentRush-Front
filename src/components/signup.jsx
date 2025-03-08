@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from 'axios'
 import Toast from "./Toast";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 const Base_Url = import.meta.env.VITE_API_URL;
 function SignUp() {
   const navigate = useNavigate();
@@ -30,13 +32,13 @@ function SignUp() {
    })
   }
   return (
+    <>
+      <Navbar />
     <div className="flex items-center justify-center background min-w-max min-h-screen py-16">
       <div className="w-screen h-fit max-w-md py-5 px-7 bg-gray-300 backdrop-blur-lg bg-white/30 border border-white/10 rounded-3xl  p-5 shadow-lg">
-        <img
-          src="/src/assets/logo.svg"
-          className="w-[80px] -my-5 -mx-5 -mt-4"
-          alt=""
-        />
+      <div className="flex justify-center">
+          <img src="/src/assets/logo.png" className="-ml-4 p w-[100px]" alt="" />
+           </div>
         <h2 className="text-3xl font-bold text-[#02073F]">Create Account</h2>
         <form onSubmit={handleSignup} className="mt-8  rounded mb-4">
           {/* Name */}
@@ -186,6 +188,8 @@ function SignUp() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 export default SignUp;
