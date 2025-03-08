@@ -42,7 +42,7 @@ const CarCard = ({ car }) => {
         </div>
 
         <div className="flex justify-between items-center pb-4">
-          <span className="text-xl font-bold">{car.rentRate}rs</span>
+          <span className="text-xl font-bold">{car.rentRate}rs/Day</span>
 
           {car.availability === "Rented Out" && (
             <button
@@ -111,7 +111,7 @@ const CarCard = ({ car }) => {
             </p>
             <p className="text-lg font-semibold mt-4">
               <strong>Total Amount:</strong>{" "}
-              {car.rentalInfo?.totalAmount || "N/A"}rs
+              {car.rentalInfo?.totalAmount || "N/A"}rs/Day
             </p>
           </div>
         </div>
