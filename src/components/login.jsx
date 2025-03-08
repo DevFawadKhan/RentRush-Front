@@ -3,6 +3,8 @@ import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
+
 const Base_Url = import.meta.env.VITE_API_URL;
 
 function Login() {
@@ -21,10 +23,10 @@ function Login() {
       const userRole = response.data.role;
       localStorage.setItem("token", response.data.token);
       if (userRole === "admin") {
-        Toast("Yahoo! Login Successfull!", "success");
+        Toast("Login Successfull!", "success");
         navigator("/admin");
       } else if (userRole === "client") {
-        Toast("Yahoo! Login Successfull!", "success");
+        Toast("Login Successfull!", "success");
         localStorage.setItem("name", response.data.name);
         navigator("/customer/Dashboard");
       } else if (userRole === "showroom") {
@@ -40,10 +42,12 @@ function Login() {
   };
   return (
     <>
-      <Navbar />
+      <Navbar/>
       <div className="flex items-center justify-center background h-[calc(100vh-70px)]">
         <div className="w-screen max-w-md py-5 px-8 bg-gray-300 backdrop-blur-lg bg-white/30 border border-white/10 rounded-3xl shadow-lg">
-          <img src="/src/assets/logo.svg" className="-ml-4 p" alt="" />
+        <div className="flex justify-center">
+          <img src="/src/assets/logo.png" className="-ml-4 p w-[150px]"/>
+           </div>
           <h2 className="pt-2 font-bold text-[35px] text-[#02073F] ml-5 ">
             Login
           </h2>
@@ -105,6 +109,7 @@ function Login() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
