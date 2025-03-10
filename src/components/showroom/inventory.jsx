@@ -147,6 +147,9 @@ function ShowroomInventory() {
                   Engine Displacement
                 </th>
                 <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
+                  Registration Year
+                </th>
+                <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
                   Rental Price
                 </th>
                 <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
@@ -188,6 +191,9 @@ function ShowroomInventory() {
                     </td>
                     <td className="px-4 py-2 border-b border-gray-700">
                       {vehicle.engineType}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-700">
+                      {vehicle.year}
                     </td>
                     <td className="px-4 py-2 border-b border-gray-700">
                       {vehicle.rentRate} RS/hr
