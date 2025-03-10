@@ -3,12 +3,14 @@ import axios from "axios";
 import Navbar from "./Navbar";
 import Toast from "../Toast";
 import EditBookingModal from './EditBooking.jsx';
+import ConfirmationDialog from "./ConfirmationDialog.jsx";
 const Base_Url = import.meta.env.VITE_API_URL;
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [ModelOpen, setModelOpen] = useState(false)
+  const [ShowDialog, setShowDialog] = useState(false)
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -176,10 +178,12 @@ const UserBookings = () => {
                 {/* Add button update booking */}
                 <div className="space-x-12">
                 <button onClick={()=>setModelOpen(true)}  className="px-3 py-2 bg-red-300 rounded-lg ">Update booking</button>
-                <button onClick={()=>CancleFunction(booking._id)}  className="bg-red-700 text-white px-2 py-3 font-bold rounded-lg">Cancle booking</button>
+                <button onClick={()=>setShowDialog(true)}  className="bg-red-700 text-white px-2 py-3 font-bold rounded-lg">Cancle booking</button>
                 </div>
                 {/* open dialop edit booking model*/}
                 <EditBookingModal booking={booking} isOpen={ModelOpen} onClose={()=>setModelOpen(false)}/>
+                {/* Cancle Booking dialog */}
+              {ShowDialog&&(<ConfirmationDialog message="Are you sure to cancle booking" onCancel={()=>setShowDialog(false)} onConfirm={()=>CancleFunction(booking._id)} />)}
               </div>
             ))}
           </div>
