@@ -4,6 +4,7 @@ import Drawer from "./drawer";
 import CarCard from "./carCard";
 import axios from "axios";
 import Toast from "../Toast";
+import ChecklistItem from "./CarMaintenanceChecklist";
 const Base_Url = import.meta.env.VITE_API_URL;
 
 const ShowroomDashboard = () => {
@@ -70,7 +71,7 @@ const ShowroomDashboard = () => {
         </button>
       </div>
 
-      <div className="bg-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-4 xl:grid-cols-5 gap-4 px-6 py-10 justify-items-center">
+      <div className="bg-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-4 xl:grid-cols-4 gap-4 px-6 py-10 justify-items-center">
         {activeTab === "Rented Out"
           ? rentedCars.length > 0 &&
             rentedCars.map((car, index) => <CarCard key={index} car={car} />)
@@ -80,6 +81,7 @@ const ShowroomDashboard = () => {
       </div>
 
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
+
     </>
   );
 };

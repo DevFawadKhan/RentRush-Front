@@ -104,7 +104,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
 
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-xl font-bold mb-1">Make</label>
+                <label className="block text-xl font-bold mb-1">Brand</label>
                 <input
                   type="text"
                   name="make"
@@ -137,18 +137,21 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                 />
               </div>
               <div>
-                <label className="block text-xl font-bold mb-1">
-                  Registration year
-                </label>
-                <input
-                  type="number"
-                  name="year"
-                  value={formData.year}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="2024"
-                />
-              </div>
+  <label className="block text-xl font-bold mb-1">
+    Registration Year
+  </label>
+  <input
+    type="number"
+    name="year"
+    value={formData.year}
+    onChange={handleInputChange}
+    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+    placeholder="2025"
+    min="2000"
+    max={new Date().getFullYear()} // Ensures max is the current year
+  />
+</div>
+
               <div>
                 <label className="block text-xl font-bold mb-1">
                   Engine Displacement
@@ -159,7 +162,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   value={formData.engineDisplacement}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="1.6cc"
+                  placeholder="cc"
                 />
               </div>
               <div>
@@ -172,7 +175,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   value={formData.rentalPrice}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="200/hr"
+                  placeholder="200/day"
                 />
               </div>
               <div>

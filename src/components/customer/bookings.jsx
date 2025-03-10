@@ -135,7 +135,7 @@ const UserBookings = () => {
                   className="w-full h-40 object-cover rounded-md mb-3"
                 />
                 <div className="flex justify-between items-center mb-2">
-                  <p className="flex items-center">
+                  {/* <p className="flex items-center">
                     <span className="text-purple-600 mr-1">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +153,7 @@ const UserBookings = () => {
                       </svg>
                     </span>
                     {booking.carDetails.seatingCapacity} Seats
-                  </p>
+                  </p> */}
                   <p className="flex items-center">
                     <span className="text-purple-600 mr-1">
                       <svg
@@ -173,12 +173,13 @@ const UserBookings = () => {
                     </span>
                     {booking.carDetails.transmission}
                   </p>
+                  <p className="text-blue">Details</p>
                 </div>
                 <p className="text-lg font-bold">{booking.carDetails.rentRate} Rs/d</p>
                 {/* Add button update booking */}
                 <div className="space-x-12">
-                <button onClick={()=>setModelOpen(true)}  className="px-3 py-2 bg-red-300 rounded-lg ">Update booking</button>
-                <button onClick={()=>setShowDialog(true)}  className="bg-red-700 text-white px-2 py-3 font-bold rounded-lg">Cancle booking</button>
+                <button onClick={()=>setModelOpen(true)}  className="px-3 py-2 bg-blue-300 rounded-lg ">Update booking</button>
+                <button onClick={()=>setShowDialog(true)}  className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg">Cancle booking</button>
                 </div>
                 {/* open dialop edit booking model*/}
                 <EditBookingModal booking={booking} isOpen={ModelOpen} onClose={()=>setModelOpen(false)}/>

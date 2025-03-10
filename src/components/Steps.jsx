@@ -2,48 +2,52 @@ import React from "react";
 
 function Steps() {
   return (
-    <>
-      <div className="bg-[#0B132A] py-5 text-white min-h-screen flex flex-col justify-center items-center" id="steps">
-        <h1 className="text-center text-3xl font-bold">How it Works</h1>
-        <p className="text-lg text-center w-4/5 sm:w-1/3 mx-auto py-4">
-          A high-performing web-based car rental system for any rent-a-car company and website
-        </p>
+    <div className="bg-[#0B132A] py-12 text-white">
+      {/* Heading */}
+      <h1 className="text-3xl text-center font-bold">How it Works</h1>
+      <p className="text-lg text-center mx-auto max-w-2xl mt-2">
+        A high-performing web-based car rental system for any rent-a-car company and website.
+      </p>
 
-        <div className="flex flex-col items-center py-10 space-y-10 px-10 sm:flex-row sm:justify-evenly sm:space-y-0 sm:space-x-10">
-         
-          <div className="flex flex-col justify-center items-center">
-            <div className="bg-[#C17D3C] w-fit p-6 rounded-2xl mx-auto">
-              <img src="/src/assets/work/gps.png" alt="Choose Location" />
-            </div>
-            <h1 className="py-3 text-center font-bold text-lg">Choose Location</h1>
-            <p className="text-center mx-12 sm:mx-12 lg:mx-auto text-sm sm:text-base">
-              Enable car rentals across various locations. Flexible Book and Return Locations.
-            </p>
-          </div>
+      {/* Steps Section */}
+      <div className="relative flex flex-col lg:flex-row justify-center items-center mt-12 space-y-12 lg:space-y-0 lg:space-x-12 px-6">
+        {/* Line Connector (Curved) */}
+        <div className="absolute hidden lg:block w-full top-1/2 h-1 border-t-2 border-gray-500 left-0 right-0 z-0"></div>
 
-          
-          <div className="flex flex-col justify-center items-center">
-            <div className="bg-[#C17D3C] mx-auto w-fit p-6 rounded-2xl">
-              <img src="/src/assets/work/celender.png" alt="Pick-up Date" />
-            </div>
-            <h1 className="py-3 text-center font-bold text-lg">Pick-up Date</h1>
-            <p className="text-center mx-12 sm:mx-12 lg:mx-auto text-sm sm:text-base">
-              Anytime, Anywhere, Pick your Date and Enjoy your Trip. Select your pick-up date for your rental car.
-            </p>
+        {/* Step 1 */}
+        <div className="relative flex flex-col items-center text-center bg-[#0B132A] z-10">
+          <div className="bg-[#C17D3C] p-6 rounded-full">
+            <img src="/src/assets/work/gps.png" alt="Choose Location" className="w-10 h-10" />
           </div>
-   
-          <div className="flex flex-col justify-center items-center">
-            <div className="bg-[#C17D3C] mx-auto w-fit p-6 rounded-2xl">
-              <img src="/src/assets/work/caricon.png" alt="Book your car" />
-            </div>
-            <h1 className="py-3 text-center font-bold text-lg">Book your car</h1>
-            <p className="text-center mx-12 sm:mx-12 lg:mx-auto text-sm sm:text-base">
-              Offer updated car information and models. Allow users to choose and own their preferred car models.
-            </p>
+          <h2 className="text-lg font-bold mt-4">Choose Location</h2>
+          <p className="text-sm max-w-xs mt-2">
+            Enable car rentals across various locations. Flexible book and return locations.
+          </p>
+        </div>
+
+        {/* Step 2 */}
+        <div className="relative flex flex-col items-center text-center bg-[#0B132A] z-10">
+          <div className="bg-[#C17D3C] p-6 rounded-full">
+            <img src="/src/assets/work/celender.png" alt="Pick-up Date" className="w-10 h-10" />
           </div>
+          <h2 className="text-lg font-bold mt-4">Pick-up Date</h2>
+          <p className="text-sm max-w-xs mt-2">
+            Anytime, anywhere, pick your date and enjoy your trip. Select your pick-up date for your rental car.
+          </p>
+        </div>
+
+        {/* Step 3 */}
+        <div className="relative flex flex-col items-center text-center bg-[#0B132A] z-10">
+          <div className="bg-[#C17D3C] p-6 rounded-full">
+            <img src="/src/assets/work/caricon.png" alt="Book your car" className="w-10 h-10" />
+          </div>
+          <h2 className="text-lg font-bold mt-4">Book your car</h2>
+          <p className="text-sm max-w-xs mt-2">
+            Offer updated car information and models. Allow users to choose and own their preferred car models.
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

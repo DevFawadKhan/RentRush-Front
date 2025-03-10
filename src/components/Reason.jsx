@@ -21,40 +21,23 @@ function Reason() {
   ];
 
   return (
-    <div
-      className="bg-[#0B132A] h-auto pt-20 pb-20 lg:pb-0 text-white grid grid-cols-1 justify-center items-center relative"
-      id="detail"
-    >
-      <h1 className="text-3xl text-center py-2 font-bold">Why Choose us</h1>
-      <p className="text-sm mx-10 text-center">
-        Choose RentRush for our unbeatable prices, extensive location options,
-        and a commitment to exceptional customer service
+    <div className="bg-[#0B132A] py-12 text-white">
+      <h1 className="text-3xl text-center font-bold">Why Choose Us</h1>
+      <p className="text-sm text-center mx-4 mt-2">
+        Choose RentRush for our unbeatable prices, extensive location options, and a commitment to exceptional customer service.
       </p>
-      <div className="flex flow-row justify-between">
-        <div className="hidden md:block lg:block">
-          <img
-            src="/src/assets/choose/bg.png"
-            className="w-[350px] rotate-[60] relative -left-[60px]"
-            alt=""
-          />
+      <div className="flex flex-col lg:flex-row justify-center items-center mt-8">
+        <div className="hidden lg:block w-[40%]">
           <img
             src="/src/assets/choose/redcar.png"
-            className="absolute bottom-[220px] -left-12 w-[45%]"
-            alt=""
+            className="w-full max-w-md"
+            alt="Car"
           />
         </div>
-
-        <div className="w-[100%] lg:w-[50%] pl-8 lg:pl-0 relative pt-[90px]">
-          {arr.map((item, index) => {
-            return (
-              <Card
-                key={index}
-                title={item.title}
-                desc={item.desc}
-                img={item.img}
-              />
-            );
-          })}
+        <div className="w-full lg:w-[50%] flex flex-col space-y-4 px-6">
+          {arr.map((item, index) => (
+            <Card key={index} title={item.title} desc={item.desc} img={item.img} />
+          ))}
         </div>
       </div>
     </div>
