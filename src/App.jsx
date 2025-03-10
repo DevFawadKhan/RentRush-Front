@@ -13,6 +13,7 @@ import Bookings from "./components/customer/bookings.jsx";
 import Adminpage from "./components/admin/Adminpage.jsx";
 import ProtectedLayout from "./auth/protectedRoute.jsx";
 import EditBookingModal from '../src/components/customer/EditBooking.jsx'
+import CarDetailsScreen from '../src/components/customer/CarDetailsScreen.jsx'
 function App() {
   return (
     <>
@@ -43,6 +44,8 @@ function App() {
             <Route path="/customer/bookings" element={<Bookings />}></Route>
             <Route path="/admin" element={<Adminpage />}></Route>
             <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
+            <Route path="/customer/CarDetailsScreen" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
+
             
           </Route>
         </Routes>

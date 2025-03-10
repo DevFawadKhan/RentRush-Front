@@ -173,8 +173,7 @@ const UserBookings = () => {
                     </span>
                     {booking.carDetails.transmission}
                   </p>
-                  <button
-            className="text-blue-600 hover:underline"
+                  <button className="text-blue-600 hover:underline"
           >
             View Details
           </button>
