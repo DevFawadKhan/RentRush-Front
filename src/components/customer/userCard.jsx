@@ -205,91 +205,87 @@ const UserCard = ({ car }) => {
           </div>
         </div>
       )}
-      {showBookingModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg relative h-auto w-96">
-            <button
-              onClick={closeBookingModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-            >
-              &#10005;
-            </button>
+     {showBookingModal && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg relative h-auto w-96">
+                        <button
+                            onClick={closeBookingModal}
+                            className="absolute top-2 right-2 text-gray-500 hover:text-black"
+                        >
+                            &#10005;
+                        </button>
 
-            <h2 className="text-2xl font-bold mb-4 text-center">
-              Book Car Now
-            </h2>
+                        <h2 className="text-2xl font-bold mb-4 text-center">Book Car Now</h2>
 
-            {errorMessage && (
-              <p className="text-red-500 text-center">{errorMessage}</p>
+                        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
+
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <div className="flex flex-col">
+                                <label htmlFor="startDate" className="text-sm font-semibold">
+                                    Rental Start Date
+                                </label>
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    value={rentalStartDate}
+                                    onChange={(e) => setRentalStartDate(e.target.value)}
+                                    className="border p-2 rounded-md"
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label htmlFor="endDate" className="text-sm font-semibold">
+                                    Rental End Date
+                                </label>
+                                <input
+                                    type="date"
+                                    id="endDate"
+                                    value={rentalEndDate}
+                                    onChange={(e) => setRentalEndDate(e.target.value)}
+                                    className="border p-2 rounded-md"
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label htmlFor="startTime" className="text-sm font-semibold">
+                                    Rental Start Time
+                                </label>
+                                <input
+                                    type="time"
+                                    id="startTime"
+                                    value={rentalStartTime}
+                                    onChange={(e) => setRentalStartTime(e.target.value)}
+                                    className="border p-2 rounded-md"
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label htmlFor="endTime" className="text-sm font-semibold">
+                                    Rental End Time
+                                </label>
+                                <input
+                                    type="time"
+                                    id="endTime"
+                                    value={rentalEndTime}
+                                    onChange={(e) => setRentalEndTime(e.target.value)}
+                                    className="border p-2 rounded-md"
+                                    required
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="bg-primary text-white p-2 rounded-md w-full"
+                            >
+                                Confirm Booking
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
-
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div className="flex flex-col">
-                <label htmlFor="startDate" className="text-sm font-semibold">
-                  Rental Start Date
-                </label>
-                <input
-                  type="date"
-                  id="startDate"
-                  value={rentalStartDate}
-                  onChange={(e) => setRentalStartDate(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="endDate" className="text-sm font-semibold">
-                  Rental End Date
-                </label>
-                <input
-                  type="date"
-                  id="endDate"
-                  value={rentalEndDate}
-                  onChange={(e) => setRentalEndDate(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="startTime" className="text-sm font-semibold">
-                  Rental Start Time
-                </label>
-                <input
-                  type="time"
-                  id="startTime"
-                  value={rentalStartTime}
-                  onChange={(e) => setRentalStartTime(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="endTime" className="text-sm font-semibold">
-                  Rental End Time
-                </label>
-                <input
-                  type="time"
-                  id="endTime"
-                  value={rentalEndTime}
-                  onChange={(e) => setRentalEndTime(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-primary text-white p-2 rounded-md w-full"
-              >
-                Confirm Booking
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
