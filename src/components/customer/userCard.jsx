@@ -164,28 +164,44 @@ const UserCard = ({ car }) => {
               </div>
 
               <h2 className="text-2xl font-bold">Car Details</h2>
-              <p className="text-gray-700">
-                <strong>Model:</strong> {car.carModel}
-              </p>
-              <p className="text-gray-700">
-                <strong>Color:</strong> {car.color}
-              </p>
-              <p className="text-gray-700">
-                <strong>Mileage:</strong> {car.mileage} miles
-              </p>
-              <p className="text-gray-700">
-                <strong>BodyType:</strong> {car.bodyType}
-              </p>
-              <p className="text-gray-700">
-                <strong>Transmission:</strong> {car.transmission}
-              </p>
-              <p className="text-gray-700">
-                <strong>Engine Type:</strong> {car.engineType || "N/A"}
-              </p>
-              <p className="text-lg font-semibold">
-                <strong>Price:</strong> {car.rentRate}rs/Day
-              </p>
-            </div>
+              <div className="overflow-x-auto">
+        <table className="w-full border-collapse border text-sm">
+          <tbody>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Model</td>
+              <td className="border p-2">{car.carModel}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Color</td>
+              <td className="border p-2">{car.color}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Mileage</td>
+              <td className="border p-2">{car.mileage} miles</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Body Type</td>
+              <td className="border p-2">{car.bodyType}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Transmission</td>
+              <td className="border p-2">{car.transmission}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Engine Type</td>
+              <td className="border p-2">{car.engineType || "N/A"}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Registration Year</td>
+              <td className="border p-2">{car.year || "N/A"}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Price</td>
+              <td className="border p-2 font-bold">{car.rentRate} rs/Day</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
           </div>
         </div>
       )}
