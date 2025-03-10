@@ -173,7 +173,11 @@ const UserBookings = () => {
                     </span>
                     {booking.carDetails.transmission}
                   </p>
-                  <p className="text-blue">Details</p>
+                  <button
+            className="text-blue-600 hover:underline"
+          >
+            View Details
+          </button>
                 </div>
                 <p className="text-lg font-bold">{booking.carDetails.rentRate} Rs/d</p>
                 {/* Add button update booking */}
