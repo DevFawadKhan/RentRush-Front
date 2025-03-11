@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../customer/Navbar";
 
 const UserProfile = () => {
@@ -23,152 +23,135 @@ const UserProfile = () => {
 
     const handleSave = () => {
         setIsEditing(false);
+        // Add logic to save the updated user info
     };
 
-    const handleCancel = () => setIsEditing(false);
+    const handleCancel = () => {
+        setIsEditing(false);
+        // Optionally, reset the form to the original values
+    };
 
     return (
-        <div className="bg-white h-screen"> 
+        <div className="bg-gray-100 min-h-screen">
             <Navbar />
 
-            <div className="w-96 justify-center text-center mt-10 m-auto p-4 bg-white rounded-xl">
-                <h2 className="text-2xl font-bold mb-4">User Profile</h2>
+            <div className="flex justify-center items-center mt-10">
+                <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl p-8">
+                    <h2 className="text-3xl font-bold mb-6 text-center text-[#C17D3C]">Profile</h2>
 
-                <div className="profile-fields">
-                    <div className="mb-4">
-                        <label className="block font-semibold text-xl">Name</label>
-                        {isEditing ? (
-                            <input
-                                type="text"
-                                name="name"
-                                value={userInfo.name}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-full"
-                            />
-                        ) : (
-                            <input
-                                type="text"
-                                name="name"
-                                value={userInfo.name}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-auto"
-                                readOnly
-                            />
-                        )}
+                    <div className="space-y-6">
+                        <div className="flex flex-col space-y-2">
+                            <label className="text-lg font-semibold text-gray-700">Name</label>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={userInfo.name}
+                                    onChange={handleInputChange}
+                                    className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
+                                />
+                            ) : (
+                                <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
+                                    {userInfo.name}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label className="text-lg font-semibold text-gray-700">Email</label>
+                            {isEditing ? (
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={userInfo.email}
+                                    onChange={handleInputChange}
+                                    className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
+                                />
+                            ) : (
+                                <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
+                                    {userInfo.email}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label className="text-lg font-semibold text-gray-700">Phone Number</label>
+                            {isEditing ? (
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={userInfo.phone}
+                                    onChange={handleInputChange}
+                                    className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
+                                />
+                            ) : (
+                                <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
+                                    {userInfo.phone}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label className="text-lg font-semibold text-gray-700">Address</label>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    name="address"
+                                    value={userInfo.address}
+                                    onChange={handleInputChange}
+                                    className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
+                                />
+                            ) : (
+                                <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
+                                    {userInfo.address}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label className="text-lg font-semibold text-gray-700">CNIC</label>
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    name="cnic"
+                                    value={userInfo.cnic}
+                                    onChange={handleInputChange}
+                                    className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
+                                />
+                            ) : (
+                                <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
+                                    {userInfo.cnic}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="mb-4">
-                        <label className="block font-semibold text-xl">Email</label>
-                        {isEditing ? (
-                            <input
-                                type="email"
-                                name="email"
-                                value={userInfo.email}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-full"
-                            />
+                    <div className="mt-8 text-center">
+                        {!isEditing ? (
+                            <button
+                                onClick={handleEdit}
+                                className="bg-[#C17D3C] text-white px-8 py-3 rounded-lg hover:bg-[#A56A33] transition duration-300"
+                            >
+                                Edit Profile
+                            </button>
                         ) : (
-                            <input
-                                type="text"
-                                name="name"
-                                value={userInfo.email}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-auto"
-                                readOnly
-                            />
-                        )}
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block font-semibold text-xl">Phone Number</label>
-                        {isEditing ? (
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={userInfo.phone}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-full"
-                            />
-                        ) : (
-                            <input
-                                type="text"
-                                name="name"
-                                value={userInfo.phone}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-auto"
-                                readOnly
-                            />
-                        )}
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block font-semibold text-xl">Address</label>
-                        {isEditing ? (
-                            <input
-                                type="text"
-                                name="address"
-                                value={userInfo.address}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-full"
-                            />
-                        ) : (
-                            <input
-                                type="text"
-                                name="name"
-                                value={userInfo.address}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-auto"
-                                readOnly
-                            />
-                        )}
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block font-semibold text-xl">CNIC</label>
-                        {isEditing ? (
-                            <input
-                                type="text"
-                                name="cnic"
-                                value={userInfo.cnic}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-full"
-                            />
-                        ) : (
-                            <input
-                                type="text"
-                                name="name"
-                                value={userInfo.cnic}
-                                onChange={handleInputChange}
-                                className="border p-2 rounded w-auto"
-                                readOnly
-                            />
+                            <div className="flex justify-center space-x-4">
+                                <button
+                                    onClick={handleSave}
+                                    className="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition duration-300"
+                                >
+                                    Save Changes
+                                </button>
+                                <button
+                                    onClick={handleCancel}
+                                    className="bg-red-500 text-white px-8 py-3 rounded-lg hover:bg-red-600 transition duration-300"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>
-
-                {!isEditing ? (
-                    <button
-                        onClick={handleEdit}
-                        className="bg-primary text-white px-4 py-2 rounded mt-4"
-                    >
-                        Edit
-                    </button>
-                ) : (
-                    <div>
-                        <button
-                            onClick={handleSave}
-                            className="bg-green-500 text-white px-4 py-2 rounded mt-4 mr-2"
-                        >
-                            Save
-                        </button>
-                        <button
-                            onClick={handleCancel}
-                            className="bg-red-500 text-white px-4 py-2 rounded mt-4"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );

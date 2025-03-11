@@ -11,8 +11,8 @@ const CarDetailsScreen = () => {
     const [rentalStartTime, setRentalStartTime] = useState("");
     const [rentalEndTime, setRentalEndTime] = useState("");
     const [Price, setPrice] = useState(0);  
-    const [hours, sethours] = useState(0);
-    const [days, setdays] = useState(0);
+    // const [hours, sethours] = useState(0);
+    // const [days, setdays] = useState(0);
     // let Total_Days=null;
     // let Total_hours=null;
     // let difference_millisecond
@@ -50,8 +50,8 @@ const CarDetailsScreen = () => {
   }, [bookingId]);
   
   // State for progress and time left
-  const [progress, setProgress] = useState(0);
-  const [timeLeft, setTimeLeft] = useState("");
+  // const [progress, setProgress] = useState(0);
+  // const [timeLeft, setTimeLeft] = useState("");
 
   // Calculate progress and time left
   // useEffect(() => {
@@ -135,10 +135,10 @@ const CarDetailsScreen = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-blue-600 h-2.5 rounded-full"
-            style={{ width: `${progress}%` }}
+            // style={{ width: `${progress}%` }}
           ></div>
         </div>
-        <p className="text-sm text-gray-500 mt-2">{timeLeft}</p>
+        {/* <p className="text-sm text-gray-500 mt-2">{timeLeft}</p> */}
       </div>
 
       {/* Details Table */}
@@ -151,14 +151,14 @@ const CarDetailsScreen = () => {
           <span className="text-gray-700">Rental End Date</span>
           <span className="text-gray-900 font-semibold">{rentalEndDate}</span>
         </div>
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <span className="text-gray-700">Rental Duration</span>
           <span className="text-gray-900 font-semibold">{Total_hours}{"day"}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-700">Rental Hours</span>
           <span className="text-gray-900 font-semibold">{Total_Days}</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Total Amount */}
@@ -192,7 +192,7 @@ const CarDetailsScreen = () => {
             </button>
 
             {/* Error Message */}
-            {errorMessage && <p className="text-red-500 text-center">{}</p>}
+            {/* {errorMessage && <p className="text-red-500 text-center">{}</p>} */}
 
             {/* Form */}
             <form className="space-y-4" onSubmit={handleSubmit}>

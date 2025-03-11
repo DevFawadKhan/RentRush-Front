@@ -50,7 +50,7 @@ const Cars = () => {
           </div>
         </div>
      <Link to="/customer/bookings">
-<div className="flex justify-center mx-5 lg:absolute lg:right-3 bg-slate-900 text-white rounded-md px-2 lg:py-3 font-semibold">
+<div className="flex justify-center mx-5 lg:absolute lg:right-3 bg-blue-900 text-white rounded-md px-2 lg:py-3 font-semibold">
   <button>You Bookings</button></div></Link>
       </div>
       <div className="bg-white flex justify-center">
