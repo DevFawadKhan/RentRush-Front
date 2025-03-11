@@ -4,8 +4,8 @@ import Navbar from "./Navbar";
 import Toast from "../Toast";
 import EditBookingModal from './EditBooking.jsx';
 import ConfirmationDialog from "./ConfirmationDialog.jsx";
+import { Link } from "react-router-dom";
 const Base_Url = import.meta.env.VITE_API_URL;
-
 const UserBookings = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -159,11 +159,13 @@ const UserBookings = () => {
                     </span>
                     {booking.carDetails.transmission}
                   </p>
-                  <button className="text-blue-600 hover:underline"
-          >
-            View Details
-          </button>
-                </div>
+                  {/* Show extend booking button */}
+      {new Date(booking.startDate).toDateString() === new Date(Date.now()).toDateString() && (
+        <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
+          <button className="text-blue-600 hover:underline">Extend Booking</button>
+        </Link>
+      )}
+            </div>
                 <p className="text-lg font-bold">{booking.carDetails.rentRate} Rs/d</p>
                 <div className="space-x-12">
                   <button
