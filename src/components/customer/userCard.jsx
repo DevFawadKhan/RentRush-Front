@@ -79,6 +79,7 @@ const UserCard = ({ car }) => {
   return (
     <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-64 relative">
       <div className="relative">
+      {/* <h1 className="list-none cursor-pointer font-bold text-[20px] text-[#00004b]">RentRush Cars</h1> */}
         <img
           src={`/uploads/${car.images}`}
           alt={car.name}
@@ -106,7 +107,6 @@ const UserCard = ({ car }) => {
             <span className="text-gray-500">{car.transmission}</span>
           </div>
         </div>
-
         <div className="flex justify-between items-center pb-4">
           <span className="text-xl font-bold">{car.rentRate}rs/Day</span>
           <button
