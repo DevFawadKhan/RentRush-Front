@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { Search } from "lucide-react";
 import axios from "axios";
 import Toast from "../Toast";
+import { Link } from "react-router-dom";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -22,7 +23,6 @@ const Cars = () => {
       Toast(err.data || err.message || "Something went wrong", "error");
     }
   };
-
   useEffect(() => {
     fetchVehicles();
   }, []);
@@ -49,6 +49,9 @@ const Cars = () => {
             <Search />
           </div>
         </div>
+     <Link to="/customer/bookings">
+<div className="flex justify-center mx-5 lg:absolute lg:right-3 bg-slate-900 text-white rounded-md px-2 lg:py-3 font-semibold">
+  <button>You Bookings</button></div></Link>
       </div>
       <div className="bg-white flex justify-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl py-10 w-full">

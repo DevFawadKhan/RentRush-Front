@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import Toast from "../Toast";
 import EditBookingModal from './EditBooking.jsx';
 import ConfirmationDialog from "./ConfirmationDialog.jsx";
+import { Link } from "react-router-dom";
 const Base_Url = import.meta.env.VITE_API_URL;
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -135,25 +136,6 @@ const UserBookings = () => {
                   className="w-full h-40 object-cover rounded-md mb-3"
                 />
                 <div className="flex justify-between items-center mb-2">
-                  {/* <p className="flex items-center">
-                    <span className="text-purple-600 mr-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 3.75H7.5a4.5 4.5 0 00-4.5 4.5v7.5a4.5 4.5 0 004.5 4.5h9a4.5 4.5 0 004.5-4.5v-7.5a4.5 4.5 0 00-4.5-4.5z"
-                        />
-                      </svg>
-                    </span>
-                    {booking.carDetails.seatingCapacity} Seats
-                  </p> */}
                   <p className="flex items-center">
                     <span className="text-purple-600 mr-1">
                       <svg
@@ -173,11 +155,13 @@ const UserBookings = () => {
                     </span>
                     {booking.carDetails.transmission}
                   </p>
-                  <button className="text-blue-600 hover:underline"
-          >
-            View Details
-          </button>
-                </div>
+                  {/* Show extend booking button */}
+      {new Date(booking.startDate).toDateString() === new Date(Date.now()).toDateString() && (
+        <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
+          <button className="text-blue-600 hover:underline">Extend Booking</button>
+        </Link>
+      )}
+            </div>
                 <p className="text-lg font-bold">{booking.carDetails.rentRate} Rs/d</p>
                 {/* Add button update booking */}
                 <div className="space-x-12">
