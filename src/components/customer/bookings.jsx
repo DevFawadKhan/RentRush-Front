@@ -160,6 +160,7 @@ const UserBookings = () => {
                     {booking.carDetails.transmission}
                   </p>
                   {/* Show extend booking button */}
+                  {console.log(booking.startDate)}
       {new Date(booking.startDate).toDateString() === new Date(Date.now()).toDateString() && (
         <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
           <button className="text-blue-600 hover:underline">Extend Booking</button>
