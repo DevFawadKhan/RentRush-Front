@@ -2,21 +2,28 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Toast from "../Toast";
+import { toast } from "react-toastify";
 const Base_Url = import.meta.env.VITE_API_URL;
 const CarDetailsScreen = () => {
     // State for Extend Booking modal
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [rentalStartDate, setRentalStartDate] = useState("");
     const [rentalEndDate, setRentalEndDate] = useState("");
-    const [rentalStartTime, setRentalStartTime] = useState("");
     const [rentalEndTime, setRentalEndTime] = useState("");
+    const [rentalStartTime, setRentalStartTime] = useState("");
+    const [image, setimage] = useState([])
     const [Price, setPrice] = useState(0);  
     const [BookingDetails, setBookingDetails] = useState([])
+    // USESTATE FOR EndDate and EndTime POST ON EDIT BOOKING API
+    const [EndDate, setEndDate] = useState("")
+    const [EndTime, setEndTime] = useState("")
       // State for progress and time left
   const [progress, setProgress] = useState(0);
   const { bookingId } = useParams(); // GET BOOKING ID FROM URL
   console.log("booking id", bookingId);
   
+  // Fetch booking date and time
   useEffect(() => {
     const FetchBookingDetail = async () => {
       try {
@@ -29,6 +36,7 @@ const CarDetailsScreen = () => {
         setRentalStartTime(res.data.rentalStartTime)
         setRentalEndTime(res.data.rentalEndDate)
         setPrice(res.data.totalPrice)
+        setimage(res.data.images)
         const booking = res.data;
         const startDate = new Date(booking.rentalStartDate);
         const endDate = new Date(booking.rentalEndDate);
@@ -67,41 +75,52 @@ const CarDetailsScreen = () => {
     }
     }
   },[rentalStartDate,rentalEndDate]);
-  // Calculate progress and time left
 
-  // Handle Extend Booking button click
-  const handleExtendBooking = () => {
-    setShowBookingModal(true); // Show the modal
-  };
-
-  // Handle modal close
-  const closeBookingModal = () => {
-    setShowBookingModal(false);
-    setErrorMessage(""); // Clear any error messages
-  };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
-
-    // Validate inputs
-    if (!rentalStartDate || !rentalEndDate || !rentalStartTime || !rentalEndTime) {
-      setErrorMessage("All fields are required.");
-      return;
+    try {
+      console.log("END DATE",EndDate);
+      console.log("END TIME",EndTime);
+    if (!EndDate||!EndTime) {return Toast("All Fields are required","error")}
+    const res=await axios.patch(`${Base_Url}/api/bookcar/extend-booking/${bookingId}`,{
+      rentalEndDate:EndDate,
+      rentalEndTime:EndTime,
+    },{
+      withCredentials:true,
+    })
+    console.log("Response of Extend booking",res.data.message);
+    console.log("Invoice of update booking",res.data.invoiceUrl)
+    console.log("Response of Extend booking Status",res.status);
+    if(res.status==200){
+      const invoiceUrl = res.data.invoiceUrl;
+      if (invoiceUrl) {
+        Toast(
+          <>
+            {"Please Ganerate yourUpdated invoice"}{" "}
+            <a
+              href={invoiceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "blue", textDecoration: "underline" }}
+            >
+              Click here to download the Invoice
+            </a>
+          </>
+        );
+      }
     }
-
-    // Perform the booking extension logic here
-    console.log("Extending booking with:", {
-      rentalStartDate,
-      rentalEndDate,
-      rentalStartTime,
-      rentalEndTime,
-    });
-
-    // Close the modal after submission
-    closeBookingModal();
+    if(res.status===400){
+      Toast(res?.data?.message || "An error occurred", "error");
+    }
+    } catch (error) {
+      console.log("Error in Extend booking",error.response.data.message);
+    }
+    setEndDate("");
+    setEndTime("");
+    setShowBookingModal(false)
   };
-
   return (
     <>
     <Navbar/>
@@ -109,16 +128,11 @@ const CarDetailsScreen = () => {
       {/* Car Image */}
       <div className="mb-6">
         <img
-          src=""
-          alt=""
+          src={`/uploads/${image[0]}`}
+          alt={image}
           className="w-full h-48 object-cover rounded-lg"
         />
       </div>
-
-      {/* Car Name and Price */}
-      {/* <h1 className="text-2xl font-bold text-gray-800 mb-4">{car.name}</h1>
-      <p className="text-lg text-gray-600 mb-6">{car.price}</p> */}
-
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -141,7 +155,7 @@ const CarDetailsScreen = () => {
         </div>
                <div className="flex justify-between">
               <span className="text-gray-700">Rental Duration</span>
-              <span className="text-gray-900 font-semibold">{BookingDetails.totalDays}{"day"}</span>
+              <span className="text-gray-900 font-semibold">{Math.ceil(BookingDetails.totalDays)}{" day"}</span>
             </div>
             <div className="flex justify-between">
             <span className="text-gray-700">Rental Hours</span>
@@ -160,92 +174,34 @@ const CarDetailsScreen = () => {
       {/* Extend Booking Button */}
       <div className="mt-6">
         <button
-          onClick={handleExtendBooking}
+          onClick={()=>setShowBookingModal(true)}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
         >
           Extend Booking
         </button>
       </div>
-
       {/* Extend Booking Modal */}
       {showBookingModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg relative h-auto w-96">
             {/* Close Button */}
             <button
-              onClick={closeBookingModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-            >
-              &#10005;
-            </button>
-
-            {/* Error Message */}
-            {/* {errorMessage && <p className="text-red-500 text-center">{}</p>} */}
-
+onClick={()=>setShowBookingModal(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"> &#10005;</button>
             {/* Form */}
             <form className="space-y-4" onSubmit={handleSubmit}>
-              <div className="flex flex-col">
-                <label htmlFor="startDate" className="text-sm font-semibold">
-                  Rental Start Date
-                </label>
-                <input
-                  type="date"
-                  id="startDate"
-                  value={rentalStartDate}
-                  onChange={(e) => setRentalStartDate(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
-              </div>
-
               <div className="flex flex-col">
                 <label htmlFor="endDate" className="text-sm font-semibold">
                   Rental End Date
                 </label>
-                <input
-                  type="date"
-                  id="endDate"
-                  value={rentalEndDate}
-                  onChange={(e) => setRentalEndDate(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
+                <input value={EndDate} onChange={(e)=>setEndDate(e.target.value)} type="date"className="border p-2 rounded-md"/>
               </div>
-
               <div className="flex flex-col">
-                <label htmlFor="startTime" className="text-sm font-semibold">
-                  Rental Start Time
-                </label>
-                <input
-                  type="time"
-                  id="startTime"
-                  value={rentalStartTime}
-                  onChange={(e) => setRentalStartTime(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
+                <label htmlFor="endTime" className="text-sm font-semibold">Rental End Time</label>
+                <input value={EndTime} onChange={(e)=>setEndTime(e.target.value)} type="time"className="border p-2 rounded-md"/>
               </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="endTime" className="text-sm font-semibold">
-                  Rental End Time
-                </label>
-                <input
-                  type="time"
-                  id="endTime"
-                  value={rentalEndTime}
-                  onChange={(e) => setRentalEndTime(e.target.value)}
-                  className="border p-2 rounded-md"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white p-2 rounded-md w-full hover:bg-blue-700"
-              >
-                Confirm Booking
-              </button>
+              <button type="submit"className="bg-blue-600 text-white p-2 rounded-md w-full hover:bg-blue-700">
+              Confirm Booking</button>
             </form>
           </div>
         </div>
