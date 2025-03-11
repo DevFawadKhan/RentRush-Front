@@ -11,13 +11,9 @@ const CarDetailsScreen = () => {
     const [rentalStartTime, setRentalStartTime] = useState("");
     const [rentalEndTime, setRentalEndTime] = useState("");
     const [Price, setPrice] = useState(0);  
-    // const [hours, sethours] = useState(0);
-    // const [days, setdays] = useState(0);
-    // let Total_Days=null;
-    // let Total_hours=null;
-    // let difference_millisecond
-    // let EndDate
-    // let StartDate
+    const [BookingDetails, setBookingDetails] = useState([])
+      // State for progress and time left
+  const [progress, setProgress] = useState(0);
   const { bookingId } = useParams(); // GET BOOKING ID FROM URL
   console.log("booking id", bookingId);
   
@@ -33,52 +29,45 @@ const CarDetailsScreen = () => {
         setRentalStartTime(res.data.rentalStartTime)
         setRentalEndTime(res.data.rentalEndDate)
         setPrice(res.data.totalPrice)
-        //  StartDate=new Date(rentalStartDate)
-        //  EndDate=new Date(rentalEndDate)
-        //  difference_millisecond=EndDate-StartDate;
-        //  Total_hours=difference_millisecond/ (1000 * 60 * 60);
-        //  Total_Days=difference_millisecond / (1000 * 60 * 60 * 24);
-        // console.log("TOTAL HOURS",Total_hours);
-        // console.log("Total Days",Total_Days);
+        const booking = res.data;
+        const startDate = new Date(booking.rentalStartDate);
+        const endDate = new Date(booking.rentalEndDate);
+        const difference_millisecond = endDate - startDate;
+        const totalHours = difference_millisecond / (1000 * 60 * 60);
+        const totalDays = difference_millisecond / (1000 * 60 * 60 * 24);
+        setBookingDetails({
+          ...booking,
+          totalHours,
+          totalDays,
+        });
+        
       } catch (error) {
-        console.log("ERROR IN", error.message);
+      console.log("ERROR IN EXTEND BOOKING", error.message)
       }
     };
     if (bookingId) {
       FetchBookingDetail();
     }
   }, [bookingId]);
-  
-  // State for progress and time left
-  // const [progress, setProgress] = useState(0);
-  // const [timeLeft, setTimeLeft] = useState("");
-
+// USE Effect for Progress Bar
+  useEffect(() => {
+    if(rentalStartDate&&rentalEndDate){
+    const Start=new Date(rentalStartDate).getTime();
+    const end=new Date(rentalEndDate).getTime();
+    const NowDate=Date.now();
+    if(NowDate=>Start &&NowDate<=end){
+    const TotalDuration=end-Start;
+    const elapsedTime=NowDate-Start;
+    const progressPercentage = (elapsedTime /TotalDuration) * 100;
+    setProgress(progressPercentage)
+    }else if(NowDate>end){
+      setProgress(100) //Booking complete;
+    }else{
+      setProgress(0);
+    }
+    }
+  },[rentalStartDate,rentalEndDate]);
   // Calculate progress and time left
-  // useEffect(() => {
-  //   const startDate = new Date(car.rentalStartDate);
-  //   const endDate = new Date(car.rentalEndDate);
-  //   const now = new Date();
-
-  //   // Calculate total duration in milliseconds
-  //   const totalDuration = endDate - startDate;
-
-  //   // Calculate elapsed time in milliseconds
-  //   const elapsedTime = now - startDate;
-
-  //   // Calculate progress percentage
-  //   const progressPercentage = Math.min(100, (elapsedTime / totalDuration) * 100);
-  //   setProgress(progressPercentage);
-
-  //   // Calculate time left
-  //   const timeLeftMs = endDate - now;
-  //   if (timeLeftMs > 0) {
-  //     const daysLeft = Math.floor(timeLeftMs / (1000 * 60 * 60 * 24));
-  //     const hoursLeft = Math.floor((timeLeftMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  //     setTimeLeft(`${daysLeft} days ${hoursLeft} hours left`);
-  //   } else {
-  //     setTimeLeft("Rental period has ended");
-  //   }
-  // }, [car.rentalStartDate, car.rentalEndDate]);
 
   // Handle Extend Booking button click
   const handleExtendBooking = () => {
@@ -134,13 +123,12 @@ const CarDetailsScreen = () => {
       <div className="mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
-            className="bg-blue-600 h-2.5 rounded-full"
-            // style={{ width: `${progress}%` }}
+            className="bg-blue-600 h-2.5 rounded-full animate-pulse"
+            style={{ width: `${progress}%` }}
           ></div>
         </div>
-        {/* <p className="text-sm text-gray-500 mt-2">{timeLeft}</p> */}
+        <p className="text-sm text-gray-500 mt-2">{progress===100?"Booking complete":"Time Left"}</p>
       </div>
-
       {/* Details Table */}
       <div className="space-y-4">
         <div className="flex justify-between">
@@ -151,14 +139,14 @@ const CarDetailsScreen = () => {
           <span className="text-gray-700">Rental End Date</span>
           <span className="text-gray-900 font-semibold">{rentalEndDate}</span>
         </div>
-        {/* <div className="flex justify-between">
-          <span className="text-gray-700">Rental Duration</span>
-          <span className="text-gray-900 font-semibold">{Total_hours}{"day"}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-700">Rental Hours</span>
-          <span className="text-gray-900 font-semibold">{Total_Days}</span>
-        </div> */}
+               <div className="flex justify-between">
+              <span className="text-gray-700">Rental Duration</span>
+              <span className="text-gray-900 font-semibold">{BookingDetails.totalDays}{"day"}</span>
+            </div>
+            <div className="flex justify-between">
+            <span className="text-gray-700">Rental Hours</span>
+            <span className="text-gray-900 font-semibold">{BookingDetails.totalHours}</span>
+            </div>
       </div>
 
       {/* Total Amount */}
