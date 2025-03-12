@@ -134,15 +134,18 @@ const CarDetailsScreen = () => {
         />
       </div>
       {/* Progress Bar */}
-      <div className="mb-6">
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div
-            className="bg-blue-600 h-2.5 rounded-full animate-pulse"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-        <p className="text-sm text-gray-500 mt-2">{progress===100?"Booking complete":"Time Left"}</p>
-      </div>
+      <div className="mb-6 w-full max-w-[90vw] sm:max-w-[600px]">
+  <div className="w-full bg-gray-200 rounded-full h-2.5">
+    <div
+      className="bg-blue-600 h-2.5 rounded-full animate-pulse"
+      style={{ width: `${progress}%` }}
+    ></div>
+  </div>
+  <p className="text-sm text-gray-500 mt-2 text-center">
+    {progress === 100 ? "Booking complete" : "Time Left"}
+  </p>
+</div>
+
       {/* Details Table */}
       <div className="space-y-4">
         <div className="flex justify-between">

@@ -11,6 +11,7 @@ const Base_Url = import.meta.env.VITE_API_URL;
 const Cars = () => {
   const [cars, setCars] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("available"); // New state for dropdown filter
 
   const fetchVehicles = async () => {
     try {
@@ -25,41 +26,66 @@ const Cars = () => {
   };
   useEffect(() => {
     fetchVehicles();
-  }, []);
-
-  const filteredCars = cars.filter((car) =>
-    `${car.carBrand} ${car.carModel} ${car.color}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
-
+  }, [fetchVehicles]);
+  // Filter cars based on dropdown and search input
+  const filteredCars = cars
+    .filter((car) =>
+      `${car.carBrand} ${car.carModel} ${car.color}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    )
+    .filter((car) =>
+      filter === "available"
+        ? car.availability === "Available"
+        : car.availability === "Rented Out"
+    );
   return (
     <>
       <Navbar />
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-between items-center">
+        {/* Dropdown */}
         <div className="relative">
+          <select
+            className="border lg:ml-6 border-gray-300 rounded-full pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="available">Available Cars</option>
+            <option value="rented">Rented Out Cars</option>
+          </select>
+        </div>
+
+        {/* Search input */}
+        <div className="relative w-[150px] lg:w-[300px]">
           <input
             type="text"
             placeholder="Search by brand, model, or color"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded-full pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-gray-300 rounded-full pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
             <Search />
           </div>
         </div>
-     <Link to="/customer/bookings">
-<div className="flex justify-center mx-5 lg:absolute lg:right-3 bg-blue-900 text-white rounded-md px-2 lg:py-3 font-semibold">
-  <button>You Bookings</button></div></Link>
+
+        {/* Bookings Button */}
+        <Link to="/customer/bookings">
+          <div className="bg-blue-900 text-white rounded-md p-3 lg:px-4 lg:py-2 lg:mr-4 font-semibold">
+            Your Bookings
+          </div>
+        </Link>
       </div>
+      {/* Cars List */}
       <div className="bg-white flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl py-10 w-full">
+        <div className="grid ml-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl py-10 w-full">
           {filteredCars.length > 0 ? (
             filteredCars.map((car, index) => <UserCard key={index} car={car} />)
           ) : (
             <p className="text-gray-500 col-span-full text-center">
-              No cars match your search.
+              {filter === "available"
+                ? "Sorry, no available cars."
+                : "No rented out cars."}
             </p>
           )}
         </div>
