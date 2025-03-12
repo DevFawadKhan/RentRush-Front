@@ -1,4 +1,4 @@
-import { User, Calendar, LogOut, House, FileText } from "lucide-react"; // Added FileText for the invoice icon
+import { User, Calendar, LogOut, House, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -41,6 +41,22 @@ const Navbar = () => {
           <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">RentRush</h1>
         </div>
 
+        {/* Navigation Links */}
+        <div className="flex items-center space-x-8">
+          <Link to="/customer/cars" className="text-gray-700 hover:text-primary transition-colors">
+            Cars
+          </Link>
+          <Link to="/customer/showrooms" className="text-gray-700 hover:text-primary transition-colors">
+            Showrooms
+          </Link>
+          <Link to="/customer/bookings" className="text-gray-700 hover:text-primary transition-colors">
+            Bookings
+          </Link>
+          <Link to="/customer/invoice" className="text-gray-700 hover:text-primary transition-colors">
+            Invoice
+          </Link>
+        </div>
+
         {/* User Profile Dropdown */}
         <div className="relative">
           <div
@@ -77,12 +93,11 @@ const Navbar = () => {
                 <Calendar className="mr-3 text-gray-600" size={18} />
                 <span className="text-gray-700">My Bookings</span>
               </Link>
-              {/* Add Invoice Link */}
               <Link
                 to="/customer/invoice"
                 className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
               >
-                <FileText className="mr-3 text-gray-600" size={18} /> {/* Invoice icon */}
+                <FileText className="mr-3 text-gray-600" size={18} />
                 <span className="text-gray-700">Invoices</span>
               </Link>
               <div className="border-t border-gray-100 my-1"></div>
