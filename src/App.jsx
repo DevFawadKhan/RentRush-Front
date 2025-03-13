@@ -14,6 +14,7 @@ import Adminpage from "./components/admin/Adminpage.jsx";
 import ProtectedLayout from "./auth/protectedRoute.jsx";
 import EditBookingModal from '../src/components/customer/EditBooking.jsx'
 import CarDetailsScreen from '../src/components/customer/CarDetailsScreen.jsx'
+import Invoice from "../src/components/customer/invoice.jsx"
 function App() {
   return (
     <>
@@ -45,7 +46,7 @@ function App() {
             <Route path="/admin" element={<Adminpage />}></Route>
             <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
             <Route path="/customer/CarDetailsScreen/:bookingId" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
-
+            <Route path="/invoice" element={<Invoice></Invoice>}></Route>
             
           </Route>
         </Routes>

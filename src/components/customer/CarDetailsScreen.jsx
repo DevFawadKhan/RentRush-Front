@@ -23,104 +23,167 @@ const CarDetailsScreen = () => {
   const { bookingId } = useParams(); // GET BOOKING ID FROM URL
   console.log("booking id", bookingId);
   
-  // Fetch booking date and time
   useEffect(() => {
     const FetchBookingDetail = async () => {
       try {
-        const res = await axios.get(`${Base_Url}/api/bookcar/bookcar-detail/${bookingId}`,{
+        const res = await axios.get(`${Base_Url}/api/bookcar/bookcar-detail/${bookingId}`, {
           withCredentials: true,
         });
         console.log("response from booking detail", res.data);
-        setRentalStartDate(res.data.rentalStartDate)
-        setRentalEndDate(res.data.rentalEndDate)
-        setRentalStartTime(res.data.rentalStartTime)
-        setRentalEndTime(res.data.rentalEndDate)
-        setPrice(res.data.totalPrice)
-        setimage(res.data.images)
+  
+        setRentalStartDate(res.data.rentalStartDate);
+        setRentalEndDate(res.data.rentalEndDate);
+        setRentalStartTime(res.data.rentalStartTime);
+        setRentalEndTime(res.data.rentalEndTime);
+        setPrice(res.data.totalPrice);
+        setimage(res.data.images);
+  
         const booking = res.data;
         const startDate = new Date(booking.rentalStartDate);
         const endDate = new Date(booking.rentalEndDate);
-        const difference_millisecond = endDate - startDate;
-        const totalHours = difference_millisecond / (1000 * 60 * 60);
-        const totalDays = difference_millisecond / (1000 * 60 * 60 * 24);
+  
+        // ✅ Fix for same date booking (count as 1 day)
+        let totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+        if (totalDays === 0) totalDays = 1;
+  
+        // ✅ Handle timing for same date booking  
+        let totalHours = 0;
+  
+        if (
+          booking.rentalStartDate === booking.rentalEndDate &&
+          booking.rentalStartTime &&
+          booking.rentalEndTime
+        ) {
+          // ✅ Convert to 24-hour format
+          const convertTo24HourFormat = (time) => {
+            const [timePart, modifier] = time.split(" ");
+            let [hours, minutes] = timePart.split(":").map(Number);
+            if (modifier === "PM" && hours !== 12) hours += 12;
+            if (modifier === "AM" && hours === 12) hours = 0;
+            return { hours, minutes };
+          };
+  
+          const { hours: startHour, minutes: startMinute } = convertTo24HourFormat(booking.rentalStartTime);
+          const { hours: endHour, minutes: endMinute } = convertTo24HourFormat(booking.rentalEndTime);
+  
+          totalHours = (endHour - startHour) + (endMinute - startMinute) / 60;
+  
+          // ✅ Handle negative values in case of incorrect time order
+          if (totalHours < 0) totalHours = 0;
+        } else if (startDate && endDate) {
+          totalHours = (endDate - startDate) / (1000 * 60 * 60);
+        }
+  
         setBookingDetails({
           ...booking,
-          totalHours,
+          totalHours: isNaN(totalHours) ? "0.00" : totalHours.toFixed(2), // ✅ Prevent NaN
           totalDays,
         });
-        
+  
       } catch (error) {
-      console.log("ERROR IN EXTEND BOOKING", error.message)
+        console.log("ERROR IN EXTEND BOOKING", error.message);
       }
     };
+  
     if (bookingId) {
       FetchBookingDetail();
     }
   }, [bookingId]);
+  
 // USE Effect for Progress Bar
-  useEffect(() => {
-    if(rentalStartDate&&rentalEndDate){
-    const Start=new Date(rentalStartDate).getTime();
-    const end=new Date(rentalEndDate).getTime();
-    const NowDate=Date.now();
-    if(NowDate=>Start &&NowDate<=end){
-    const TotalDuration=end-Start;
-    const elapsedTime=NowDate-Start;
-    const progressPercentage = (elapsedTime /TotalDuration) * 100;
-    setProgress(progressPercentage)
-    }else if(NowDate>end){
-      setProgress(100) //Booking complete;
-    }else{
-      setProgress(0);
+useEffect(() => {
+  if (rentalStartDate && rentalEndDate && rentalStartTime && rentalEndTime) {
+    const convertTo24HourFormat = (time) => {
+      const [timePart, modifier] = time.split(" ");
+      let [hours, minutes] = timePart.split(":").map(Number);
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+      return { hours, minutes };
+    };
+
+    // ✅ Start date + time ko combine karo
+    const { hours: startHour, minutes: startMinute } = convertTo24HourFormat(rentalStartTime);
+    const { hours: endHour, minutes: endMinute } = convertTo24HourFormat(rentalEndTime);
+
+    const start = new Date(rentalStartDate);
+    start.setHours(startHour, startMinute, 0);
+
+    const end = new Date(rentalEndDate);
+    end.setHours(endHour, endMinute, 0);
+
+    const now = Date.now();
+
+    if (now >= start.getTime() && now <= end.getTime()) {
+      const totalDuration = end.getTime() - start.getTime();
+      const elapsedTime = now - start.getTime();
+      const progressPercentage = (elapsedTime / totalDuration) * 100;
+      setProgress(progressPercentage);
+    } else if (now > end.getTime()) {
+      setProgress(100); // ✅ Booking complete
+    } else {
+      setProgress(0); // ✅ Booking abhi start nahi hui
     }
-    }
-  },[rentalStartDate,rentalEndDate]);
+  }
+}, [rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime]);
 
 
-  // Handle form submission
-  const handleSubmit =async (e) => {
-    e.preventDefault();
-    try {
-      console.log("END DATE",EndDate);
-      console.log("END TIME",EndTime);
-    if (!EndDate||!EndTime) {return Toast("All Fields are required","error")}
-    const res=await axios.patch(`${Base_Url}/api/bookcar/extend-booking/${bookingId}`,{
-      rentalEndDate:EndDate,
-      rentalEndTime:EndTime,
-    },{
-      withCredentials:true,
-    })
-    console.log("Response of Extend booking",res.data.message);
-    console.log("Invoice of update booking",res.data.invoiceUrl)
-    console.log("Response of Extend booking Status",res.status);
-    if(res.status==200){
-      const invoiceUrl = res.data.invoiceUrl;
-      if (invoiceUrl) {
-        Toast(
-          <>
-            {"Please Ganerate yourUpdated invoice"}{" "}
-            <a
-              href={invoiceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "blue", textDecoration: "underline" }}
-            >
-              Click here to download the Invoice
-            </a>
-          </>
-        );
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!EndDate || !EndTime) {
+    Toast("All Fields are required", "error");
+    return;
+  }
+
+  const rentalEndDateTime = new Date(`${EndDate}T${EndTime}:00`);
+  console.log("Rental End DateTime:", rentalEndDateTime);
+
+  if (rentalEndDateTime <= new Date()) {
+    return Toast("End date and time must be in the future", "error");
+  }
+
+  try {
+    const res = await axios.patch(
+      `${Base_Url}/api/bookcar/extend-booking/${bookingId}`,
+      {
+        rentalEndDate: EndDate,
+        rentalEndTime: EndTime,
+      },
+      {
+        withCredentials: true,
       }
-    }
-    if(res.status===400){
+    );
+
+    console.log("Response:", res.data);
+
+    if (res.status === 200) {
+      Toast(
+        <>
+          Please Generate your Updated invoice{" "}
+          <a
+            href={res.data.invoiceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "blue", textDecoration: "underline" }}
+          >
+            Click here to download the Invoice
+          </a>
+        </>
+      );
+    } else {
       Toast(res?.data?.message || "An error occurred", "error");
     }
-    } catch (error) {
-      console.log("Error in Extend booking",error.response.data.message);
-    }
-    setEndDate("");
-    setEndTime("");
-    setShowBookingModal(false)
-  };
+  } catch (error) {
+    console.error("Error in Extend booking:", error.response?.data?.message || error.message);
+    Toast(error.response?.data?.message || "An error occurred", "error");
+  }
+
+  setEndDate("");
+  setEndTime("");
+  setShowBookingModal(false);
+};
+
+
   return (
     <>
     <Navbar/>
