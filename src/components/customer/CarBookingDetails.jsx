@@ -120,6 +120,14 @@ const CarBookingDetails = () => {
                     <td className="border p-2 font-bold">Price</td>
                     <td className="border p-2 font-bold">{car.rentRate} rs/Day</td>
                   </tr>
+
+                   {/* Row 6: Additional Car Details */}
+                   <tr className="hover:bg-gray-50">
+                    <td className="border p-2 font-bold">Showroom Name</td>
+                    <td className="border p-2">RentRush </td>
+                    <td className="border p-2 font-bold">Showroom Address</td>
+                    <td className="border p-2 font-bold">Islamabad</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
