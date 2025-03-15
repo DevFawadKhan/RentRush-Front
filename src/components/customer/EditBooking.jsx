@@ -26,31 +26,52 @@ const EditBookingModal = ({ booking, isOpen, onClose }) => {
     setRentalEndTime("");
     onClose();
   };
-  const formatTo12Hour = (date, time) => {
-    const [hour, minute] = time.split(":");
-    const formattedHour = hour % 12 || 12;
-    const period = hour >= 12 ? "PM" : "AM";
-    return `${date} ${formattedHour}:${minute} ${period}`;
-  };
+  // const formatTo12Hour = (date, time) => {
+  //   const [hour, minute] = time.split(":");
+  //   const formattedHour = hour % 12 || 12;
+  //   const period = hour >= 12 ? "PM" : "AM";
+  //   return `${date} ${formattedHour}:${minute} ${period}`;
+  // };
   const handleSubmit = async () => {
     if (!rentalEndDate || !rentalEndTime) {
       Toast("All Fields are required", "error");
       return;
     }
     try {
-      const formattedEndTime = formatTo12Hour(rentalEndDate, rentalEndTime);
-      console.log("FormattedEndTime:", formattedEndTime);
+      // const formattedEndTime = formatTo12Hour(rentalEndDate, rentalEndTime);
+      // console.log("FormattedEndTime:", formattedEndTime);
       const bookingId = booking._id;
-      const res = await axios.patch(
-        `${Base_Url}/api/bookcar/extend-booking/${bookingId}`,
+      const res = await axios.put(
+        `${Base_Url}/api/bookcar/update/${bookingId}`,
         {
-          rentalEndDate,
-          rentalEndTime: formattedEndTime.split(" ")[1] + " " + formattedEndTime.split(" ")[2],
+          rentalStartDate:rentalStartDate,
+          rentalEndDate:rentalEndDate, 
+          rentalStartTime:rentalStartTime,
+          rentalEndTime:rentalEndTime
         },
         { withCredentials: true }
       );
       console.log("Response:", res.data);
-      Toast("Booking extended successfully!", "success");
+      if(res.status===200){
+        Toast(res.data.message,"success");
+        const invoiceUrl = res.data.invoiceUrl;
+        if (invoiceUrl) {
+          Toast(
+            <>
+              {res.data.message}{" "}
+              <a
+                href={invoiceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "blue", textDecoration: "underline" }}
+              >
+                Click here to download the Invoice
+              </a>
+            </>
+          );
+        }
+      }
+
       handleClose();
     } catch (error) {
       console.error("Error in Extend booking:", error.response?.data?.message || error.message);
