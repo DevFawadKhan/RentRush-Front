@@ -37,34 +37,42 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
           ))}
         </div>
 
-        {/* Progress Bar - Centered */}
-        <div className="flex justify-center mb-6">
-          <div className="w-full max-w-[90vw] sm:max-w-[600px]">
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div
-                className="bg-blue-600 h-2.5 rounded-full animate-pulse"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2 text-center">
-              {progress === 100 ? "Booking complete" : "Time Left"}
-            </p>
-          </div>
-        </div>
+       {/* Progress Bar - Centered */}
+<div className="flex justify-center mb-6">
+  <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
+    {/* Progress Bar Container */}
+    <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
+      {/* Progress Indicator */}
+      <div
+        className="h-full rounded-full bg-gradient-to-r from-blue-600 to-brown-600 shadow-md transition-all duration-300"
+        style={{ width: `${progress}%` }}
+      ></div>
+    </div>
+
+    {/* Moving Car Icon */}
+    <div
+      className="absolute top-0 transform -translate-y-1/2"
+      style={{ left: `calc(${progress}% - 35px)` }} // Adjust the car position based on progress
+    >
+      <img
+  src="/src/assets/barcar.png"
+  alt="Car Icon"
+  className="w-20 h-20"
+/>
+        <path d="M5 14v-2h14v2H5zM4 6h16v2H4V6zm1 10h14v2H5v-2z" />
+    </div>
+    {/* Progress Label */}
+    <p className="text-sm text-gray-500 mt-2 text-center">
+      {progress === 100 ? "Booking complete" : "Time Left"}
+    </p>
+  </div>
+</div>
 
         {/* Combined Table for Booking and Car Details */}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border text-sm">
             <tbody>
-              {/* Row 1: Car Details */}
-              <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Car Model</td>
-                <td className="border p-2">{car.carModel}</td>
-                <td className="border p-2 font-bold">Color</td>
-                <td className="border p-2">{car.color}</td>
-              </tr>
-
-              {/* Row 2: Booking Details */}
+              {/* Row 1: Booking Details */}
               <tr className="hover:bg-gray-50">
                 <td className="border p-2 font-bold">Booked By</td>
                 <td className="border p-2">{bookingDetails.customerName}</td>
@@ -72,6 +80,14 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
                 <td className="border p-2">
                   {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
                 </td>
+              </tr>
+
+              {/* Row 2: Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Car Model</td>
+                <td className="border p-2">{car.carModel}</td>
+                <td className="border p-2 font-bold">Color</td>
+                <td className="border p-2">{car.color}</td>
               </tr>
 
               {/* Row 3: Additional Car Details */}
