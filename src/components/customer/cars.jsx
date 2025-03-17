@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { Search } from "lucide-react";
 import axios from "axios";
 import Toast from "../Toast";
+import Footer from "./Footer";
 import { Link } from "react-router-dom";
 
 const Base_Url = import.meta.env.VITE_API_URL;
@@ -72,7 +73,7 @@ const Cars = () => {
         {/* Bookings Button */}
         <Link to="/customer/bookings">
           <div className="bg-blue-900 text-white rounded-md p-3 lg:px-4 lg:py-2 lg:mr-4 font-semibold">
-            Your Bookings
+            My Bookings
           </div>
         </Link>
       </div>
@@ -90,6 +91,7 @@ const Cars = () => {
           )}
         </div>
       </div>
+      <Footer/>
     </>
   );
 };
