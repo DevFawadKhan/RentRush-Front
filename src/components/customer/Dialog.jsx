@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types';
 
-const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
+const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
   if (!isOpen) return null;
 
   return (
     <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-    onClick={onClose} // Close dialog when clicking outside
-  >
-    <div
-      className="bg-white rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 h-auto max-h-[90vh] overflow-y-auto p-6 relative"
-      onClick={(e) => e.stopPropagation()} // Prevent clicks inside the dialog from closing it
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={onClose} // Close dialog when clicking outside
     >
-      {/* Close Button */}
-      <button
-        onClick={onClose}
-        className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
+      <div
+        className="bg-white rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 h-auto max-h-[90vh] overflow-y-auto p-6 relative"
+        onClick={(e) => e.stopPropagation()} // Prevent clicks inside the dialog from closing it
       >
-        &times;
-      </button>
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
+        >
+          &times;
+        </button>
 
         {/* Modal Title */}
         <h2 className="text-3xl font-bold text-center mb-4">
@@ -37,12 +37,34 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
           ))}
         </div>
 
+        {/* Progress Bar - Centered */}
+        <div className="flex justify-center mb-6">
+          <div className="w-full max-w-[90vw] sm:max-w-[600px]">
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className="bg-blue-600 h-2.5 rounded-full animate-pulse"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <p className="text-sm text-gray-500 mt-2 text-center">
+              {progress === 100 ? "Booking complete" : "Time Left"}
+            </p>
+          </div>
+        </div>
+
         {/* Combined Table for Booking and Car Details */}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border text-sm">
             <tbody>
+              {/* Row 1: Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Car Model</td>
+                <td className="border p-2">{car.carModel}</td>
+                <td className="border p-2 font-bold">Color</td>
+                <td className="border p-2">{car.color}</td>
+              </tr>
 
-              {/* Row 1: Booking Details */}
+              {/* Row 2: Booking Details */}
               <tr className="hover:bg-gray-50">
                 <td className="border p-2 font-bold">Booked By</td>
                 <td className="border p-2">{bookingDetails.customerName}</td>
@@ -51,15 +73,6 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
                   {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
                 </td>
               </tr>
-
-              {/* Row 2: Car Details */}
-              <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Car Model</td>
-                <td className="border p-2">{car.carModel}</td>
-                <td className="border p-2 font-bold">Color</td>
-                <td className="border p-2">{car.color}</td>
-              </tr>
-
 
               {/* Row 3: Additional Car Details */}
               <tr className="hover:bg-gray-50">
@@ -90,7 +103,7 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
                 <td className="border p-2 font-bold">Showroom Name</td>
                 <td className="border p-2">RentRush</td>
                 <td className="border p-2 font-bold">Showroom Address</td>
-                <td className="border p-2 font-bold">Islamabad</td>
+                <td className="border p-2">DHA 1, Sector C, Street#1, House#4</td>
               </tr>
             </tbody>
           </table>
@@ -120,6 +133,7 @@ Dialog.propTypes = {
     startDateTime: PropTypes.string.isRequired,
     endDateTime: PropTypes.string.isRequired,
   }).isRequired,
+  progress: PropTypes.number.isRequired, // Add progress prop
 };
 
 export default Dialog;
