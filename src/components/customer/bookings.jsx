@@ -4,9 +4,12 @@ import Navbar from "./Navbar";
 import Toast from "../Toast";
 import EditBookingModal from './EditBooking.jsx';
 import ConfirmationDialog from "./ConfirmationDialog.jsx";
-import { Link} from "react-router-dom";
+import Dialog from './Dialog';
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const Base_Url = import.meta.env.VITE_API_URL;
+
 const UserBookings = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -14,9 +17,24 @@ const UserBookings = () => {
   const [error, setError] = useState(null);
   const [ModelOpen, setModelOpen] = useState(false);
   const [ShowDialog, setShowDialog] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null); // Track the selected booking for cancellation
-  const [car, setCar] = useState(null); // Track the car for the details modal
-  const currentDate = new Date().toLocaleDateString('en-CA'); // 'YYYY-MM-DD' format
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [car, setCar] = useState(null);
+  const currentDate = new Date().toLocaleDateString('en-CA');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedBookingDetails, setSelectedBookingDetails] = useState(null); // Track the selected booking for the dialog
+
+  // Function to open the dialog
+  const openDialog = (booking) => {
+    setSelectedBookingDetails(booking); // Set the selected booking details
+    setIsDialogOpen(true); // Open the dialog
+  };
+
+  // Function to close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false); // Close the dialog
+    setSelectedBookingDetails(null); // Clear the selected booking details
+  };
+
   const openDetailsModal = (carDetails) => {
     setCar(carDetails);
     setShowDetailsModal(true);
@@ -59,27 +77,30 @@ const UserBookings = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchBookings();
   }, []);
+
   // Return Car API CALL
-  const ReturnCar= async (BookingId)=>{
+  const ReturnCar = async (BookingId) => {
     try {
       const response = await axios.post(
         `${Base_Url}/api/bookcar/returncar/${BookingId}`,
-        {}, 
+        {},
         {
           withCredentials: true,
         }
-      );      
-      if(response.status==200){
-        toast(response.data.message,"success")
+      );
+      if (response.status === 200) {
+        toast(response.data.message, "success");
       }
-      console.log("Response return car",response.data.message);
+      console.log("Response return car", response.data.message);
     } catch (error) {
-      console.log("ERROR IN RETURN CAR",error.response.data.message)
+      console.log("ERROR IN RETURN CAR", error.response.data.message);
     }
-  }
+  };
+
   // Cancel booking API calling function
   const CancleFunction = async (bookingId) => {
     try {
@@ -133,7 +154,7 @@ const UserBookings = () => {
                     <p className="text-gray-500">{booking.carDetails.carType}</p>
                   </div>
                   <div className="text-gray-500">
-                    <button>
+                    <button onClick={() => openDialog(booking)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -177,40 +198,36 @@ const UserBookings = () => {
                     {booking.carDetails.transmission}
                   </p>
                   {/* Show extend booking button */}
-                  {console.log("BOOKING START DATE",booking.startDate)}
-      {( new Date(Date.now()).toDateString() >= new Date(booking.startDate).toDateString()) && (
-        <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-          <button className="text-blue-600 hover:underline">Extend Booking</button>
-        </Link>
-      )}
-            </div>
+                  {new Date(Date.now()).toDateString() >= new Date(booking.startDate).toDateString() && (
+                    <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
+                      <button className="text-blue-600 hover:underline">Extend Booking</button>
+                    </Link>
+                  )}
+                </div>
                 <p className="text-lg font-bold">{booking.carDetails.rentRate} Rs/d</p>
                 <div className="space-x-12">
-                  {/* Return car button based on EndDate and time*/}
-                  {console.log("EndDate",booking.EndDate)}
-                  {console.log("EndDTime",booking.EndTime)}   
-                  {console.log("CurrentDate",currentDate)}               
+                  {/* Return car button based on EndDate and time */}
                   {currentDate === booking?.EndDate ? (
-  <button onClick={()=>ReturnCar(booking._id)} className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg ">Return Car</button>
-) : (
-  <>
-    <button
-      onClick={() => setModelOpen(true)}
-      className="px-3 py-2 bg-blue-300 rounded-lg"
-    >
-      Update booking
-    </button>
-    <button
-      onClick={() => {
-        setSelectedBooking(booking._id);
-        setShowDialog(true);
-      }}
-      className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg"
-    >
-      Cancel booking
-    </button>
-  </>
-)}
+                    <button onClick={() => ReturnCar(booking._id)} className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg">Return Car</button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setModelOpen(true)}
+                        className="px-3 py-2 bg-blue-300 rounded-lg"
+                      >
+                        Update booking
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedBooking(booking._id);
+                          setShowDialog(true);
+                        }}
+                        className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg"
+                      >
+                        Cancel booking
+                      </button>
+                    </>
+                  )}
                 </div>
                 {/* Edit Booking Modal */}
                 <EditBookingModal
@@ -301,12 +318,24 @@ const UserBookings = () => {
           onConfirm={() => CancleFunction(selectedBooking)}
         />
       )}
+
+{isDialogOpen && selectedBookingDetails && (
+  <Dialog
+    isOpen={isDialogOpen}
+    onClose={closeDialog}
+    car={selectedBookingDetails.carDetails}
+    bookingDetails={{
+      customerName: selectedBookingDetails.customerName,
+      startDateTime: selectedBookingDetails.rentalStartDate,
+      endDateTime: selectedBookingDetails.rentalEndDate,
+    }}
+  />
+)}
     </div>
   );
 };
 
 export default UserBookings;
-
 
 
 
