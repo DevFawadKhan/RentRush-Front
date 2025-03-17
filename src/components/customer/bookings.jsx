@@ -22,6 +22,43 @@ const UserBookings = () => {
   const currentDate = new Date().toLocaleDateString('en-CA');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBookingDetails, setSelectedBookingDetails] = useState(null); // Track the selected booking for the dialog
+  const [progress, setProgress] = useState(0);
+
+useEffect(() => {
+  if (selectedBookingDetails) {
+    const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime } = selectedBookingDetails;
+
+    const convertTo24HourFormat = (time) => {
+      const [timePart, modifier] = time.split(" ");
+      let [hours, minutes] = timePart.split(":").map(Number);
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+      return { hours, minutes };
+    };
+
+    const { hours: startHour, minutes: startMinute } = convertTo24HourFormat(rentalStartTime);
+    const { hours: endHour, minutes: endMinute } = convertTo24HourFormat(rentalEndTime);
+
+    const start = new Date(rentalStartDate);
+    start.setHours(startHour, startMinute, 0);
+
+    const end = new Date(rentalEndDate);
+    end.setHours(endHour, endMinute, 0);
+
+    const now = Date.now();
+
+    if (now >= start.getTime() && now <= end.getTime()) {
+      const totalDuration = end.getTime() - start.getTime();
+      const elapsedTime = now - start.getTime();
+      const progressPercentage = (elapsedTime / totalDuration) * 100;
+      setProgress(progressPercentage);
+    } else if (now > end.getTime()) {
+      setProgress(100); // Booking complete
+    } else {
+      setProgress(0); // Booking not started
+    }
+  }
+}, [selectedBookingDetails]);
 
   // Function to open the dialog
   const openDialog = (booking) => {
@@ -329,6 +366,7 @@ const UserBookings = () => {
       startDateTime: selectedBookingDetails.rentalStartDate,
       endDateTime: selectedBookingDetails.rentalEndDate,
     }}
+    progress={progress} // Pass the progress state
   />
 )}
     </div>
