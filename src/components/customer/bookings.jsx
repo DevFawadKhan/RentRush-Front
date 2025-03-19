@@ -81,7 +81,7 @@ useEffect(() => {
     setShowDetailsModal(false);
     setCar(null);
   };
-
+// Fetch my booking
   const fetchBookings = async () => {
     setLoading(true);
     try {
@@ -177,7 +177,21 @@ useEffect(() => {
           <p>No active bookings found.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-            {bookings.map((booking) => (
+            {bookings.map((booking) => {
+const CurrentDate = new Date();
+const BookingStartDate = new Date(booking?.startDate);
+const [time, modifier] = booking?.StartTime.split(' ');
+let [hours, minutes] = time.split(':').map(Number);
+if (modifier === 'PM' && hours !== 12) hours += 12;
+if (modifier === 'AM' && hours === 12) hours = 0;
+// Date + Time ko combine karo
+BookingStartDate.setHours(hours);
+BookingStartDate.setMinutes(minutes);
+BookingStartDate.setSeconds(0);
+
+// console.log("BOOKING START DATE TIME", BookingStartDate);
+// console.log("CURRENT DATE TIME", CurrentDate);
+              return(<>
               <div
                 key={booking._id}
                 className="bg-white shadow-md rounded-lg p-4 relative"
@@ -247,6 +261,7 @@ useEffect(() => {
                   {currentDate === booking?.EndDate ? (
                     <button onClick={() => ReturnCar(booking._id)} className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg">Return Car</button>
                   ) : (
+                    CurrentDate>BookingStartDate?"YOUR  BOOKING START NOW":
                     <>
                       <button
                         onClick={() => setModelOpen(true)}
@@ -273,7 +288,8 @@ useEffect(() => {
                   onClose={() => setModelOpen(false)}
                 />
               </div>
-            ))}
+              </>)
+            })}
           </div>
         )}
       </div>
