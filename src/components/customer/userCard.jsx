@@ -12,6 +12,8 @@ const UserCard = ({ car }) => {
   const [rentalStartTime, setRentalStartTime] = useState("");
   const [rentalEndTime, setRentalEndTime] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [ShowDialog, setShowDialog] = useState(false)
+  const [ModelVisible, setModelVisible] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +37,7 @@ const UserCard = ({ car }) => {
       Toast(response.data.message);
 
       const invoiceUrl = response.data.invoiceUrl;
+      setModelVisible(false)
       if (invoiceUrl) {
         Toast(
           <>
@@ -74,7 +77,14 @@ const UserCard = ({ car }) => {
   const closeBookingModal = () => {
     setShowBookingModal(false);
   };
-  
+  // USEFFECT FOR  OPEN DIALOG DETAILS
+  useEffect(() => {
+    console.log("ShowDialog value:", ShowDialog);
+    if (ShowDialog) {
+      console.log("Opening dialog");
+      setModelVisible(true);
+    }
+  }, [ShowDialog]);  
 
   return (
     <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-64 relative">
@@ -233,7 +243,7 @@ const UserCard = ({ car }) => {
 
                         {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
 
-                        <form className="space-y-4" onSubmit={handleSubmit}>
+                        <form className="space-y-4" onSubmit={(e)=>e.preventDefault()}>
                             <div className="flex flex-col">
                                 <label htmlFor="startDate" className="text-sm font-semibold">
                                     Rental Start Date
@@ -289,18 +299,119 @@ const UserCard = ({ car }) => {
                                     required
                                 />
                             </div>
-
-                            <button
-                                type="submit"
-                                className="bg-primary text-white p-2 rounded-md w-full"
-                            >
-                                Confirm Booking
-                            </button>
+                            <button  
+    onClick={() => {
+        if (rentalStartDate && rentalEndDate && rentalEndTime&&rentalStartTime) { // yahan required fields check karo
+          setShowDialog(true);
+        } else {
+            alert('Please fill all fields');
+        }
+    }}
+    type="submit"
+    className="bg-primary text-white p-2 rounded-md w-full"
+>
+    Confirm Booking
+</button>
                         </form>
                     </div>
                 </div>
             )}
+            {ModelVisible&&(<div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      // onClick={onClose} // Close dialog when clicking outside
+    >
+      <div
+        className="bg-white rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 h-auto max-h-[90vh] overflow-y-auto p-6 relative"
+      >
+        {/* Close Button */}
+        <button
+          onClick={()=>setModelVisible(false)}
+          className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
+        >
+          &times;
+        </button>
+
+        {/* Modal Title */}
+        <h2 className="text-3xl font-bold text-center mb-4">
+          {car.carBrand} {car.carModel}
+        </h2>
+
+        {/* Car Images */}
+        <div className="flex justify-center gap-3 mb-6 flex-wrap">
+          {car.images?.map((img, index) => (
+            <img
+              key={index}
+              src={`/uploads/${img}`}
+              alt={`Car ${index}`}
+              className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
+            />
+          ))}
+        </div>
+        {/* Combined Table for Booking and Car Details */}
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border text-sm">
+            <tbody>
+              {/* Row 1: Booking Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Booked By</td>
+                
+                <td className="border p-2">{localStorage.getItem('name')}</td>
+                <td className="border p-2 font-bold">Renting Period</td>
+                <td className="border p-2">
+                  {rentalStartDate} - {rentalEndDate}
+                </td>
+              </tr>
+              {/* Row 2: Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Car Model</td>
+                <td className="border p-2">{car.carModel}</td>
+                <td className="border p-2 font-bold">Color</td>
+                <td className="border p-2">{car.color}</td>
+              </tr>
+
+              {/* Row 3: Additional Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Mileage</td>
+                <td className="border p-2">{car.mileage} miles</td>
+                <td className="border p-2 font-bold">Transmission</td>
+                <td className="border p-2">{car.transmission}</td>
+              </tr>
+
+              {/* Row 4: Additional Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Engine Type</td>
+                <td className="border p-2">{car.engineType}</td>
+                <td className="border p-2 font-bold">Registration Year</td>
+                <td className="border p-2">{car.year}</td>
+              </tr>
+
+              {/* Row 5: Additional Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Body Type</td>
+                <td className="border p-2">{car.bodyType}</td>
+                <td className="border p-2 font-bold">Price</td>
+                <td className="border p-2 font-bold">{car.rentRate} rs/Day</td>
+              </tr>
+
+              {/* Row 6: Additional Car Details */}
+              <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Showroom Name</td>
+                
+                <td className="border p-2">{car.userId?.showroomName}</td>
+                <td className="border p-2 font-bold">Showroom Address</td>
+                <td className="border p-2">{car.userId?.address}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-center">
+    <button onClick={handleSubmit} className="text-red-200 text-center bg-black px-2 py-2 mt-3">Confirm booking</button>
+</div>
+      </div>
+    </div>)}
+
     </div>
+
   );
 };
 

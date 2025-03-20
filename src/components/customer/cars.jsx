@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import UserCard from "./userCard";
+import UserCard from "./userCard.jsx";
 import Navbar from "./Navbar";
 import { Search } from "lucide-react";
 import axios from "axios";
@@ -20,6 +20,7 @@ const Cars = () => {
         withCredentials: true,
       });
       setCars(response.data);
+      console.log(response.data)
     } catch (err) {
       console.log(err);
       Toast(err.data || err.message || "Something went wrong", "error");
@@ -27,7 +28,7 @@ const Cars = () => {
   };
   useEffect(() => {
     fetchVehicles();
-  }, [fetchVehicles]);
+  },[setCars]);
   // Filter cars based on dropdown and search input
   const filteredCars = cars
     .filter((car) =>

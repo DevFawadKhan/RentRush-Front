@@ -188,9 +188,6 @@ if (modifier === 'AM' && hours === 12) hours = 0;
 BookingStartDate.setHours(hours);
 BookingStartDate.setMinutes(minutes);
 BookingStartDate.setSeconds(0);
-
-// console.log("BOOKING START DATE TIME", BookingStartDate);
-// console.log("CURRENT DATE TIME", CurrentDate);
               return(<>
               <div
                 key={booking._id}
@@ -204,7 +201,8 @@ BookingStartDate.setSeconds(0);
                     </h3>
                     <p className="text-gray-500">{booking.carDetails.carType}</p>
                   </div>
-                  <div className="text-gray-500">
+                  {/* this will change  */}
+                  <div className="text-red-500">
                     <button onClick={() => openDialog(booking)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
