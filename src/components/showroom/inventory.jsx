@@ -51,7 +51,7 @@ function ShowroomInventory() {
   const handleSave = async (data) => {
     try {
       const formData = new FormData();
-
+  
       // Add non-file fields
       formData.append("carBrand", data.make);
       formData.append("rentRate", data.rentalPrice);
@@ -62,12 +62,22 @@ function ShowroomInventory() {
       formData.append("bodyType", data.bodyType);
       formData.append("mileage", data.mileage);
       formData.append("transmission", data.transmission);
-
+      formData.append("seatCapacity", data.seatCapacity); // New field
+      formData.append("luggageCapacity", data.luggageCapacity); // New field
+      formData.append("fuelType", data.fuelType); // Corrected field name
+  
+      // Add car features if needed
+      if (data.carFeatures) {
+        formData.append("carFeatures", data.carFeatures);
+      }
+  
+      // Add images
       if (Array.isArray(data.images) && data.images.length > 0) {
         data.images.forEach((image) => {
           if (image) formData.append("images", image); // Append the actual image file
         });
       }
+  
       if (isEditing) {
         const response = await axios.put(
           `${Base_Url}/api/car/update/${vehicles[vehicleToEdit]?._id}`,
@@ -77,7 +87,6 @@ function ShowroomInventory() {
         fetchVehicles();
         Toast(response.data.message, "success");
       } else {
-        console.log({ formData });
         const response = await axios.post(`${Base_Url}/api/car/add`, formData, {
           withCredentials: true,
         });
@@ -162,6 +171,18 @@ function ShowroomInventory() {
                   Body Type
                 </th>
                 <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
+                  Seat Capacity
+                </th>
+                <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
+                  Luggage Capacity
+                </th>
+                <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
+                  Fuel Type
+                </th>
+                <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
+                  Car Features
+                </th>
+                <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
                   Actions
                 </th>
               </tr>
@@ -207,6 +228,18 @@ function ShowroomInventory() {
                     <td className="px-4 py-2 border-b border-gray-700">
                       {vehicle.bodyType}
                     </td>
+                    <td className="px-4 py-2 border-b border-gray-700">
+                      {vehicle.seatCapacity}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-700">
+                      {vehicle.luggageCapacity}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-700">
+                      {vehicle.fuelType}
+                    </td>
+                    <td className="px-4 py-2 border-b border-gray-700">
+                      {vehicle.carFeatures}
+                    </td>
                     <td className="px-4 py-2 border-b border-gray-700 flex justify-center space-x-2">
                       <button
                         title="Edit"
@@ -227,7 +260,7 @@ function ShowroomInventory() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="10" className="px-4 py-2 text-center">
+                  <td colSpan="16" className="px-4 py-2 text-center">
                     No vehicles in inventory.
                   </td>
                 </tr>
@@ -236,6 +269,7 @@ function ShowroomInventory() {
           </table>
         </div>
       </div>
+
 
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
 

@@ -11,6 +11,10 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     color: "",
     transmission: "",
     bodyType: "",
+    seatCapacity: "", // New field
+    luggageCapacity: "", // New field
+    fuelType: "", // New field
+    carFeatures: "", // New field
     images: [],
   });
 
@@ -29,6 +33,10 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         color: vehicle.color,
         transmission: vehicle.transmission,
         bodyType: vehicle.bodyType,
+        seatCapacity: vehicle.seatCapacity || "", // New field
+        luggageCapacity: vehicle.luggageCapacity || "", // New field
+        fuelType: vehicle.fuelType || "", // New field
+        carFeatures: vehicle.carFeatures || "", // New field
         images: [vehicle.images],
       });
     } else {
@@ -41,6 +49,10 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         color: "",
         transmission: "",
         bodyType: "",
+        seatCapacity: "", // New field
+        luggageCapacity: "", // New field
+        fuelType: "", // New field
+        carFeatures: "", // New field
         images: [],
       });
     }
@@ -67,6 +79,10 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
       color: "",
       transmission: "",
       bodyType: "",
+      seatCapacity: "", // New field
+      luggageCapacity: "", // New field
+      fuelType: "", // New field
+      carFeatures: "", // New field
       images: [],
     });
     onClose();
@@ -103,6 +119,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
             </h2>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
+              {/* Existing fields */}
               <div>
                 <label className="block text-xl font-bold mb-1">Brand</label>
                 <input
@@ -137,21 +154,20 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                 />
               </div>
               <div>
-  <label className="block text-xl font-bold mb-1">
-    Registration Year
-  </label>
-  <input
-    type="number"
-    name="year"
-    value={formData.year}
-    onChange={handleInputChange}
-    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-    placeholder="2025"
-    min="2000"
-    max={new Date().getFullYear()} // Ensures max is the current year
-  />
-</div>
-
+                <label className="block text-xl font-bold mb-1">
+                  Registration Year
+                </label>
+                <input
+                  type="number"
+                  name="year"
+                  value={formData.year}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+                  placeholder="2025"
+                  min="2000"
+                  max={new Date().getFullYear()}
+                />
+              </div>
               <div>
                 <label className="block text-xl font-bold mb-1">
                   Engine Displacement
@@ -219,6 +235,67 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   <option value="SUV">SUV</option>
                 </select>
               </div>
+
+              {/* New fields */}
+              <div>
+                <label className="block text-xl font-bold mb-1">
+                  Seat Capacity
+                </label>
+                <input
+                  type="number"
+                  name="seatCapacity"
+                  value={formData.seatCapacity}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+                  placeholder="5"
+                  min="1"
+                />
+              </div>
+              <div>
+                <label className="block text-xl font-bold mb-1">
+                  Luggage Capacity
+                </label>
+                <input
+                  type="number"
+                  name="luggageCapacity"
+                  value={formData.luggageCapacity}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+                  placeholder="2"
+                  min="1"
+                />
+              </div>
+              <div>
+                <label className="block text-xl font-bold mb-1">
+                  Fuel Type
+                </label>
+                <select
+                  name="fuelType"
+                  value={formData.fuelType}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded"
+                >
+                  <option value="">Select Fuel Type</option>
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Electric">Electric</option>
+                  <option value="Hybrid">Hybrid</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xl font-bold mb-1">
+                  Car Features
+                </label>
+                <textarea
+                  name="carFeatures"
+                  value={formData.carFeatures}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded"
+                  placeholder="Enter car features (e.g., GPS, Air Conditioning)"
+                />
+              </div>
+
+              {/* Image upload */}
               <div>
                 <label className="block text-xl font-bold mb-1">Images</label>
                 <input
