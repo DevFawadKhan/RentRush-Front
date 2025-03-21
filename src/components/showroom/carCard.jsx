@@ -23,19 +23,20 @@ const CarCard = ({ car }) => {
       </div>
 
       <div className="p-4">
-        <h3 className="font-bold text-lg text-center">
+        {/* Car Name */}
+        <h3 className="font-bold text-lg text-center mb-4">
           {car.carBrand + " " + car.carModel}
         </h3>
 
         {/* Grid for mileage, fuel type, and transmission */}
-        <div className="grid grid-cols-3 gap-4 text-sm text-black my-4">
+        <div className="grid grid-cols-3 gap-4 text-sm text-black mb-4">
           <div className="flex flex-col items-center">
             <CircleGauge className="w-5 h-5" />
             <span className="text-gray-500 mt-1">{car.mileage} km</span>
           </div>
           <div className="flex flex-col items-center">
             <Fuel className="w-5 h-5" />
-            <span className="text-gray-500 mt-1">{car.fuelType}</span>
+            <span className="text-gray-500 mt-1">{car.fuelType} Petrol</span>
           </div>
           <div className="flex flex-col items-center">
             <GripHorizontal className="w-5 h-5" />
@@ -44,7 +45,7 @@ const CarCard = ({ car }) => {
         </div>
 
         {/* Price */}
-        <div className="flex justify-center items-center mb-4">
+        <div className="flex items-center mb-4">
           <span className="text-xl font-bold">Rs {car.rentRate}/Day</span>
         </div>
 
@@ -56,7 +57,7 @@ const CarCard = ({ car }) => {
 
         {/* View Details button (only shown if car is rented out) */}
         {car.availability === "Rented Out" && (
-          <div className="flex justify-center mb-4">
+          <div className="flex mb-4">
             <button
               onClick={openModal}
               className="text-blue-600 hover:underline"
@@ -93,7 +94,7 @@ const CarCard = ({ car }) => {
               &#10005;
             </button>
 
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-center">
               {car.carBrand + " " + car.carModel}
             </h2>
             <img
@@ -101,36 +102,41 @@ const CarCard = ({ car }) => {
               alt={car.carBrand + " " + car.carModel}
               className="w-full h-40 object-cover mb-4 rounded"
             />
-            <h2 className="text-2xl font-bold mb-4">Rental Information</h2>
-            <p className="text-gray-700">
-              <strong>Renter Name:</strong>{" "}
-              {car.rentalInfo?.rentername || "N/A"}
-            </p>
-            <p className="text-gray-700">
-              <strong>Email:</strong> {car.rentalInfo?.renteremail || "N/A"}
-            </p>
-            <p className="text-gray-700">
-              <strong>Phone:</strong> {car.rentalInfo?.renterphone || "N/A"}
-            </p>
-            <p className="text-gray-700">
-              <strong>Address:</strong> {car.rentalInfo?.renteraddress || "N/A"}
-            </p>
-            <p className="text-gray-700">
-              <strong>Rental Start Date:</strong>{" "}
-              {car.rentalInfo?.rentalStartDate || "12-02-2024"}
-            </p>
-            <p className="text-gray-700">
-              <strong>Rental End Date:</strong>{" "}
-              {car.rentalInfo?.rentalEndDate || "12-03-2024"}
-            </p>
-            <p className="text-gray-700">
-              <strong>Rental Days:</strong>{" "}
-              {car.rentalInfo?.rentalDays || "2000"}
-            </p>
-            <p className="text-lg font-semibold mt-4">
-              <strong>Total Amount:</strong>{" "}
-              {car.rentalInfo?.totalAmount || "N/A"} Rs
-            </p>
+            <h2 className="text-2xl font-bold mb-4 text-center">
+              Rental Information
+            </h2>
+            <div className="space-y-2">
+              <p className="text-gray-700">
+                <strong>Renter Name:</strong>{" "}
+                {car.rentalInfo?.rentername || "N/A"}
+              </p>
+              <p className="text-gray-700">
+                <strong>Email:</strong> {car.rentalInfo?.renteremail || "N/A"}
+              </p>
+              <p className="text-gray-700">
+                <strong>Phone:</strong> {car.rentalInfo?.renterphone || "N/A"}
+              </p>
+              <p className="text-gray-700">
+                <strong>Address:</strong>{" "}
+                {car.rentalInfo?.renteraddress || "N/A"}
+              </p>
+              <p className="text-gray-700">
+                <strong>Rental Start Date:</strong>{" "}
+                {car.rentalInfo?.rentalStartDate || "12-02-2024"}
+              </p>
+              <p className="text-gray-700">
+                <strong>Rental End Date:</strong>{" "}
+                {car.rentalInfo?.rentalEndDate || "12-03-2024"}
+              </p>
+              <p className="text-gray-700">
+                <strong>Rental Days:</strong>{" "}
+                {car.rentalInfo?.rentalDays || "2000"}
+              </p>
+              <p className="text-lg font-semibold mt-4">
+                <strong>Total Amount:</strong>{" "}
+                {car.rentalInfo?.totalAmount || "N/A"} Rs
+              </p>
+            </div>
           </div>
         </div>
       )}
