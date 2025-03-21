@@ -1,27 +1,25 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
-const Customers = ({data}) => {
+const Customers = ({ data }) => {
     return (
-  <>  
-  <h2 className="  grid-cols-12  break-before-column font-semibold text-[#363843] ">Customer Accounts</h2>
-  {
-    data.map((value)=>{
-      return(
-        <>
-   <section className="mb-8 ml-2">
-        <div key={value.id} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <FontAwesomeIcon icon={faUser} className="text-[#394A9A] mb-2" size="2x" />            <p className="text-xl font-semibold">name{value.ownerName}</p>
-      <p className="text-gray-600">Email:{value.email}</p>
-        </div>
-        </div>
-    </section>
-        </>
-      )
-    })
-  }
-   </>
-    )
+        <section className="mb-8 ml-10 mr-10 w-full">
+            <h2 className="text-3xl font-bold text-[#394A9A] mb-6">Customer Accounts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {data.map((value) => (
+                    <div key={value.id} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <div className="flex items-center space-x-4">
+                            <FontAwesomeIcon icon={faUser} className="text-[#394A9A] text-3xl" />
+                            <div>
+                                <p className="text-xl font-bold text-gray-800">{value.ownerName}</p>
+                                <p className="text-gray-600">Email: {value.email}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
 };
+
 export default Customers;

@@ -43,7 +43,7 @@ function App() {
             <Route path="/customer/cars" element={<Cars />}></Route>
             <Route path="/customer/Showrooms" element={<Showrooms />}></Route>
             <Route path="/customer/bookings" element={<Bookings />}></Route>
-            <Route path="/admin" element={<Adminpage />}></Route>
+            <Route path="/admin/Adminpage" element={<Adminpage />}></Route>
             <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
             <Route path="/customer/CarDetailsScreen/:bookingId" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
             <Route path="/invoice" element={<Invoice></Invoice>}></Route>

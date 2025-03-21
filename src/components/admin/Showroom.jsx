@@ -1,4 +1,4 @@
-import { faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCheck, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 import ConfirmationDialog from './ConfirmationDialog';
@@ -6,47 +6,67 @@ const Base_Url = import.meta.env.VITE_API_URL;
 import axios from 'axios';
 
 const Showroom = ({ value }) => {
-    const [status, setStatus] = useState('active');
     const [showBan, setShowBan] = useState([]);
     const [isRatingsOpen, setIsRatingsOpen] = useState(false);
+    const [statuses, setStatuses] = useState({}); // Track status for each showroom individually
+    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [selectedShowroomId, setSelectedShowroomId] = useState(null); // Track which showroom is being modified
+    const [nextStatus, setNextStatus] = useState('');
 
-    const banShowroom = async (id) => {
-        try {
-            const url = `${Base_Url}/api/admin/banshowroom/${id}`;
-            const response = await axios.post(url); // this API bans the showroom
-            console.log(response.data.msg);
-            alert(response.data.msg);
-        } catch (error) {
-            console.log(error.response.data.msg);
-            alert(error.response.data.msg);
-        }
-    };
-
+    // Fetch banned users on component mount
     useEffect(() => {
         const fetchBannedUsers = async () => {
-            const response2 = await axios.get(`${Base_Url}/api/admin/viewBanUser`); // this API fetches status banned or active
+            const response2 = await axios.get(`${Base_Url}/api/admin/viewBanUser`);
             setShowBan(response2.data);
             console.log(response2.data);
         };
         fetchBannedUsers();
     }, []);
 
+    // Initialize statuses for each showroom
     useEffect(() => {
-        console.log(showBan);
-    }, [showBan]);
+        const initialStatuses = {};
+        value.forEach((showroom) => {
+            initialStatuses[showroom._id] = showroom.status || 'active'; // Use showroom.status from API or default to 'active'
+        });
+        setStatuses(initialStatuses);
+    }, [value]);
 
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-    const [nextStatus, setNextStatus] = useState('');
+    // Function to ban or activate a showroom
+    const banShowroom = async (id) => {
+        try {
+            const url = `${Base_Url}/api/admin/banshowroom/${id}`;
+            const response = await axios.post(url);
+            console.log(response.data.msg);
+            alert(response.data.msg);
 
-    const openConfirmDialog = (newStatus) => {
+            // Update the status for the specific showroom
+            setStatuses((prevStatuses) => ({
+                ...prevStatuses,
+                [id]: nextStatus,
+            }));
+        } catch (error) {
+            console.log(error.response.data.msg);
+            alert(error.response.data.msg);
+        }
+    };
+
+    // Open confirmation dialog and set the next status
+    const openConfirmDialog = (id, newStatus) => {
+        setSelectedShowroomId(id);
         setNextStatus(newStatus);
         setIsConfirmDialogOpen(true);
     };
+
+    // Handle status change after confirmation
     const handleStatusChange = () => {
-        setStatus(nextStatus);
+        if (selectedShowroomId) {
+            banShowroom(selectedShowroomId);
+        }
         setIsConfirmDialogOpen(false);
     };
 
+    // Sample ratings data
     const ratings = [
         { user: 'John Doe', rating: 4, feedback: 'Great service and friendly staff!' },
         { user: 'Jane Smith', rating: 5, feedback: 'Amazing experience, highly recommend!' },
@@ -59,58 +79,62 @@ const Showroom = ({ value }) => {
 
     return (
         <section className="mb-8 ml-10 mr-10 w-full">
-            <h2 className="text-2xl font-semibold text-[#394A9A] mb-4">Showroom Accounts</h2>
-            {value.map((data) => (
-                <div key={data._id} className="grid grid-cols-1 gap-4 w-full">
-                    <div className="bg-white p-6 my-2 rounded-lg shadow-xl hover:shadow-xl hover:cursor-pointer transition sm:flex justify-between items-center w-full">
-                        <div>
-                            <p className="text-xl font-bold">Showroom name: {data.showroomName}</p>
-                            <p className="text-gray-600">Owner Name: {data.ownerName}</p>
-                            <p className="text-gray-600">Owner CNIC: {data.cnic}</p>
-                            <p className="text-gray-600">Showroom Address: {data.address}</p>
+            <h2 className="text-3xl font-bold text-[#394A9A] mb-6">Showroom Accounts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {value.map((data) => (
+                    <div key={data._id} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <div className="space-y-4">
+                            <p className="text-xl font-bold text-gray-800">Showroom: {data.showroomName}</p>
+                            <p className="text-gray-600">Owner: {data.ownerName}</p>
+                            <p className="text-gray-600">CNIC: {data.cnic}</p>
+                            <p className="text-gray-600">Address: {data.address}</p>
                             <button
-                                className="text-blue-500 underline hover:text-blue-700"
+                                className="flex items-center text-blue-500 hover:text-blue-700 transition-colors duration-200"
                                 onClick={() => setIsRatingsOpen(true)}
                             >
-                                Ratings
+                                <FontAwesomeIcon icon={faStar} className="mr-2" />
+                                View Ratings
                             </button>
                             <p className="text-lg font-semibold">
-                                Status: {status === 'active' ? 'Active' : 'Banned'}
+                                Status:{' '}
+                                <span className={statuses[data._id] === 'active' ? 'text-green-600' : 'text-red-600'}>
+                                    {statuses[data._id] === 'active' ? 'Active' : 'Banned'}
+                                </span>
                             </p>
+                            <button
+                                className={`w-full py-2 rounded-lg text-white font-semibold transition-colors duration-200 ${
+                                    statuses[data._id] === 'active' ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+                                }`}
+                                onClick={() => openConfirmDialog(data._id, statuses[data._id] === 'active' ? 'banned' : 'active')}
+                            >
+                                <FontAwesomeIcon icon={statuses[data._id] === 'active' ? faBan : faCheck} className="mr-2" />
+                                {statuses[data._id] === 'active' ? 'Ban Showroom' : 'Activate Showroom'}
+                            </button>
                         </div>
-                        <button
-                            className={`ml-2 text-white px-4 sm:py-2 rounded-lg transition duration-200 ${
-                                status === 'active'
-                                    ? 'bg-red-500 hover:bg-red-600'
-                                    : 'bg-green-500 hover:bg-green-600'
-                            }`}
-                            onClick={() => banShowroom(data._id)}
-                        >
-                            <FontAwesomeIcon icon={status === 'active' ? faBan : faCheck} />{' '}
-                            {status === 'active' ? 'Ban' : 'Activate'}
-                        </button>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
 
-            {/* Ratings Section */}
+            {/* Ratings Modal */}
             {isRatingsOpen && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-full">
-                        <h3 className="text-xl font-bold mb-4">Showroom Ratings & Feedback</h3>
-                        <div className="max-h-60 overflow-y-auto">
-                            <ul>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-2xl">
+                        <h3 className="text-2xl font-bold mb-6 text-gray-800">Showroom Ratings & Feedback</h3>
+                        <div className="max-h-96 overflow-y-auto pr-4">
+                            <ul className="space-y-4">
                                 {ratings.map((rating, index) => (
-                                    <li key={index} className="mb-4 border-b pb-2">
-                                        <p className="font-semibold">{rating.user}</p>
-                                        <p>Rating: {rating.rating} / 5</p>
-                                        <p className="italic">{rating.feedback}</p>
+                                    <li key={index} className="border-b pb-4">
+                                        <p className="font-semibold text-gray-800">{rating.user}</p>
+                                        <p className="text-yellow-500">
+                                            Rating: {'★'.repeat(rating.rating)}{'☆'.repeat(5 - rating.rating)}
+                                        </p>
+                                        <p className="text-gray-600 italic">"{rating.feedback}"</p>
                                     </li>
                                 ))}
                             </ul>
                         </div>
                         <button
-                            className="mt-4 bg-primary text-white px-4 py-2 rounded-lg transition duration-200"
+                            className="mt-6 w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark transition-colors duration-200"
                             onClick={() => setIsRatingsOpen(false)}
                         >
                             Close
@@ -119,6 +143,7 @@ const Showroom = ({ value }) => {
                 </div>
             )}
 
+            {/* Confirmation Dialog */}
             {isConfirmDialogOpen && (
                 <ConfirmationDialog
                     message={
@@ -132,5 +157,6 @@ const Showroom = ({ value }) => {
             )}
         </section>
     );
-}
+};
+
 export default Showroom;
