@@ -13,7 +13,7 @@ const CarCard = ({ car }) => {
   };
 
   return (
-    <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-64 relative">
+    <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-65 relative">
       <div className="relative">
         <img
           src={`/uploads/${car.images}`}
@@ -122,19 +122,19 @@ const CarCard = ({ car }) => {
               </p>
               <p className="text-gray-700">
                 <strong>Rental Start Date:</strong>{" "}
-                {car.rentalInfo?.rentalStartDate || "12-02-2024"}
+                {car.rentalInfo?.rentalStartDate || ""}
               </p>
               <p className="text-gray-700">
                 <strong>Rental End Date:</strong>{" "}
-                {car.rentalInfo?.rentalEndDate || "12-03-2024"}
+                {car.rentalInfo?.rentalEndDate || ""}
               </p>
               <p className="text-gray-700">
                 <strong>Rental Days:</strong>{" "}
-                {car.rentalInfo?.rentalDays || "2000"}
+                {car.rentalInfo?.rentalDays || ""}
               </p>
               <p className="text-lg font-semibold mt-4">
                 <strong>Total Amount:</strong>{" "}
-                {car.rentalInfo?.totalAmount || "N/A"} Rs
+                {car.rentalInfo?.totalAmount || ""} Rs
               </p>
             </div>
           </div>
