@@ -409,7 +409,6 @@ const UserCard = ({ car }) => {
 </div>
       </div>
     </div>)}
-
     </div>
 
   );

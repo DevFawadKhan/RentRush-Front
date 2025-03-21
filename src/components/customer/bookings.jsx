@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 const Base_Url = import.meta.env.VITE_API_URL;
 
 const UserBookings = () => {
+
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,6 @@ const UserBookings = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBookingDetails, setSelectedBookingDetails] = useState(null); // Track the selected booking for the dialog
   const [progress, setProgress] = useState(0);
-
 useEffect(() => {
   if (selectedBookingDetails) {
     const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime } = selectedBookingDetails;
@@ -91,6 +91,7 @@ useEffect(() => {
 
       if (response.status === 200 && response.data && response.data.length > 0) {
         setBookings(response.data);
+        // console.log("bookings from showrrrom",bookings?.showroomDetails)
         setError("");
       } else if (response.status === 204) {
         setError("You have no active bookings, book a car first.");

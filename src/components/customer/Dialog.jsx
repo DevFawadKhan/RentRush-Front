@@ -75,7 +75,7 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
               {/* Row 1: Booking Details */}
               <tr className="hover:bg-gray-50">
                 <td className="border p-2 font-bold">Booked By</td>
-                <td className="border p-2">{bookingDetails.customerName}</td>
+                <td className="border p-2">{localStorage.getItem("name")}</td>
                 <td className="border p-2 font-bold">Renting Period</td>
                 <td className="border p-2">
                   {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
@@ -117,9 +117,10 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
               {/* Row 6: Additional Car Details */}
               <tr className="hover:bg-gray-50">
                 <td className="border p-2 font-bold">Showroom Name</td>
-                <td className="border p-2">RentRush</td>
+                {console.log(car?.showroomId?.showroomName)}
+                <td className="border p-2">{car?.showroomId?.showroomName}</td>
                 <td className="border p-2 font-bold">Showroom Address</td>
-                <td className="border p-2">DHA 1, Sector C, Street#1, House#4</td>
+                <td className="border p-2">{car?.showroomId?.address}</td>
               </tr>
             </tbody>
           </table>
@@ -129,27 +130,27 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
   );
 };
 
-Dialog.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  car: PropTypes.shape({
-    carBrand: PropTypes.string.isRequired,
-    carModel: PropTypes.string.isRequired,
-    images: PropTypes.arrayOf(PropTypes.string).isRequired,
-    color: PropTypes.string.isRequired,
-    mileage: PropTypes.string.isRequired,
-    transmission: PropTypes.string.isRequired,
-    engineType: PropTypes.string.isRequired,
-    year: PropTypes.string.isRequired,
-    bodyType: PropTypes.string.isRequired,
-    rentRate: PropTypes.string.isRequired,
-  }).isRequired,
-  bookingDetails: PropTypes.shape({
-    customerName: PropTypes.string.isRequired,
-    startDateTime: PropTypes.string.isRequired,
-    endDateTime: PropTypes.string.isRequired,
-  }).isRequired,
-  progress: PropTypes.number.isRequired, // Add progress prop
-};
+// Dialog.propTypes = {
+//   isOpen: PropTypes.bool.isRequired,
+//   onClose: PropTypes.func.isRequired,
+//   car: PropTypes.shape({
+//     carBrand: PropTypes.string.isRequired,
+//     carModel: PropTypes.string.isRequired,
+//     images: PropTypes.arrayOf(PropTypes.string).isRequired,
+//     color: PropTypes.string.isRequired,
+//     mileage: PropTypes.string.isRequired,
+//     transmission: PropTypes.string.isRequired,
+//     engineType: PropTypes.string.isRequired,
+//     year: PropTypes.string.isRequired,
+//     bodyType: PropTypes.string.isRequired,
+//     rentRate: PropTypes.string.isRequired,
+//   }).isRequired,
+//   bookingDetails: PropTypes.shape({
+//     customerName: PropTypes.string.isRequired,
+//     startDateTime: PropTypes.string.isRequired,
+//     endDateTime: PropTypes.string.isRequired,
+//   }).isRequired,
+//   progress: PropTypes.number.isRequired, // Add progress prop
+// };
 
 export default Dialog;
