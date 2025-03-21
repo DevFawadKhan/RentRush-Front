@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CircleGauge, Fuel, GripHorizontal } from "lucide-react";
 
 const CarCard = ({ car }) => {
@@ -83,32 +83,32 @@ const CarCard = ({ car }) => {
             <h2 className="text-2xl font-bold mb-4">Rental Information</h2>
             <p className="text-gray-700">
               <strong>Renter Name:</strong>{" "}
-              {car.rentalInfo?.rentername || "Saira Ramzan"}
+              {car.rentalInfo?.rentername || ""}
             </p>
             <p className="text-gray-700">
-              <strong>Email:</strong> {car.rentalInfo?.renteremail || "sairaramzan17@gmail.com"}
+              <strong>Email:</strong> {car.rentalInfo?.renteremail || ""}
             </p>
             <p className="text-gray-700">
-              <strong>Phone:</strong> {car.rentalInfo?.renterphone || "+92 3125461735"}
+              <strong>Phone:</strong> {car.rentalInfo?.renterphone || ""}
             </p>
             <p className="text-gray-700">
-              <strong>Address:</strong> {car.rentalInfo?.renteraddress || "Misrial Road"}
+              <strong>Address:</strong> {car.rentalInfo?.renteraddress || ""}
             </p>
             <p className="text-gray-700">
               <strong>Rental Start Date:</strong>{" "}
-              {car.rentalInfo?.rentalStartDate || "12-02-2024"}
+              {car.rentalInfo?.rentalStartDate || ""}
             </p>
             <p className="text-gray-700">
               <strong>Rental End Date:</strong>{" "}
-              {car.rentalInfo?.rentalEndDate || "12-03-2024"}
+              {car.rentalInfo?.rentalEndDate || ""}
             </p>
             <p className="text-gray-700">
               <strong>Rental Days: Rs</strong>{" "}
-              {car.rentalInfo?.rentalDays || "2000"}
+              {car.rentalInfo?.rentalDays || ""}
             </p>
             <p className="text-lg font-semibold mt-4">
               <strong>Total Amount:</strong>{" "}
-              {car.rentalInfo?.totalAmount || "N/A"}rs
+              {car.rentalInfo?.totalAmount || ""}Rs
             </p>
           </div>
         </div>
