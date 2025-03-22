@@ -46,7 +46,7 @@ function App() {
             <Route path="/admin/Adminpage" element={<Adminpage />}></Route>
             <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
             <Route path="/customer/CarDetailsScreen/:bookingId" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
-            <Route path="/invoice" element={<Invoice></Invoice>}></Route>
+            <Route path="/customer/invoice" element={<Invoice></Invoice>}></Route>
             
           </Route>
         </Routes>
