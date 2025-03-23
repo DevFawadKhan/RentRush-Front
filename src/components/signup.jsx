@@ -15,14 +15,19 @@ function SignUp() {
   const [cnic, setcnic] = useState('');
   const [address, setaddress] = useState('');
   const [password, setpassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // Add state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(''); // State for password mismatch error
 
   const handleSignup = (e) => {
     e.preventDefault();
 
+    // Reset password error
+    setPasswordError('');
+
     // Check if passwords match
     if (password !== confirmPassword) {
-      Toast("Passwords do not match", "error");
+      setPasswordError("Passwords do not match"); // Set error message
+      Toast("Passwords do not match", "error"); // Show toast notification
       return; // Stop the function if passwords don't match
     }
 
@@ -163,13 +168,22 @@ function SignUp() {
               </label>
               <input
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setPasswordError(''); // Clear error when user types
+                }}
                 type="password"
                 id="confirm-password"
                 placeholder="********"
-                className="shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+                  passwordError ? 'border-red-500' : '' // Add red border if there's an error
+                }`}
                 required
               />
+              {/* Display error message if passwords don't match */}
+              {passwordError && (
+                <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+              )}
             </div>
 
             {/* Centered Sign Up Button */}
