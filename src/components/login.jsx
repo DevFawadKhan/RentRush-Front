@@ -42,7 +42,7 @@ function Login() {
       }
     } catch (error) {
       // Set error message for incorrect username or password
-      setLoginError("The username or password you entered is incorrect. 😊");
+      setLoginError("The username or password you entered is incorrect.");
       Toast(error.response?.data?.message || "An error occurred", "error");
     }
   };
