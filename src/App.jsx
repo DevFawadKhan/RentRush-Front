@@ -15,6 +15,9 @@ import ProtectedLayout from "./auth/protectedRoute.jsx";
 import EditBookingModal from '../src/components/customer/EditBooking.jsx'
 import CarDetailsScreen from '../src/components/customer/CarDetailsScreen.jsx'
 import Invoice from "../src/components/customer/invoice.jsx"
+import ForgotPassword from "./components/ForgotPassword.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
+import ResetConfirmation from "./components/ResetConfirmation.jsx";
 function App() {
   return (
     <>
@@ -24,6 +27,10 @@ function App() {
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/showroom/signup" element={<ShowroomSignUp />}></Route>
           <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+        <Route path="/reset-password" element={<ResetPassword />}></Route>
+        <Route path="/reset-confirmation" element={<ResetConfirmation />}></Route>
 
           {/* Protected Routes */}
           <Route element={<ProtectedLayout />}>

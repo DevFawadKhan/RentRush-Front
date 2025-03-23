@@ -87,8 +87,8 @@ function Login() {
               />
             </div>
             <p className="text-xs py-2 font-bold hover:cursor-pointer hover:text-[#ffffff] text-[#02073F]">
-              Forgot password?
-            </p>
+  <Link to="/forgot-password">Forgot password?</Link>
+</p>
             <div className="flex items-center justify-between">
               <button
                 type="submit"
