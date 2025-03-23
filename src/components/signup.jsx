@@ -176,13 +176,13 @@ function SignUp() {
                 id="confirm-password"
                 placeholder="********"
                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  passwordError ? 'border-red-500' : '' // Add red border if there's an error
+                  passwordError ? 'border-red-700' : '' // Add red border if there's an error
                 }`}
                 required
               />
               {/* Display error message if passwords don't match */}
               {passwordError && (
-                <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+                <p className="text-red-700 text-xs mt-1">{passwordError}</p>
               )}
             </div>
 
