@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import Footer from "./Footer"
+import Navbar from "./Navbar";
 import { FileText, Download, Filter, Search } from "lucide-react";
 
 const Invoice = () => {
@@ -46,6 +48,8 @@ const Invoice = () => {
   });
 
   return (
+    <>
+    <Navbar />
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Invoices</h1>
 
@@ -173,6 +177,8 @@ const Invoice = () => {
         </table>
       </div>
     </div>
+     <Footer />
+     </>
   );
 };
 
