@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { CircleGauge, Fuel, GripHorizontal, Users } from "lucide-react";
+import { useState } from "react";
 
 const CarCard = ({ car }) => {
   const [showModal, setShowModal] = useState(false);
@@ -108,17 +108,18 @@ const CarCard = ({ car }) => {
             <div className="space-y-2">
               <p className="text-gray-700">
                 <strong>Renter Name:</strong>{" "}
-                {car.rentalInfo?.rentername || "N/A"}
+                {car.rentalInfo?.userId?.ownerName || "N/A"}
               </p>
               <p className="text-gray-700">
-                <strong>Email:</strong> {car.rentalInfo?.renteremail || "N/A"}
+                <strong>Email:</strong> {car.rentalInfo?.userId?.email || "N/A"}
               </p>
               <p className="text-gray-700">
-                <strong>Phone:</strong> {car.rentalInfo?.renterphone || "N/A"}
+                <strong>Phone:</strong>{" "}
+                {car.rentalInfo?.userId?.contactNumber || "N/A"}
               </p>
               <p className="text-gray-700">
                 <strong>Address:</strong>{" "}
-                {car.rentalInfo?.renteraddress || "N/A"}
+                {car.rentalInfo?.userId?.address || "N/A"}
               </p>
               <p className="text-gray-700">
                 <strong>Rental Start Date:</strong>{" "}
@@ -130,11 +131,18 @@ const CarCard = ({ car }) => {
               </p>
               <p className="text-gray-700">
                 <strong>Rental Days:</strong>{" "}
-                {car.rentalInfo?.rentalDays || ""}
+                {car.rentalInfo?.rentalStartDate &&
+                car.rentalInfo?.rentalEndDate
+                  ? Math.ceil(
+                      (new Date(car.rentalInfo.rentalEndDate) -
+                        new Date(car.rentalInfo.rentalStartDate)) /
+                        (1000 * 60 * 60 * 24)
+                    )
+                  : ""}
               </p>
               <p className="text-lg font-semibold mt-4">
                 <strong>Total Amount:</strong>{" "}
-                {car.rentalInfo?.totalAmount || ""} Rs
+                {car.rentalInfo?.totalPrice || ""} Rs
               </p>
             </div>
           </div>
