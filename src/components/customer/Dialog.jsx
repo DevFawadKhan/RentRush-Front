@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
+const Dialog = ({ isOpen, onClose, car, bookingDetails, progress,showroom }) => {
   if (!isOpen) return null;
 
   return (
@@ -117,10 +117,10 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress }) => {
               {/* Row 6: Additional Car Details */}
               <tr className="hover:bg-gray-50">
                 <td className="border p-2 font-bold">Showroom Name</td>
-                {console.log(car?.showroomId?.showroomName)}
-                <td className="border p-2">{car?.showroomId?.showroomName}</td>
+              
+                <td className="border p-2">{showroom?.showroomName}</td>
                 <td className="border p-2 font-bold">Showroom Address</td>
-                <td className="border p-2">{car?.showroomId?.address}</td>
+                <td className="border p-2">{showroom?.address}</td>
               </tr>
             </tbody>
           </table>

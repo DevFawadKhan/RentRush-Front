@@ -56,6 +56,12 @@ const UserCard = ({ car }) => {
       console.error("Error occurred during booking:", error);
       console.error("Backend Error Response:", error.response?.data); // Log the backend error response
       setErrorMessage(error.response?.data?.message || "An error occurred");
+     
+    }finally{
+      setRentalStartDate("")
+      setRentalEndDate("")
+      setRentalStartTime("")
+      setRentalEndTime("")
     }
   };
 
@@ -238,8 +244,8 @@ const UserCard = ({ car }) => {
                         </button>
 
                         <h2 className="text-2xl font-bold mb-4 text-center">Book Car Now</h2>
-
-                        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
+{/* 
+                        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>} */}
 
                         <form className="space-y-4" onSubmit={(e)=>e.preventDefault()}>
                             <div className="flex flex-col">
@@ -300,12 +306,12 @@ const UserCard = ({ car }) => {
                             <button  
     onClick={() => {
         if (rentalStartDate && rentalEndDate && rentalEndTime&&rentalStartTime) { // yahan required fields check karo
-          setShowDialog(true);
+          setModelVisible(true);
         } else {
             alert('Please fill all fields');
         }
     }}
-    type="submit"
+    type="button"
     className="bg-primary text-white p-2 rounded-md w-full"
 >
     Confirm Booking
@@ -328,7 +334,6 @@ const UserCard = ({ car }) => {
         >
           &times;
         </button>
-
         {/* Modal Title */}
         <h2 className="text-3xl font-bold text-center mb-4">
           {car.carBrand} {car.carModel}
@@ -344,6 +349,7 @@ const UserCard = ({ car }) => {
               className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
             />
           ))}
+    {errorMessage && <p className="text-red-500 text-center font-bold">{errorMessage}</p>}
         </div>
         {/* Combined Table for Booking and Car Details */}
         <div className="overflow-x-auto">
@@ -402,8 +408,9 @@ const UserCard = ({ car }) => {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-center">
-    <button onClick={handleSubmit} className="text-red-200 text-center bg-black px-2 py-2 mt-3">Confirm booking</button>
+        <div className="flex justify-center gap-10">
+    <button type="submit" onClick={handleSubmit} className="text-white hover:bg-blue-900 text-center bg-blue-600 px-2 py-2 mt-3">Confirm booking</button>
+     <button onClick={()=>setModelVisible(false)} className="text-white bg-red-600 px-2 py-2 mt-3">Cancle Booking</button>
 </div>
       </div>
     </div>)}

@@ -91,7 +91,8 @@ useEffect(() => {
 
       if (response.status === 200 && response.data && response.data.length > 0) {
         setBookings(response.data);
-        // console.log("bookings from showrrrom",bookings?.showroomDetails)
+        console.log("booking from array",response.data);
+        console.log("bookings from showrrrom",selectedBookingDetails?.showroomDetails?.showroomName)
         setError("");
       } else if (response.status === 204) {
         setError("You have no active bookings, book a car first.");
@@ -203,23 +204,8 @@ BookingStartDate.setSeconds(0);
                     <p className="text-gray-500">{booking.carDetails.carType}</p>
                   </div>
                   {/* this will change  */}
-                  <div className="text-red-500">
-                    <button onClick={() => openDialog(booking)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M17.25 6.75l-6.75 6.75m0 0l-6.75-6.75m6.75 6.75v11.25"
-                        />
-                      </svg>
-                    </button>
+                  <div className="text-blue-400 font-bold">
+                    <button onClick={() => openDialog(booking)}>View Details</button>
                   </div>
                 </div>
                 <img
@@ -376,10 +362,12 @@ BookingStartDate.setSeconds(0);
     isOpen={isDialogOpen}
     onClose={closeDialog}
     car={selectedBookingDetails.carDetails}
+    showroom={selectedBookingDetails.showroomDetails}
     bookingDetails={{
       customerName: selectedBookingDetails.customerName,
       startDateTime: selectedBookingDetails.rentalStartDate,
       endDateTime: selectedBookingDetails.rentalEndDate,
+      
     }}
     progress={progress} // Pass the progress state
   />
@@ -389,145 +377,3 @@ BookingStartDate.setSeconds(0);
 };
 
 export default UserBookings;
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import Navbar from "./Navbar";
-// import EditBookingModal from "./EditBooking";
-
-// const Base_Url = import.meta.env.VITE_API_URL;
-
-// const UserBookings = () => {
-//   const [bookings, setBookings] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [selectedBooking, setSelectedBooking] = useState(null);
-
-//     const fetchBookings = async () => {
-//       setLoading(true); // Set loading to true when starting the fetch
-//       try {
-//         const response = await axios.get(`${Base_Url}/api/bookcar/my-bookings`, {
-//           withCredentials: true,
-//         });
-
-//         // Handle successful response
-//         if (response.status === 200) {
-//           if (response.data.length === 0) {
-//             setError("You have no active bookings, book a car first.");
-//             setBookings([]); // Ensure bookings state is empty
-//           } else {
-//             setBookings(response.data);
-//             setError(""); // Clear any previous error
-//           }
-//         } else if (response.status === 204) {
-//           // No content but successful request
-//           setError("You have no active bookings, book a car first.");
-//           setBookings([]); // No bookings
-//         }
-//       } catch (err) {
-//         // General error handling
-//         if (err.response) {
-//           // Server responded with a status code out of the 2xx range
-//           if (err.response.status === 404) {
-//             setError("You have no active bookings, book a car first."); // Specific message for 404
-//           } else {
-//             setError("Server error. Please try again later."); // Handle other server errors
-//           }
-//         } else if (err.request) {
-//           // No response received
-//           setError("API is not working, failed to fetch bookings.");
-//         } else {
-//           // Other unexpected errors
-//           setError("Failed to fetch bookings.");
-//         }
-//       } finally {
-//         setLoading(false); // Set loading to false after the fetch is complete
-//       }
-//     };
-
-//     useEffect(() => {
-//       fetchBookings();
-//     }, []);
-
-//     if (loading) {
-//       return <div>Loading...</div>;
-//     }
-
-//     if (error) {
-//       return <div>{error}</div>;
-//     }
-
-//     return (
-//       <div>
-//         <Navbar />
-//         <div className="px-10">
-//           <h2 className="flex justify-center items-center text-2xl font-bold my-4">
-//             Your Bookings
-//           </h2>
-//           {bookings.length === 0 ? (
-//             <p>No active bookings found.</p>
-//           ) : (
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-60">
-//               {bookings.map((booking) => (
-//                 <div
-//                   key={booking._id}
-//                   className="bg-white shadow-md rounded-lg p-4"
-//                 >
-//                   <img
-//                     src={`/uploads/${booking.carDetails.images}`}
-//                     alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
-//                     className="w-full h-60 rounded"
-//                   />
-//                   <p>
-//                     <strong>Car Brand:</strong> {booking.carDetails.carBrand}{" "}
-//                     {/* Adjusted to match your schema */}
-//                   </p>
-//                   <p>
-//                     <strong>Car Model:</strong> {booking.carDetails.carModel}{" "}
-//                     {/* Adjusted to match your schema */}
-//                   </p>
-//                   <p>
-//                     <strong>Daily Rent:</strong> {booking.carDetails.rentRate}{" "}
-//                     Rs/- {/* Adjusted to match your schema */}
-//                   </p>
-//                   <p>
-//                     <strong>Rental Start:</strong>{" "}
-//                     {new Date(booking.rentalStartDate).toLocaleString()}
-//                   </p>
-//                   <p>
-//                     <strong>Rental Start Time:</strong> {booking.rentalStartTime}
-//                   </p>
-//                   <p>
-//                     <strong>Rental End:</strong>{" "}
-//                     {new Date(booking.rentalEndDate).toLocaleString()}
-//                   </p>
-//                   <p>
-//                     <strong>Rental End Time:</strong> {booking.rentalEndTime}
-//                   </p>
-//                   <p>
-//                     <strong>Total Price:</strong> {booking.totalPrice} Rs/-
-//                   </p>
-//                   <div className="bottom-4 right-4 space-x-4 my-5">
-//                 <button className="bg-green-600 text-white py-2 px-4 rounded">
-//                   Edit Details
-//                 </button>
-//                 <button className="bg-red-600 text-white py-2 px-4 rounded">
-//                   Cancel Booking
-//                 </button>
-//               </div>
-//                 </div>
-
-//               ))}
-
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     );
-//   };
-
-//   export default UserBookings;
