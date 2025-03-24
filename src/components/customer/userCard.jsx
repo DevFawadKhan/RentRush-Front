@@ -18,7 +18,6 @@ const UserCard = ({ car }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
-
     try {
       const response = await axios.post(
         `${Base_Url}/api/bookcar/book`,
@@ -32,10 +31,8 @@ const UserCard = ({ car }) => {
         },
         { withCredentials: true }
       );
-
       console.log("Response received:", response.data);
       Toast(response.data.message);
-
       const invoiceUrl = response.data.invoiceUrl;
       setModelVisible(false)
       if (invoiceUrl) {
@@ -87,6 +84,7 @@ const UserCard = ({ car }) => {
   }, [ShowDialog]);  
 
   return (
+    <>
     <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-64 relative">
       <div className="relative">
       {/* <h1 className="list-none cursor-pointer font-bold text-[20px] text-[#00004b]">RentRush Cars</h1> */}
@@ -410,7 +408,7 @@ const UserCard = ({ car }) => {
       </div>
     </div>)}
     </div>
-
+</>
   );
 };
 
