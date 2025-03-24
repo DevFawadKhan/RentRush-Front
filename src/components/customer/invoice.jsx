@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-const Base_Url = import.meta.env.VITE_API_URL;
+import React, { useState } from "react";
 const Invoice = () => {
   const [fileUrl, setFileUrl] = useState('');
   useEffect(() => {
@@ -23,8 +21,8 @@ const Invoice = () => {
     window.open(url, '_blank');
   };
   return (
-    <div>
-      <h2>Invoice</h2>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Invoices</h1>
 
       {fileUrl && (
         <button onClick={() => openPDF(fileUrl)}>View Invoice</button>
