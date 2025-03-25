@@ -8,13 +8,15 @@ function ShowroomNavbar() {
         {/* Logo */}
         <div className="flex items-center">
           <Link to="/showroom/inventory">
-          <img
-    src="/src/assets/logo.png"
-    alt="Logo"
-    className="-my-3 h-[100px] mr-2"
-  />
+            <img
+              src="/src/assets/logo.png"
+              alt="Logo"
+              className="-my-3 h-[100px] mr-2"
+            />
           </Link>
-  <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">RentRush</h1>
+          <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
+            RentRush
+          </h1>
         </div>
 
         {/* Center Navigation Links */}
@@ -46,7 +48,6 @@ function ShowroomNavbar() {
         >
           Logout
         </Link>
-        
       </div>
     </nav>
   );

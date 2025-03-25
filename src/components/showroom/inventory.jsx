@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ShowroomNavbar from "./showroomNavbar";
 import Drawer from "./drawer";
 import Dialog from "./dialog";
@@ -51,7 +51,7 @@ function ShowroomInventory() {
   const handleSave = async (data) => {
     try {
       const formData = new FormData();
-  
+
       // Add non-file fields
       formData.append("carBrand", data.make);
       formData.append("rentRate", data.rentalPrice);
@@ -65,24 +65,24 @@ function ShowroomInventory() {
       formData.append("seatCapacity", data.seatCapacity); // New field
       formData.append("luggageCapacity", data.luggageCapacity); // New field
       formData.append("fuelType", data.fuelType); // Corrected field name
-  
+
       // Add car features if needed
       if (data.carFeatures) {
         formData.append("carFeatures", data.carFeatures);
       }
-  
+
       // Add images
       if (Array.isArray(data.images) && data.images.length > 0) {
         data.images.forEach((image) => {
           if (image) formData.append("images", image); // Append the actual image file
         });
       }
-  
+
       if (isEditing) {
         const response = await axios.put(
           `${Base_Url}/api/car/update/${vehicles[vehicleToEdit]?._id}`,
           formData,
-          { withCredentials: true }
+          { withCredentials: true },
         );
         fetchVehicles();
         Toast(response.data.message, "success");
@@ -121,7 +121,7 @@ function ShowroomInventory() {
     // setVehicles(updatedVehicles);
     const response = await axios.delete(
       `${Base_Url}/api/car/delete/${vehicleToDelete}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     Toast(response.data, "success");
     fetchVehicles();
@@ -269,7 +269,6 @@ function ShowroomInventory() {
           </table>
         </div>
       </div>
-
 
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
 
