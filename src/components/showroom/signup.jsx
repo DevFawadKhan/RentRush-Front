@@ -88,9 +88,15 @@ function ShowroomSignUp() {
       <div className="flex items-center justify-center background min-h-screen py-16">
         <div className="w-screen h-fit max-w-lg p-5 bg-gray-300 backdrop-blur-lg bg-white/30 border border-white/10 rounded-3xl shadow-lg">
           <div className="flex justify-center">
-            <img src="/src/assets/logo.png" className="-ml-4 w-[150px]" alt="Logo" />
+            <img
+              src="/src/assets/logo.png"
+              className="-ml-4 w-[150px]"
+              alt="Logo"
+            />
           </div>
-          <h2 className="text-3xl font-bold text-[#02073F] text-center mb-4">Register Showroom</h2>
+          <h2 className="text-3xl font-bold text-[#02073F] text-center mb-4">
+            Register Showroom
+          </h2>
 
           <form onSubmit={Handlesubmit} className="rounded mb-4">
             {/* Image Upload */}
@@ -106,7 +112,9 @@ function ShowroomSignUp() {
                     className="w-28 h-28 object-cover rounded-full border-4 border-gray-300 shadow-md"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full">
-                    <span className="text-white text-sm font-semibold">Showroom Logo</span>
+                    <span className="text-white text-sm font-semibold">
+                      Showroom Logo
+                    </span>
                   </div>
                 </div>
               </div>
@@ -236,7 +244,9 @@ function ShowroomSignUp() {
                       required
                     />
                     {passwordError && (
-                      <p className="text-red-900 text-xs mt-1">{passwordError}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {passwordError}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -257,7 +267,10 @@ function ShowroomSignUp() {
           {/* Redirect to Login */}
           <p className="mt-4 text-center text-[#02073F] text-xs">
             Already have an account?{" "}
-            <Link to="/login" className="text-[#02073F] font-bold hover:text-[#ffffff]">
+            <Link
+              to="/login"
+              className="text-[#02073F] font-bold hover:text-[#ffffff]"
+            >
               Log In
             </Link>
           </p>

@@ -17,7 +17,7 @@ const ShowroomDashboard = () => {
       });
       setCars(response.data); // Set the fetched data to vehicles state
       const hasRentedCars = response.data.some(
-        (car) => car.availability === "Rented Out"
+        (car) => car.availability === "Rented Out",
       );
       setActiveTab(hasRentedCars ? "Rented Out" : "Available");
     } catch (err) {
@@ -81,7 +81,6 @@ const ShowroomDashboard = () => {
       </div>
 
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
-
     </>
   );
 };
