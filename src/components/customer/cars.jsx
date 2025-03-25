@@ -30,8 +30,7 @@ const Cars = () => {
     fetchVehicles();
   },[setCars]);
   // Filter cars based on dropdown and search input
-  const filteredCars = cars
-    .filter((car) =>
+  const filteredCars = cars.filter((car) =>
       `${car.carBrand} ${car.carModel} ${car.color}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
