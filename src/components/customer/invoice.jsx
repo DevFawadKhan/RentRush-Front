@@ -1,3 +1,72 @@
+// import React, { useState,useEffect } from "react";
+// import axios from "axios";
+// const Base_Url = import.meta.env.VITE_API_URL;
+// import {Link} from 'react-router-dom'
+// const Invoice = () => {
+//   const [invoices, setInvoices] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
+//   useEffect(() => {
+//     const fetchInvoices = async () => {
+//       setLoading(true);
+//       console.log("Base_Url being used:", Base_Url); // Debug
+//       try {
+//         const response = await axios.get(${Base_Url}/api/getinvoice, {
+//           withCredentials: true,
+//         });
+//         console.log("Fetched Invoices:", response.data.data);
+//         setInvoices(response.data.data);
+//       } catch (error) {
+//         console.error("Error fetching invoices:", error);
+//         setError(error.response?.data?.message || "Failed to fetch invoices");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchInvoices();
+//   }, []);
+//   const openPDF = (url) => {
+//     window.open(url, '_blank');
+//   };
+//  return (
+//     <div className="p-6 bg-gray-50 min-h-screen">
+//       <h1 className="text-2xl font-bold text-gray-800 mb-6">My Invoices</h1>
+//       <Link  to="/customer/Dashboard"><button className="bg-blue-600 text-white font-serif px-2 py-2 m-3">Home page</button></Link>
+//       {loading && <p>Loading invoices...</p>}
+//       {error && <p className="text-red-500">{error}</p>}
+//       {invoices.length === 0 && !loading && !error && <p>No invoices found.</p>}
+//       <div className="space-y-4">
+//         {invoices.map((invoice) => (
+//           <div
+//             key={invoice.bookingId}
+//             className="border p-4 rounded-lg bg-white shadow-md flex justify-between items-center"
+//           >
+//             <div>
+//               <p>
+//                 <strong>Booking ID:</strong> {invoice.bookingId}
+//               </p>
+//               <p>
+//                 <strong>Invoice:</strong> {invoice.invoiceUrl.split("/").pop()}
+//               </p>
+//             </div>
+//             <div className="space-x-2">
+//               <button
+//                 onClick={() => openPDF(invoice.invoiceUrl)}
+//                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+//               >
+//                 View
+//               </button>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Invoice;
+
+
 import React, { useState } from 'react';
 import { FiDownload, FiEye, FiFilter, FiPrinter, FiSearch } from 'react-icons/fi';
 import Footer from "./Footer";
@@ -32,7 +101,7 @@ const InvoiceDashboard = () => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'Pkr',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
@@ -118,7 +187,7 @@ const InvoiceDashboard = () => {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Car Name</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
