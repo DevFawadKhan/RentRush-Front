@@ -17,6 +17,8 @@ const Showrooms = () => {
     try {
       const response = await axios.get(`${Base_Url}/api/admin/adminview`);
       setData(response.data.showroomSection);
+      console.log("showroom",response.data.showroomSection)
+      console.log("data",data)
     } catch (error) {
       setError(error.message);
       console.error("Error fetching data:", error.message);

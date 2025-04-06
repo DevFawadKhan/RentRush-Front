@@ -136,7 +136,7 @@ const CarCard = ({ car }) => {
                   ? Math.ceil(
                       (new Date(car.rentalInfo.rentalEndDate) -
                         new Date(car.rentalInfo.rentalStartDate)) /
-                        (1000 * 60 * 60 * 24)
+                        (1000 * 60 * 60 * 24),
                     )
                   : ""}
               </p>
