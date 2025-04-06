@@ -82,7 +82,6 @@ const UserCard = ({ car }) => {
   };
   // USEFFECT FOR  OPEN DIALOG DETAILS
   useEffect(() => {
-    console.log("ShowDialog value:", ShowDialog);
     if (ShowDialog) {
       console.log("Opening dialog");
       setModelVisible(true);
@@ -130,14 +129,15 @@ const UserCard = ({ car }) => {
             View Details
           </button>
         </div>
-
         <div className="flex justify-between items-center pb-4">
-          <button
+          {
+          car?.availability==="Available"? <button
             onClick={openBookingModal}
             className="bg-primary text-white p-2 rounded-md"
           >
             Book Now
-          </button>
+          </button>:<button className="bg-red-700 text-white p-2 rounded-md">RentOut</button>
+          }
         </div>
       </div>
 
@@ -161,14 +161,6 @@ const UserCard = ({ car }) => {
       {/* Car Name */}
       <h2 className="text-3xl font-bold text-center mb-4">{car.name}</h2>
 
-      {/* Main Car Image */}
-      {/* { <div className="flex justify-center mb-6">
-        <img
-          src={`Rentrush-frontend/Public/uploads/${car.images}`}
-          alt={car.name}
-          className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md"
-        />
-      </div>} */}
 
       { <div className="flex justify-center gap-3 mb-6 flex-wrap">
         {car.images?.length > 0
