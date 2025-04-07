@@ -108,16 +108,23 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, progress,showroom }) => 
 
               {/* Row 5: Additional Car Details */}
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Body Type</td>
-                <td className="border p-2">{car.bodyType}</td>
-                <td className="border p-2 font-bold">Price</td>
-                <td className="border p-2 font-bold">{car.rentRate} rs/Day</td>
+                <td className="border p-2 font-bold">Fuel Type</td>
+                <td className="border p-2">{car.fuelType}</td>
+                <td className="border p-2 font-bold">Seat Capacity</td>
+                <td className="border p-2">{car.seatCapacity}</td>
               </tr>
 
               {/* Row 6: Additional Car Details */}
               <tr className="hover:bg-gray-50">
+                <td className="border p-2 font-bold">Body Type</td>
+                <td className="border p-2">{car.bodyType}</td>
+                <td className="border p-2 font-bold">Price</td>
+                <td className="border p-2 font-bold">{car.rentRate} Rs/Day</td>
+              </tr>
+
+              {/* Row 7: Additional Car Details */}
+              <tr className="hover:bg-gray-50">
                 <td className="border p-2 font-bold">Showroom Name</td>
-              
                 <td className="border p-2">{showroom?.showroomName}</td>
                 <td className="border p-2 font-bold">Showroom Address</td>
                 <td className="border p-2">{showroom?.address}</td>
