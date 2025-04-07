@@ -111,7 +111,7 @@ const UserCard = ({ car }) => {
           </div>
           <div className="flex flex-col items-center">
             <Fuel />
-            <h1 className="text-gray-500"> Petrol</h1>
+            <h1 className="text-gray-500"> </h1>
             <span className="text-gray-500">{car.fuelType}</span>
           </div>
           <div className="flex flex-col items-center">
