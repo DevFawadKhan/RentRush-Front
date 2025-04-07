@@ -401,7 +401,7 @@ const UserCard = ({ car }) => {
         </div>
         <div className="flex justify-center gap-10">
     <button type="submit" onClick={handleSubmit} className="text-white hover:bg-blue-900 text-center bg-blue-600 px-2 py-2 mt-3">Confirm booking</button>
-     <button onClick={()=>setModelVisible(false)} className="text-white bg-red-600 px-2 py-2 mt-3">Cancle Booking</button>
+     <button onClick={()=>setModelVisible(false)} className="text-white bg-red-600 px-2 py-2 mt-3">Cancle</button>
 </div>
       </div>
     </div>)}
@@ -411,4 +411,3 @@ const UserCard = ({ car }) => {
 };
 
 export default UserCard;
-
