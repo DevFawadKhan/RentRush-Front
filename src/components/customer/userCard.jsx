@@ -120,7 +120,7 @@ const UserCard = ({ car }) => {
           </div>
         </div>
         <div className="flex justify-between items-center pb-4">
-          <span className="text-xl font-bold">{car.rentRate}rs/Day</span>
+          <span className="text-xl font-bold">{car.rentRate}Rs/Day</span>
           <button
             onClick={openDetailsModal}
             className="text-blue-600 hover:underline"
@@ -183,7 +183,7 @@ const UserCard = ({ car }) => {
 
       {/* Car Details Table */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border text-sm">
+        <table className="w-full border-collapse border text-20px">
           <tbody>
             <tr className="hover:bg-gray-50">
               <td className="border p-2 font-bold">Model</td>
@@ -212,6 +212,18 @@ const UserCard = ({ car }) => {
             <tr className="hover:bg-gray-50">
               <td className="border p-2 font-bold">Registration Year</td>
               <td className="border p-2">{car.year || "N/A"}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Seat Capacity</td>
+              <td className="border p-2">{car.seatCapacity} </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Luggage Capacity</td>
+              <td className="border p-2">{car.luggageCapacity} </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Fuel Type</td>
+              <td className="border p-2">{car.fuelType} </td>
             </tr>
             <tr className="hover:bg-gray-50">
               <td className="border p-2 font-bold">Price</td>
