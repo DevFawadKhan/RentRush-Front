@@ -14,7 +14,6 @@ const UserCard = ({ car }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [ShowDialog, setShowDialog] = useState(false)
   const [ModelVisible, setModelVisible] = useState(false)
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
@@ -101,10 +100,10 @@ const UserCard = ({ car }) => {
       </div>
 
       <div className="p-4">
-        <h3 className="font-bold text-lg gap-4">{car.name}</h3>
-        <button className="text-gray-900 hover:underline">
-          {car.carBrand} {car.carModel}
-        </button>
+      <div className="flex justify-between">
+      <button className="text-gray-900 font-bold hover:underline">{car.carBrand} {car.carModel}</button>
+      <h3 className="font-bold text-lg">{car.userId?.showroomName}</h3>
+        </div>
         <div className="grid grid-cols-3 gap-4 text-sm text-black my-2">
           <div className="flex flex-col items-center">
             <CircleGauge />
