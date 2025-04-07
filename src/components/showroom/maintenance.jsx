@@ -1,160 +1,93 @@
-/*import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ShowroomNavbar from "./showroomNavbar";
+import axios from "axios";
+import Toast from "../Toast";
+import CarCard from "./carCard";
+import CarMaintenanceChecklist from "./CarMaintenanceChecklist";
+import MarkCompleteMaintenance from "./MarkCompleteMaintenance";
+const Base_Url = import.meta.env.VITE_API_URL;
 
-function Maintenance() { 
-  const [checkedParts, setCheckedParts] = useState({
-    engine: false,
-    tyres: false,
-    brakes: false,
-    oil: false,
-    airFilter: false,
-    coolant: false,
-    lights: false,
-    wipers: false,
-  });
+const CarMaintenancePage = () => {
+  const [maintenanceSelectedCar, setMaintenanceSelectedCar] = useState(null);
+  const [completeMaintenanceSelectedCar, setCompleteMaintenanceSelectedCar] =
+    useState(null);
+  const [cars, setCars] = useState(null);
 
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setCheckedParts((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }));
+  const fetchVehicles = async () => {
+    try {
+      const response = await axios.get(
+        `${Base_Url}/api/car/get-all-return-cars`,
+        {
+          withCredentials: true,
+        }
+      );
+      setCars(response.data); // Set the fetched data to vehicles state
+    } catch (err) {
+      console.log(err);
+      Toast(err.data || err.message || "Something went wrong", "error");
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Selected Maintenance Parts:", checkedParts);
+  useEffect(() => {
+    try {
+      fetchVehicles();
+    } catch (error) {
+      console.error("Error fetching vehicles:", error);
+      Toast("Failed to fetch vehicles", "error");
+    }
+  }, []);
+
+  const handleMaintenanceCarSelect = (car) => {
+    setMaintenanceSelectedCar(car);
   };
 
-  return (
-    <>
-    <ShowroomNavbar/>
-    <div className="bg-opacity-70 bg-gray-500 backdrop-blur-lg w-full h-full flex justify-center items-center">
-      <div className="mt-10 mb-10 bg-[#0B132A] text-white w-[500px] p-6 rounded-xl shadow-xl min-h-[60vh] text-center">
-        <h2 className="text-2xl font-semibold mb-4">Car Maintenance Checklist</h2>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-start">
-          {Object.keys(checkedParts).map((part) => (
-            <div key={part} className="flex items-center gap-4 bg-[#2C2C2C] p-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#C17D3C] w-full hover:scale-105">
-              <input
-                type="checkbox"
-                name={part}
-                checked={checkedParts[part]}
-                onChange={handleCheckboxChange}
-                id={part}
-                className="w-4 h-4 border-2 border-[#C17D3C] rounded-md transition-transform duration-200 checked:bg-[#C17D3C] transform hover:scale-110"
-              />
-              <label htmlFor={part} className="text-lg cursor-pointer">
-                {part.charAt(0).toUpperCase() + part.slice(1)}
-              </label>
-            </div>
-          ))}
-          <button type="submit" className="mt-4 py-2 px-4 bg-[#C17D3C] text-white rounded-lg text-sm w-24 hover:scale-105 transition-all duration-200">
-            Submit
-          </button>
-        </form>
-      </div>
-    </div></>
-  );
-}
-
-export default Maintenance;*/
-import React, { useState } from "react";
-import ShowroomNavbar from "./showroomNavbar";
-
-function Maintenance() {
-  const [checkedParts, setCheckedParts] = useState({
-    engine: false,
-    tyres: false,
-    brakes: false,
-    oil: false,
-    airFilter: false,
-    coolant: false,
-    lights: false,
-    wipers: false,
-  });
-
-  const [showPopup, setShowPopup] = useState(false);
-
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setCheckedParts((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }));
+  const handleCompleteMaintenanceCarSelect = (car) => {
+    setCompleteMaintenanceSelectedCar(car);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Selected Maintenance Parts:", checkedParts);
-    setShowPopup(true); // Show popup after submission
+  const handleCloseCompleteMaintenanceSelectedCar = () => {
+    setMaintenanceSelectedCar(null);
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false); // Close the popup
+  const handleCloseChecklist = () => {
+    setMaintenanceSelectedCar(null);
   };
 
   return (
     <>
       <ShowroomNavbar />
-      <div className="bg-opacity-70 bg-gray-500 backdrop-blur-lg w-full h-screen flex justify-center items-center">
-        <div className="bg-[#0B132A] text-white w-[500px] p-6 rounded-xl shadow-xl min-h-[60vh] text-center">
-          <h2 className="text-2xl font-semibold mb-4">
-            Car Maintenance Checklist
-          </h2>
-
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4 items-start"
-          >
-            {Object.keys(checkedParts).map((part) => (
-              <div
-                key={part}
-                className="flex items-center gap-4 bg-[#2C2C2C] p-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#C17D3C] w-full hover:scale-105"
-              >
-                <input
-                  type="checkbox"
-                  name={part}
-                  checked={checkedParts[part]}
-                  onChange={handleCheckboxChange}
-                  id={part}
-                  className="w-4 h-4 border-2 border-[#C17D3C] rounded-md transition-transform duration-200 checked:bg-[#C17D3C] transform hover:scale-110"
-                />
-                <label htmlFor={part} className="text-lg cursor-pointer">
-                  {part.charAt(0).toUpperCase() + part.slice(1)}
-                </label>
-              </div>
-            ))}
-            <button
-              type="submit"
-              className="mt-4 py-2 px-4 bg-[#C17D3C] text-white rounded-lg text-sm w-24 hover:scale-105 transition-all duration-200"
+      <div className="p-8 bg-[#F9FAFB] min-h-screen">
+        <h2 className="text-3xl font-bold text-center mb-8 text-[#0B132A]">
+          Select a Car for Maintenance
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+          {cars?.map((car) => (
+            <div
+              key={car._id}
+              onClick={() =>
+                car.availability === "Pending Return"
+                  ? handleMaintenanceCarSelect(car)
+                  : handleCompleteMaintenanceCarSelect(car)
+              }
+              className="cursor-pointer"
             >
-              Submit
-            </button>
-          </form>
+              <CarCard car={car} />
+            </div>
+          ))}
         </div>
 
-        {/* Popup Message */}
-        {showPopup && (
-          <div className="fixed inset-0 flex justify-center items-center z-50 bg-opacity-50 bg-gray-800">
-            <div className="bg-white text-[#0B132A] p-8 rounded-lg shadow-xl w-[400px] max-w-full space-y-4">
-              <h3 className="text-2xl font-semibold">Maintenance Successful</h3>
-              <p className="text-lg text-gray-600">
-                The selected parts have been successfully marked for
-                maintenance. Thank you for your submission!
-              </p>
-              <button
-                onClick={handleClosePopup}
-                className="mt-4 py-2 px-6 bg-[#C17D3C] text-white rounded-lg transition-all duration-200 hover:bg-[#a96a33]"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+        {maintenanceSelectedCar && (
+          <CarMaintenanceChecklist
+            car={maintenanceSelectedCar}
+            onClose={handleCloseChecklist}
+          />
+        )}
+        {completeMaintenanceSelectedCar && (
+          <MarkCompleteMaintenance onClose={handleCloseChecklist} />
         )}
       </div>
     </>
   );
-}
+};
 
-export default Maintenance;
+export default CarMaintenancePage;
