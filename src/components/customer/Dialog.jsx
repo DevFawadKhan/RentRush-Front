@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import { useState, useEffect } from 'react';
 import { FiClock, FiCheckCircle, FiAlertTriangle, FiX } from 'react-icons/fi';
 
@@ -158,55 +158,76 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border text-sm">
             <tbody>
+            <tr className="hover:bg-gray-50 border-t">
+    <td className="p-3 font-bold">Booked By</td>
+    <td className="p-3" colSpan={3}>{localStorage.getItem("name")}</td>
+  </tr>
+
+  <tr className="hover:bg-gray-50 border-t">
+    <td className="p-3 font-bold">Renting Period</td>
+    <td className="p-3" colSpan={3}>
+      {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
+    </td>
+  </tr>
+
+  <tr className="hover:bg-gray-50 border-t">
+    <td className="p-3 font-bold">Time Slot</td>
+    <td className="p-3" colSpan={3}>
+      {bookingDetails.startTime} - {bookingDetails.endTime}
+    </td>
+  </tr>
+
+  <tr className="hover:bg-gray-50 border-t">
+    <td className="p-3 font-bold">Total Duration</td>
+    <td className="p-3 font-medium text-blue-700">
+      {bookingDetails.totalDays} Day(s)
+    </td>
+    <td className="p-3 font-medium text-blue-700">
+      {bookingDetails.totalHours} Hour(s)
+    </td>
+    <td className="p-3"></td>
+  </tr>
+
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Booked By</td>
-                <td className="border p-2">{localStorage.getItem("name")}</td>
-                <td className="border p-2 font-bold">Renting Period</td>
-                <td className="border p-2">
-                  {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
-                </td>
+                <td className="border p-3 font-bold">Car Model</td>
+                <td className="border p-3">{car.carModel}</td>
+                <td className="border p-3 font-bold">Color</td>
+                <td className="border p-3">{car.color}</td>
               </tr>
 
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Car Model</td>
-                <td className="border p-2">{car.carModel}</td>
-                <td className="border p-2 font-bold">Color</td>
-                <td className="border p-2">{car.color}</td>
+                <td className="border p-3 font-bold">Mileage</td>
+                <td className="border p-3">{car.mileage} miles</td>
+                <td className="border p-3 font-bold">Transmission</td>
+                <td className="border p-3">{car.transmission}</td>
               </tr>
 
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Mileage</td>
-                <td className="border p-2">{car.mileage} miles</td>
-                <td className="border p-2 font-bold">Transmission</td>
-                <td className="border p-2">{car.transmission}</td>
+                <td className="border p-3 font-bold">Engine Type</td>
+                <td className="border p-3">{car.engineType}</td>
+                <td className="border p-3 font-bold">Registration Year</td>
+                <td className="border p-3">{car.year}</td>
               </tr>
 
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Engine Type</td>
-                <td className="border p-2">{car.engineType}</td>
-                <td className="border p-2 font-bold">Registration Year</td>
-                <td className="border p-2">{car.year}</td>
+                <td className="border p-3 font-bold">Fuel Type</td>
+                <td className="border p-3">{car.fuelType}</td>
+                <td className="border p-3 font-bold">Seat Capacity</td>
+                <td className="border p-3">{car.seatCapacity}</td>
               </tr>
 
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Fuel Type</td>
-                <td className="border p-2">{car.fuelType}</td>
-                <td className="border p-2 font-bold">Seat Capacity</td>
-                <td className="border p-2">{car.seatCapacity}</td>
+                <td className="border p-3 font-bold">Body Type</td>
+                <td className="border p-3">{car.bodyType}</td>
+                <td className="border p-3 font-bold">Price</td>
+                <td className="border p-3 font-bold">{car.rentRate} Rs/Day</td>
               </tr>
 
               <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Body Type</td>
-                <td className="border p-2">{car.bodyType}</td>
-                <td className="border p-2 font-bold">Price</td>
-                <td className="border p-2 font-bold">{car.rentRate} Rs/Day</td>
-              </tr>
-
-              <tr className="hover:bg-gray-50">
-                <td className="border p-2 font-bold">Showroom Name</td>
-                <td className="border p-2">{showroom?.showroomName}</td>
-                <td className="border p-2 font-bold">Showroom Address</td>
-                <td className="border p-2">{showroom?.address}</td>
+                <td className="border p-3 font-bold">Showroom Name</td>
+                <td className="border p-3">{showroom?.showroomName}</td>
+                <td className="border p-3 font-bold">Showroom Address</td>
+                <td className="border p-3">{showroom?.address}</td>
               </tr>
             </tbody>
           </table>
