@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FiClock, FiCheckCircle, FiAlertTriangle, FiX } from 'react-icons/fi';
 
 const BookingProgressBar = ({ startTime, endTime }) => {
