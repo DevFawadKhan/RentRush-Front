@@ -183,6 +183,8 @@ const UserBookings = () => {
         toast(response.data.message, "success");
       }
       console.log("Response return car", response.data.message);
+
+      fetchBookings();
     } catch (error) {
       console.log("ERROR IN RETURN CAR", error.response.data.message);
     }
@@ -308,7 +310,11 @@ const UserBookings = () => {
                     </p>
                     <div className="space-x-12">
                       {/* Return car button based on EndDate and time */}
-                      {currentDate === booking?.EndDate ? (
+                      {booking?.status === "returned" ? (
+                        <p className="text-green-600 font-bold">Completed</p>
+                      ) : booking?.status === "return initiated" ? (
+                        <p className="text-red-600 font-bold">Pending Return</p>
+                      ) : currentDate === booking?.EndDate ? (
                         <button
                           onClick={() => ReturnCar(booking._id)}
                           className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg"

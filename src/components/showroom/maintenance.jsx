@@ -47,10 +47,12 @@ const CarMaintenancePage = () => {
 
   const handleCloseCompleteMaintenanceSelectedCar = () => {
     setCompleteMaintenanceSelectedCar(null);
+    fetchVehicles();
   };
 
   const handleCloseChecklist = () => {
     setMaintenanceSelectedCar(null);
+    fetchVehicles();
   };
 
   return (

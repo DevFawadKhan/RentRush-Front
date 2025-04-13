@@ -4,7 +4,7 @@ import axios from "axios";
 import Toast from "../Toast";
 const Base_Url = import.meta.env.VITE_API_URL;
 
-const UserCard = ({ car }) => {
+const UserCard = ({ car, handleRefetch }) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [rentalStartDate, setRentalStartDate] = useState("");
@@ -52,6 +52,7 @@ const UserCard = ({ car }) => {
       }
   
       closeBookingModal();
+      handleRefetch(); 
     } catch (error) {
       console.error("Error occurred during booking:", error);
       console.error("Backend Error Response:", error.response?.data); // Log the backend error response
@@ -136,7 +137,7 @@ const UserCard = ({ car }) => {
             className="bg-primary text-white p-2 rounded-md"
           >
             Book Now
-          </button>:<button className="bg-red-700 text-white p-2 rounded-md">RentOut</button>
+          </button>:<button className="bg-red-700 text-white p-2 rounded-md">Rented Out</button>
           }
         </div>
       </div>

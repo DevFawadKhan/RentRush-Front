@@ -40,6 +40,11 @@ const Cars = () => {
         ? car.availability === "Available"
         : car.availability === "Rented Out"
     );
+
+    const handleRefetch = () => {
+      fetchVehicles();
+    }
+
   return (
     <>
       <Navbar />
@@ -81,7 +86,7 @@ const Cars = () => {
       <div className="bg-white flex justify-center">
         <div className="grid ml-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl py-10 w-full">
           {filteredCars.length > 0 ? (
-            filteredCars.map((car, index) => <UserCard key={index} car={car} />)
+            filteredCars.map((car, index) => <UserCard key={index} car={car} handleRefetch={handleRefetch} />)
           ) : (
             <p className="text-gray-500 col-span-full text-center">
               {filter === "available"
