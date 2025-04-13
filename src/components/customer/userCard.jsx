@@ -364,9 +364,10 @@ const UserCard = ({ car }) => {
                 
                 <td className="border p-2">{localStorage.getItem('name')}</td>
                 <td className="border p-2 font-bold">Renting Period</td>
-                <td className="border p-2">
-                  {rentalStartDate} - {rentalEndDate}
+                <td className="border ">
+                StartTime/Date {rentalStartTime}  {rentalStartDate} EndTime/Date {rentalEndTime}{rentalEndDate}
                 </td>
+                
               </tr>
               {/* Row 2: Car Details */}
               <tr className="hover:bg-gray-50">

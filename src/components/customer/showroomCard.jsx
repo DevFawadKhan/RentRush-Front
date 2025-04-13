@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import UserCard from './userCard';
 const Base_Url = import.meta.env.VITE_API_URL;
@@ -54,6 +55,17 @@ const filtercars=allcar.filter((car)=> Filter==="available"?car.availability==="
   <>
 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
   <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-7xl h-[95vh] overflow-y-auto">
+    {/* navbar */}
+    <nav className='bg-blue-400 w-full mb-5 h-12 border rounded-md'>
+      <div className='flex justify-end'>
+      <ul className='flex mr-8 gap-5 p-2 text-white text-2xl font-bold  cursor-pointer'>
+      <li className='hover:underline'>About</li>
+      <Link to="/showroom/services"><li className='hover:underline'>Services</li></Link>
+      <Link to="/showroom/reviews"><li className='hover:underline'>Reviews</li></Link>
+
+      </ul>
+      </div>
+      </nav>
     {/* Showroom Header Section - with smaller logo */}
     <div className="flex flex-col lg:flex-row gap-8 mb-10">
       <div className="w-full lg:w-2/5 relative">
