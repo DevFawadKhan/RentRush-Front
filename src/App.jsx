@@ -18,9 +18,9 @@ import Invoice from "../src/components/customer/invoice.jsx"
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
 import ResetConfirmation from "./components/ResetConfirmation.jsx";
-import Maintenance from "./components/showroom/maintenance.jsx";
 import Services from "./components/showroom/Services.jsx";
 import Reviews from "./components/showroom/Reviews.jsx";
+import CarMaintenancePage from "./components/showroom/maintenance.jsx";
 function App() {
   return (
     <>
@@ -34,7 +34,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="/reset-password/:token" element={<ResetPassword />}></Route>
         <Route path="/reset-confirmation" element={<ResetConfirmation />}></Route>
-        <Route path="/showroom/maintenance" element={<Maintenance />}></Route>
+        <Route path="/showroom/maintenance" element={<CarMaintenancePage />}></Route>
 
           {/* Protected Routes */}
           <Route element={<ProtectedLayout />}>
