@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import ShowroomNavbar from "./showroomNavbar";
 import axios from "axios";
 import Toast from "../Toast";
 import CarCard from "./carCard";
@@ -35,8 +37,6 @@ const CarMaintenancePage = () => {
     }
   }, []);
 
-  const handleMaintenanceCarSelect = (car) => {
-    setMaintenanceSelectedCar(car);
   const handleMaintenanceCarSelect = (car) => {
     setMaintenanceSelectedCar(car);
   };
@@ -93,7 +93,6 @@ const CarMaintenancePage = () => {
       </div>
     </>
   );
-};
 };
 
 export default CarMaintenancePage;
