@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from "react";
-import ShowroomNavbar from "./showroomNavbar";
 import axios from "axios";
 import Toast from "../Toast";
 import CarCard from "./carCard";
@@ -39,6 +37,8 @@ const CarMaintenancePage = () => {
 
   const handleMaintenanceCarSelect = (car) => {
     setMaintenanceSelectedCar(car);
+  const handleMaintenanceCarSelect = (car) => {
+    setMaintenanceSelectedCar(car);
   };
 
   const handleCompleteMaintenanceCarSelect = (car) => {
@@ -46,11 +46,13 @@ const CarMaintenancePage = () => {
   };
 
   const handleCloseCompleteMaintenanceSelectedCar = () => {
-    setMaintenanceSelectedCar(null);
+    setCompleteMaintenanceSelectedCar(null);
+    fetchVehicles();
   };
 
   const handleCloseChecklist = () => {
     setMaintenanceSelectedCar(null);
+    fetchVehicles();
   };
 
   return (
@@ -58,7 +60,7 @@ const CarMaintenancePage = () => {
       <ShowroomNavbar />
       <div className="p-8 bg-[#F9FAFB] min-h-screen">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#0B132A]">
-          Select a Car for Maintenance
+          Select a Car for Maintenance Update
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
           {cars?.map((car) => (
@@ -83,11 +85,15 @@ const CarMaintenancePage = () => {
           />
         )}
         {completeMaintenanceSelectedCar && (
-          <MarkCompleteMaintenance onClose={handleCloseChecklist} />
+          <MarkCompleteMaintenance
+            carId={completeMaintenanceSelectedCar._id}
+            onClose={handleCloseCompleteMaintenanceSelectedCar}
+          />
         )}
       </div>
     </>
   );
+};
 };
 
 export default CarMaintenancePage;
