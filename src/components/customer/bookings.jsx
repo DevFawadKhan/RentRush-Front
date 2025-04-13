@@ -418,6 +418,18 @@ const UserBookings = () => {
                     <td className="border p-2">{car.year || "N/A"}</td>
                   </tr>
                   <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Seat Capacity</td>
+              <td className="border p-2">{car.seatCapacity} </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Luggage Capacity</td>
+              <td className="border p-2">{car.luggageCapacity} </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Fuel Type</td>
+              <td className="border p-2">{car.fuelType} </td>
+            </tr>
+                  <tr className="hover:bg-gray-50">
                     <td className="border p-2 font-bold">Price</td>
                     <td className="border p-2 font-bold">
                       {car.rentRate} rs/Day
@@ -439,20 +451,22 @@ const UserBookings = () => {
         />
       )}
 
-      {isDialogOpen && selectedBookingDetails && (
-        <Dialog
-          isOpen={isDialogOpen}
-          onClose={closeDialog}
-          car={selectedBookingDetails.carDetails}
-          showroom={selectedBookingDetails.showroomDetails}
-          bookingDetails={{
-            customerName: selectedBookingDetails.customerName,
-            startDateTime: selectedBookingDetails.rentalStartDate,
-            endDateTime: selectedBookingDetails.rentalEndDate,
-          }}
-          progress={progress} // Pass the progress state
-        />
-      )}
+{isDialogOpen && selectedBookingDetails && (
+  <Dialog
+    isOpen={isDialogOpen}
+    onClose={closeDialog}
+    car={selectedBookingDetails.carDetails}
+    showroom={selectedBookingDetails.showroomDetails}
+    bookingDetails={{
+      customerName: selectedBookingDetails.customerName,
+      startDateTime: selectedBookingDetails.rentalStartDate,
+      endDateTime: selectedBookingDetails.rentalEndDate,
+      starttime:selectedBookingDetails.rentalStartTime,
+      endtime:selectedBookingDetails.rentalEndTime,
+    }}
+    progress={progress} // Pass the progress state
+  />
+)}
     </div>
   );
 };

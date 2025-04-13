@@ -22,12 +22,12 @@ const ResetConfirmation = () => {
             We have sent an email to {email} with a link to reset your password.
           </p>
           <p className="mt-4 text-center text-[#02073F] text-xs">
-            <Link
-              to="/login"
+            {/* <Link
+              to="/reset-password"
               className="text-[#02073F] hover:text-[#ffffff] font-bold"
             >
-              Return to Login Page
-            </Link>
+              Return to Reset Password Page
+            </Link> */}
           </p>
         </div>
       </div>

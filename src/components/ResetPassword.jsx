@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState} from "react";
+import { useNavigate, useLocation,useParams } from "react-router-dom";
 import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
@@ -10,9 +10,11 @@ const Base_Url = import.meta.env.VITE_API_URL;
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { token } = useParams();
+  console.log("params",token);
   const navigate = useNavigate();
-  const location = useLocation();
-  const token = new URLSearchParams(location.search).get("token");
+  // const location = useLocation();
+  // const token = new URLSearchParams(location.search).get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,15 +23,15 @@ const ResetPassword = () => {
       return;
     }
     try {
-      const response = await axios.post(`${Base_Url}/api/reset-password`, {
-        token,
-        password,
+      const response = await axios.post(`${Base_Url}/api/reset-password/${token}`, {
+        password:password,
       });
       if (response.status === 200) {
         Toast("Password reset successfully!", "success");
         navigate("/login");
       }
-    } catch (error) {
+    } 
+    catch (error) {
       Toast(error.response?.data?.message || "An error occurred", "error");
     }
   };
