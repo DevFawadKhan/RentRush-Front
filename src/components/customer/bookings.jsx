@@ -379,7 +379,8 @@ BookingStartDate.setSeconds(0);
       customerName: selectedBookingDetails.customerName,
       startDateTime: selectedBookingDetails.rentalStartDate,
       endDateTime: selectedBookingDetails.rentalEndDate,
-      
+      starttime:selectedBookingDetails.rentalStartTime,
+      endtime:selectedBookingDetails.rentalEndTime,
     }}
     progress={progress} // Pass the progress state
   />

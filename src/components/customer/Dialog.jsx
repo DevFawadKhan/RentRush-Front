@@ -116,7 +116,10 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
   // Convert booking dates to timestamps
   const startTime = new Date(bookingDetails.startDateTime).getTime();
   const endTime = new Date(bookingDetails.endDateTime).getTime();
-
+  const StartDate=new Date(bookingDetails.startDateTime)
+  const EndDate=new Date(bookingDetails.endDateTime)
+let totalDays = Math.ceil((EndDate-StartDate) / (1000 * 60 * 60 * 24));
+if (totalDays === 0) totalDays = 1;
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -173,18 +176,18 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
   <tr className="hover:bg-gray-50 border-t">
     <td className="p-3 font-bold">Time Slot</td>
     <td className="p-3" colSpan={3}>
-      {bookingDetails.startTime} - {bookingDetails.endTime}
+     {"StartTime "} {bookingDetails.starttime} - {"EndTime "}{bookingDetails.endtime}
     </td>
   </tr>
-
+  
   <tr className="hover:bg-gray-50 border-t">
     <td className="p-3 font-bold">Total Duration</td>
     <td className="p-3 font-medium text-blue-700">
-      {bookingDetails.totalDays} Day(s)
+      {totalDays} Day(s)
     </td>
-    <td className="p-3 font-medium text-blue-700">
+    {/* <td className="p-3 font-medium text-blue-700">
       {bookingDetails.totalHours} Hour(s)
-    </td>
+    </td> */}
     <td className="p-3"></td>
   </tr>
 
@@ -194,7 +197,6 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
                 <td className="border p-3 font-bold">Color</td>
                 <td className="border p-3">{car.color}</td>
               </tr>
-
               <tr className="hover:bg-gray-50">
                 <td className="border p-3 font-bold">Mileage</td>
                 <td className="border p-3">{car.mileage} miles</td>
