@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CircleGauge, Fuel, GripHorizontal } from "lucide-react";
 import axios from "axios";
 import Toast from "../Toast";
@@ -14,7 +14,6 @@ const UserCard = ({ car }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [ShowDialog, setShowDialog] = useState(false)
   const [ModelVisible, setModelVisible] = useState(false)
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
@@ -101,10 +100,10 @@ const UserCard = ({ car }) => {
       </div>
 
       <div className="p-4">
-        <h3 className="font-bold text-lg gap-4">{car.name}</h3>
-        <button className="text-gray-900 hover:underline">
-          {car.carBrand} {car.carModel}
-        </button>
+      <div className="flex justify-between">
+      <button className="text-gray-900 font-bold hover:underline">{car.carBrand} {car.carModel}</button>
+      <h3 className="font-bold text-lg">{car.userId?.showroomName}</h3>
+        </div>
         <div className="grid grid-cols-3 gap-4 text-sm text-black my-2">
           <div className="flex flex-col items-center">
             <CircleGauge />
@@ -112,7 +111,7 @@ const UserCard = ({ car }) => {
           </div>
           <div className="flex flex-col items-center">
             <Fuel />
-            <h1 className="text-gray-500"> Petrol</h1>
+            <h1 className="text-gray-500"> </h1>
             <span className="text-gray-500">{car.fuelType}</span>
           </div>
           <div className="flex flex-col items-center">
@@ -121,7 +120,7 @@ const UserCard = ({ car }) => {
           </div>
         </div>
         <div className="flex justify-between items-center pb-4">
-          <span className="text-xl font-bold">{car.rentRate}rs/Day</span>
+          <span className="text-xl font-bold">{car.rentRate}Rs/Day</span>
           <button
             onClick={openDetailsModal}
             className="text-blue-600 hover:underline"
@@ -184,7 +183,7 @@ const UserCard = ({ car }) => {
 
       {/* Car Details Table */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border text-sm">
+        <table className="w-full border-collapse border text-20px">
           <tbody>
             <tr className="hover:bg-gray-50">
               <td className="border p-2 font-bold">Model</td>
@@ -213,6 +212,18 @@ const UserCard = ({ car }) => {
             <tr className="hover:bg-gray-50">
               <td className="border p-2 font-bold">Registration Year</td>
               <td className="border p-2">{car.year || "N/A"}</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Seat Capacity</td>
+              <td className="border p-2">{car.seatCapacity} </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Luggage Capacity</td>
+              <td className="border p-2">{car.luggageCapacity} </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="border p-2 font-bold">Fuel Type</td>
+              <td className="border p-2">{car.fuelType} </td>
             </tr>
             <tr className="hover:bg-gray-50">
               <td className="border p-2 font-bold">Price</td>
@@ -353,9 +364,10 @@ const UserCard = ({ car }) => {
                 
                 <td className="border p-2">{localStorage.getItem('name')}</td>
                 <td className="border p-2 font-bold">Renting Period</td>
-                <td className="border p-2">
-                  {rentalStartDate} - {rentalEndDate}
+                <td className="border ">
+                StartTime/Date {rentalStartTime}  {rentalStartDate} EndTime/Date {rentalEndTime}{rentalEndDate}
                 </td>
+                
               </tr>
               {/* Row 2: Car Details */}
               <tr className="hover:bg-gray-50">
@@ -402,7 +414,7 @@ const UserCard = ({ car }) => {
         </div>
         <div className="flex justify-center gap-10">
     <button type="submit" onClick={handleSubmit} className="text-white hover:bg-blue-900 text-center bg-blue-600 px-2 py-2 mt-3">Confirm booking</button>
-     <button onClick={()=>setModelVisible(false)} className="text-white bg-red-600 px-2 py-2 mt-3">Cancle Booking</button>
+     <button onClick={()=>setModelVisible(false)} className="text-white bg-red-600 px-2 py-2 mt-3">Cancel</button>
 </div>
       </div>
     </div>)}
@@ -412,4 +424,3 @@ const UserCard = ({ car }) => {
 };
 
 export default UserCard;
-

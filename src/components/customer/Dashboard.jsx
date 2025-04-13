@@ -28,7 +28,7 @@ const NextArrow = ({ onClick }) => (
     onClick={onClick}
     aria-label="Next Slide"
   >
-    ➡️
+   ➡️
   </button>
 );
 

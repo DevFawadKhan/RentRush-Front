@@ -19,6 +19,8 @@ import ForgotPassword from "./components/ForgotPassword.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
 import ResetConfirmation from "./components/ResetConfirmation.jsx";
 import Maintenance from "./components/showroom/maintenance.jsx";
+import Services from "./components/showroom/Services.jsx";
+import Reviews from "./components/showroom/Reviews.jsx";
 function App() {
   return (
     <>
@@ -30,7 +32,7 @@ function App() {
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-        <Route path="/reset-password" element={<ResetPassword />}></Route>
+        <Route path="/reset-password/:token" element={<ResetPassword />}></Route>
         <Route path="/reset-confirmation" element={<ResetConfirmation />}></Route>
         <Route path="/showroom/maintenance" element={<Maintenance />}></Route>
 
@@ -56,6 +58,8 @@ function App() {
             <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
             <Route path="/customer/CarDetailsScreen/:bookingId" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
             <Route path="/customer/invoice" element={<Invoice></Invoice>}></Route>
+            <Route path="/showroom/services" element={<Services/>}></Route>
+            <Route path="/showroom/reviews" element={<Reviews/>}></Route> 
             
             
           </Route>
