@@ -5,7 +5,7 @@ const ShowroomCard = ({ value }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/showroom/detailcars/${value._id}`,{
+    navigate(`/customer/detailcars/${value._id}`,{
       state:{showroom:value}
     });
   };

@@ -82,7 +82,7 @@ function ShowroomInventory() {
         const response = await axios.put(
           `${Base_Url}/api/car/update/${vehicles[vehicleToEdit]?._id}`,
           formData,
-          { withCredentials: true }
+          { withCredentials: true },
         );
         fetchVehicles();
         Toast(response.data.message, "success");
@@ -117,20 +117,15 @@ function ShowroomInventory() {
   };
 
   const confirmDelete = async () => {
-    try {
-      const response = await axios.delete(
-        `${Base_Url}/api/car/delete/${vehicleToDelete}`,
-        { withCredentials: true }
-      );
-
-      Toast(response?.data?.message || "Car deleted successfully", "success");
-      fetchVehicles(); // refresh list
-      closeDeleteDialog(); // close the modal
-    } catch (error) {
-      console.error("Delete error:", error);
-      Toast(error?.response?.data || "Failed to delete vehicle", "error");
-      closeDeleteDialog(); // close the modal
-    }
+    // const updatedVehicles = vehicles.filter((_, i) => i !== vehicleToDelete);
+    // setVehicles(updatedVehicles);
+    const response = await axios.delete(
+      `${Base_Url}/api/car/delete/${vehicleToDelete}`,
+      { withCredentials: true },
+    );
+    Toast(response.data, "success");
+    fetchVehicles();
+    closeDeleteDialog();
   };
 
   return (

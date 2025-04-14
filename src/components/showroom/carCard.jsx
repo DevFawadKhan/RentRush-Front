@@ -36,7 +36,7 @@ const CarCard = ({ car }) => {
           </div>
           <div className="flex flex-col items-center">
             <Fuel className="w-5 h-5" />
-            <span className="text-gray-500 mt-1">{car.fuelType} </span>
+            <span className="text-gray-500 mt-1">{car.fuelType} Petrol</span>
           </div>
           <div className="flex flex-col items-center">
             <GripHorizontal className="w-5 h-5" />
