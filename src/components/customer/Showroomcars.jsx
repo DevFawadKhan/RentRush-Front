@@ -35,8 +35,8 @@ const [Filter, setFilter] = useState("Available")
   <nav className="bg-blue-500 border rounded-md p-4 w-full h-14 flex items-center shadow-md px-8 mb-5">
     <ul className="flex gap-6 text-white text-lg font-semibold">
       <li className="hover:underline cursor-pointer">About</li>
-      <Link to="/showroom/services"><li className="hover:underline cursor-pointer">Services</li></Link>
-      <Link to="/showroom/reviews"><li className="hover:underline cursor-pointer">Reviews</li></Link>
+      <Link to="/customer/services"><li className="hover:underline cursor-pointer">Services</li></Link>
+      <Link to="/customer/reviews"><li className="hover:underline cursor-pointer">Reviews</li></Link>
     </ul>
   </nav>
 
