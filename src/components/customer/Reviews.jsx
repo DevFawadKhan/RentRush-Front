@@ -1,5 +1,7 @@
 import React from 'react'
 import { Star, StarHalf, User, ThumbsUp } from 'lucide-react'
+import Navbar from "./Navbar";
+import Footer from "../Footer";
 
 function Reviews() {
   const data = [
@@ -42,6 +44,7 @@ function Reviews() {
 
   return (
     <>
+     <Navbar />
       <div className='p-3'>
         <div className='border-t border-neutral-400 border-b'>
           <h1 className='p-4 font-bold text-3xl lg:text-5xl'>Review & Comments </h1>
@@ -134,6 +137,7 @@ function Reviews() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }
