@@ -21,6 +21,7 @@ import ResetConfirmation from "./components/ResetConfirmation.jsx";
 import Maintenance from "./components/showroom/maintenance.jsx";
 import Services from "./components/showroom/Services.jsx";
 import Reviews from "./components/showroom/Reviews.jsx";
+import Showroomcars from "./components/showroom/Showroomcars.jsx";
 function App() {
   return (
     <>
@@ -60,6 +61,8 @@ function App() {
             <Route path="/customer/invoice" element={<Invoice></Invoice>}></Route>
             <Route path="/showroom/services" element={<Services/>}></Route>
             <Route path="/showroom/reviews" element={<Reviews/>}></Route> 
+            <Route path="/showroom/detailcars/:id" element={<Showroomcars/>}></Route> 
+            
             
             
           </Route>

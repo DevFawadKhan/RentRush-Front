@@ -14,6 +14,11 @@ const UserCard = ({ car, handleRefetch }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [ShowDialog, setShowDialog] = useState(false)
   const [ModelVisible, setModelVisible] = useState(false)
+  const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+const minDate = tomorrow.toISOString().split("T")[0];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
@@ -263,6 +268,7 @@ const UserCard = ({ car, handleRefetch }) => {
                                     onChange={(e) => setRentalStartDate(e.target.value)}
                                     className="border p-2 rounded-md"
                                     required
+                                  min={new Date().toISOString().split("T")[0]}
                                 />
                             </div>
 
@@ -277,6 +283,7 @@ const UserCard = ({ car, handleRefetch }) => {
                                     onChange={(e) => setRentalEndDate(e.target.value)}
                                     className="border p-2 rounded-md"
                                     required
+                                  min={minDate}
                                 />
                             </div>
 
@@ -364,9 +371,10 @@ const UserCard = ({ car, handleRefetch }) => {
                 <td className="border p-2 font-bold">Booked By</td>
                 
                 <td className="border p-2">{localStorage.getItem('name')}</td>
-                <td className="border p-2 font-bold">Renting Period</td>
-                <td className="border ">
-                StartTime/Date {rentalStartTime}  {rentalStartDate} EndTime/Date {rentalEndTime}{rentalEndDate}
+                <td className="border p-2 font-bold w-12">Renting Period</td>
+                <td className="border">
+              StartTime/Date {rentalStartTime} {rentalStartDate} <br />
+              EndTime/Date {rentalEndTime} {rentalEndDate}
                 </td>
                 
               </tr>
