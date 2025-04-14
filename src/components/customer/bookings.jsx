@@ -19,7 +19,7 @@ const UserBookings = () => {
   const [ShowDialog, setShowDialog] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [car, setCar] = useState(null);
-  const currentDate = new Date().toLocaleDateString("en-CA");
+  const currentDate = new Date().toLocaleDateString("en-PK");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBookingDetails, setSelectedBookingDetails] = useState(null); // Track the selected booking for the dialog
   const [progress, setProgress] = useState(0);
@@ -237,7 +237,8 @@ const UserBookings = () => {
             {bookings.map((booking) => {
               if (!booking.carDetails) return null; // Skip if carDetails is not available
               const CurrentDate = new Date();
-              const BookingStartDate = new Date(booking?.startDate);
+              const BookingStartDate = new Date(booking?.rentalStartDate);
+              const BookingEndDate = new Date(booking?.rentalEndDate);
               const [time, modifier] = booking?.StartTime.split(" ");
               let [hours, minutes] = time.split(":").map(Number);
               if (modifier === "PM" && hours !== 12) hours += 12;
@@ -246,6 +247,14 @@ const UserBookings = () => {
               BookingStartDate.setHours(hours);
               BookingStartDate.setMinutes(minutes);
               BookingStartDate.setSeconds(0);
+              const [time1, modifier1] = booking?.rentalEndTime.split(" ");
+              let [hours1, minutes1] = time1.split(":").map(Number);
+              if (modifier1 === "PM" && hours1 !== 12) hours1 += 12;
+              if (modifier1 === "AM" && hours1 === 12) hours1 = 0;
+              // Date + Time ko combine karo
+              BookingEndDate.setHours(hours1);
+              BookingEndDate.setMinutes(minutes1);
+              BookingEndDate.setSeconds(0);
               return (
                 <>
                   <div
@@ -297,7 +306,7 @@ const UserBookings = () => {
                       </p>
                       {/* Show extend booking button */}
                       {new Date(Date.now()).toDateString() >=
-                        new Date(booking.startDate).toDateString() && (
+                        new Date(booking.rentalStartDate).toDateString() && (
                         <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
                           <button className="text-blue-600 hover:underline">
                             Extend Booking
@@ -314,7 +323,7 @@ const UserBookings = () => {
                         <p className="text-green-600 font-bold">Completed</p>
                       ) : booking?.status === "return initiated" ? (
                         <p className="text-red-600 font-bold">Pending Return</p>
-                      ) : currentDate === booking?.EndDate ? (
+                      ) : CurrentDate >= BookingEndDate ? (
                         <button
                           onClick={() => ReturnCar(booking._id)}
                           className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg"
@@ -418,17 +427,17 @@ const UserBookings = () => {
                     <td className="border p-2">{car.year || "N/A"}</td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-              <td className="border p-2 font-bold">Seat Capacity</td>
-              <td className="border p-2">{car.seatCapacity} </td>
-            </tr>
-            <tr className="hover:bg-gray-50">
-              <td className="border p-2 font-bold">Luggage Capacity</td>
-              <td className="border p-2">{car.luggageCapacity} </td>
-            </tr>
-            <tr className="hover:bg-gray-50">
-              <td className="border p-2 font-bold">Fuel Type</td>
-              <td className="border p-2">{car.fuelType} </td>
-            </tr>
+                    <td className="border p-2 font-bold">Seat Capacity</td>
+                    <td className="border p-2">{car.seatCapacity} </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border p-2 font-bold">Luggage Capacity</td>
+                    <td className="border p-2">{car.luggageCapacity} </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border p-2 font-bold">Fuel Type</td>
+                    <td className="border p-2">{car.fuelType} </td>
+                  </tr>
                   <tr className="hover:bg-gray-50">
                     <td className="border p-2 font-bold">Price</td>
                     <td className="border p-2 font-bold">
@@ -451,22 +460,22 @@ const UserBookings = () => {
         />
       )}
 
-{isDialogOpen && selectedBookingDetails && (
-  <Dialog
-    isOpen={isDialogOpen}
-    onClose={closeDialog}
-    car={selectedBookingDetails.carDetails}
-    showroom={selectedBookingDetails.showroomDetails}
-    bookingDetails={{
-      customerName: selectedBookingDetails.customerName,
-      startDateTime: selectedBookingDetails.rentalStartDate,
-      endDateTime: selectedBookingDetails.rentalEndDate,
-      starttime:selectedBookingDetails.rentalStartTime,
-      endtime:selectedBookingDetails.rentalEndTime,
-    }}
-    progress={progress} // Pass the progress state
-  />
-)}
+      {isDialogOpen && selectedBookingDetails && (
+        <Dialog
+          isOpen={isDialogOpen}
+          onClose={closeDialog}
+          car={selectedBookingDetails.carDetails}
+          showroom={selectedBookingDetails.showroomDetails}
+          bookingDetails={{
+            customerName: selectedBookingDetails.customerName,
+            startDateTime: selectedBookingDetails.rentalStartDate,
+            endDateTime: selectedBookingDetails.rentalEndDate,
+            starttime: selectedBookingDetails.rentalStartTime,
+            endtime: selectedBookingDetails.rentalEndTime,
+          }}
+          progress={progress} // Pass the progress state
+        />
+      )}
     </div>
   );
 };
