@@ -2,49 +2,49 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function ShowroomNavbar() {
+  const logoUrl = `${
+    import.meta.env.VITE_API_URL
+  }/uploads/${localStorage.getItem("logo")}`;
+  const showroomName = localStorage.getItem("showroomName");
+
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50 p-2">
-      <div className="mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex items-center">
-          <Link to="/showroom/inventory">
+    <nav className="bg-white shadow-lg sticky top-0 z-50 px-4 py-3">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
+        {/* Left: Logo and Name */}
+        <div className="flex items-center gap-4 mb-2 md:mb-0">
+          <Link to="/showroom/inventory" className="flex items-center gap-3">
             <img
-              src="/src/assets/logo.png"
-              alt="Logo"
-              className="-my-3 h-[100px] mr-2"
+              src={logoUrl}
+              alt="Showroom Logo"
+              className="h-16 sm:h-20 max-w-[160px] object-contain drop-shadow-md hover:scale-105 transition-transform rounded-xl"
             />
-          </Link>
-          <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
-            RentRush
-          </h1>
-        </div>
-
-        {/* Center Navigation Links */}
-        <div className="flex space-x-6 justify-center items-center flex-grow">
-          <Link
-            to="/showroom/dashboard"
-            className="text-[18px] text-[#000000] opacity-60 hover:opacity-100 cursor-pointer font-medium hover:text-[#C17D3C] list-none"
-          >
-            Home
-          </Link>
-          <Link
-            to="/showroom/inventory"
-            className="text-[18px] text-[#000000] opacity-60 hover:opacity-100 cursor-pointer font-medium hover:text-[#C17D3C] list-none"
-          >
-            Inventory
-          </Link>
-          <Link
-            to="/showroom/maintenance"
-            className="text-[18px] text-[#000000] opacity-60 hover:opacity-100 cursor-pointer font-medium hover:text-[#C17D3C] list-none"
-          >
-            Maintenance
+            <h1 className="text-[#00004b] text-2xl sm:text-3xl font-bold">
+              {showroomName}
+            </h1>
           </Link>
         </div>
 
-        {/* Signout Button */}
+        {/* Center: Navigation Links */}
+        <div className="flex space-x-6 justify-center items-center mb-2 md:mb-0">
+          {[
+            { label: "Home", to: "/showroom/dashboard" },
+            { label: "Inventory", to: "/showroom/inventory" },
+            { label: "Maintenance", to: "/showroom/maintenance" },
+          ].map(({ label, to }) => (
+            <Link
+              key={label}
+              to={to}
+              className="text-[17px] text-[#000000] opacity-70 hover:opacity-100 transition font-medium hover:text-[#C17D3C]"
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Right: Logout Button */}
         <Link
           to="/"
-          className="bg-primary text-white px-6 py-2 rounded-md text-[18px] font-medium opacity-60 hover:opacity-100 cursor-pointer"
+          className="bg-[#C17D3C] text-white px-5 py-2 rounded-lg text-[16px] font-medium hover:bg-[#a96a33] transition"
         >
           Logout
         </Link>
