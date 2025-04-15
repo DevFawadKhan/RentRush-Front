@@ -16,6 +16,18 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [repairCosts, setRepairCosts] = useState({});
+  const [checkAll, setCheckAll] = useState(false);
+
+  const handleCheckAllChange = (e) => {
+    const checked = e.target.checked;
+    setCheckAll(checked);
+    const updatedParts = {};
+    Object.keys(checkedParts).forEach((part) => {
+      updatedParts[part] = checked;
+    });
+    setCheckedParts(updatedParts);
+  };
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -29,6 +41,7 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
         {
           carId: car._id,
           maintenanceLog: checkedParts,
+          maintenanceCost: repairCosts,
           showroomId: car.rentalInfo.showroomId,
           rentalStartDate: car.rentalInfo.rentalStartDate,
           rentalEndDate: car.rentalInfo.rentalEndDate,
@@ -39,9 +52,29 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
           withCredentials: true,
         }
       );
+      Toast("Maintenance log submitted", "success");
+      const invoiceUrl = response.data.invoiceUrl;
+      if (invoiceUrl) {
+        Toast(
+          <>
+            {response.data.message}{" "}
+            <a
+              href={invoiceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "blue", textDecoration: "underline" }}
+            >
+              Click here to download the Invoice
+            </a>
+          </>
+        );
+      }
     } catch (err) {
       console.log(err);
-      Toast(err.data || err.message || "Something went wrong", "error");
+      Toast(
+        err?.response?.data || err.message || "Something went wrong",
+        "error"
+      );
     }
   };
 
@@ -63,24 +96,59 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
             <p className="text-center text-sm mb-6">
               Car: <strong>{car.carBrand + " " + car.carModel}</strong>
             </p>
+            <div className="flex items-center justify-between bg-gray-100 p-3 rounded-md mb-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="checkAll"
+                  checked={checkAll}
+                  onChange={handleCheckAllChange}
+                  className="w-4 h-4"
+                />
+                <label htmlFor="checkAll" className="font-medium text-sm">
+                  Check All Items
+                </label>
+              </div>
+            </div>
+            <p className="text-sm mb-2">Select the parts to be repaired:</p>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               {Object.keys(checkedParts).map((part) => (
                 <div
                   key={part}
-                  className="flex items-center gap-4 bg-gray-100 p-3 rounded-md"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-gray-100 p-3 rounded-md"
                 >
-                  <input
-                    type="checkbox"
-                    name={part}
-                    checked={checkedParts[part]}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4"
-                  />
-                  <label htmlFor={part} className="capitalize text-sm">
-                    {part}
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name={part}
+                      checked={checkedParts[part]}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <label htmlFor={part} className="capitalize text-sm">
+                      {part}
+                    </label>
+                  </div>
+
+                  {!checkedParts[part] && (
+                    <input
+                      type="number"
+                      placeholder="Repair cost"
+                      min="0"
+                      value={repairCosts[part] || ""}
+                      onChange={(e) =>
+                        setRepairCosts((prev) => ({
+                          ...prev,
+                          [part]: e.target.value,
+                        }))
+                      }
+                      className="border border-gray-300 rounded px-2 py-1 w-full sm:w-40 text-sm"
+                    />
+                  )}
                 </div>
               ))}
+
               <div className="flex justify-end gap-4 mt-6">
                 <button
                   type="button"
