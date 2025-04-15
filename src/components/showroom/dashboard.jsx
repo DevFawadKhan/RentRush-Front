@@ -17,7 +17,7 @@ const ShowroomDashboard = () => {
       });
       setCars(response.data); // Set the fetched data to vehicles state
       const hasRentedCars = response.data.some(
-        (car) => car.availability === "Rented Out",
+        (car) => car.availability === "Rented Out"
       );
       setActiveTab(hasRentedCars ? "Rented Out" : "Available");
     } catch (err) {
@@ -41,6 +41,11 @@ const ShowroomDashboard = () => {
 
   const availableCars = cars.filter((car) => car.availability === "Available");
   const rentedCars = cars.filter((car) => car.availability === "Rented Out");
+  const forMaintenance = cars.filter(
+    (car) =>
+      car.availability === "Pending Return" ||
+      car.availability === "In Maintenance"
+  );
   // const [activeTab, setActiveTab] = useState(
   //   rentedCars.length > 0 ? "Rented Out" : "Available"
   // );
@@ -49,6 +54,14 @@ const ShowroomDashboard = () => {
       <ShowroomNavbar onMenuClick={toggleDrawer} />
 
       <div className="flex justify-center mt-4">
+        <button
+          className={`px-4 py-2 font-semibold text-lg ${
+            activeTab === "Available" ? "bg-primary text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setActiveTab("Available")}
+        >
+          Available
+        </button>
         {rentedCars.length > 0 && (
           <button
             className={`px-4 py-2 mr-4 font-semibold text-lg ${
@@ -61,21 +74,30 @@ const ShowroomDashboard = () => {
             Rented Out
           </button>
         )}
-        <button
-          className={`px-4 py-2 font-semibold text-lg ${
-            activeTab === "Available" ? "bg-primary text-white" : "bg-gray-200"
-          }`}
-          onClick={() => setActiveTab("Available")}
-        >
-          Available
-        </button>
+        {forMaintenance.length > 0 && (
+          <button
+            className={`px-4 py-2 mr-4 font-semibold text-lg ${
+              activeTab === "Maintenance"
+                ? "bg-primary text-white"
+                : "bg-gray-200"
+            }`}
+            onClick={() => setActiveTab("Maintenance")}
+          >
+            Maintenance
+          </button>
+        )}
       </div>
 
       <div className="bg-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-col-4 xl:grid-cols-4 gap-4 px-6 py-10 justify-items-center">
         {activeTab === "Rented Out"
           ? rentedCars.length > 0 &&
             rentedCars.map((car, index) => <CarCard key={index} car={car} />)
-          : availableCars.map((car, index) => (
+          : activeTab === "Maintenance"
+          ? forMaintenance.map((car, index) => (
+              <CarCard key={index} car={car} />
+            ))
+          : availableCars.length > 0 &&
+            availableCars.map((car, index) => (
               <CarCard key={index} car={car} />
             ))}
       </div>
