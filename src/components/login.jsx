@@ -37,7 +37,7 @@ function Login() {
         navigator("/customer/Dashboard");
       } else if (userRole === "showroom") {
         Toast("Welcome to Showroom!", "success");
-        navigator("/showroom/inventory");
+        navigator("/showroom/dashboard");
       } else {
         Toast("Role not recognized.", "error");
         navigator("/login");
