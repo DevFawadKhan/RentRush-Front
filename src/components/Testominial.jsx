@@ -1,6 +1,6 @@
 import React from "react";
 
-function Testominial({name,city,desc}) {
+function Testominial({ name, city, desc }) {
   return (
     <div className="bg-[#C17D3C] w-full px-3 py-7 min-h-[200px] rounded-lg flex flex-col gap-3">
       <div className="flex flex-row justify-between items-center">
@@ -17,9 +17,7 @@ function Testominial({name,city,desc}) {
         </div>
         <p>4.5</p>
       </div>
-      <p>
-        {desc}
-      </p>
+      <p>{desc}</p>
     </div>
   );
 }

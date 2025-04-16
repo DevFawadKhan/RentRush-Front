@@ -19,7 +19,7 @@ const CarMaintenancePage = () => {
         `${Base_Url}/api/car/get-all-return-cars`,
         {
           withCredentials: true,
-        }
+        },
       );
       setCars(response.data); // Set the fetched data to vehicles state
     } catch (err) {

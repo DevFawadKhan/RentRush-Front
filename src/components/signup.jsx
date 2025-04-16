@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -9,20 +9,20 @@ const Base_Url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
   const navigate = useNavigate();
-  const [name, setname] = useState('');
-  const [email, setemail] = useState('');
-  const [contact, setcontact] = useState('');
-  const [cnic, setcnic] = useState('');
-  const [address, setaddress] = useState('');
-  const [password, setpassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(''); // State for password mismatch error
+  const [name, setname] = useState("");
+  const [email, setemail] = useState("");
+  const [contact, setcontact] = useState("");
+  const [cnic, setcnic] = useState("");
+  const [address, setaddress] = useState("");
+  const [password, setpassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(""); // State for password mismatch error
 
   const handleSignup = (e) => {
     e.preventDefault();
 
     // Reset password error
-    setPasswordError('');
+    setPasswordError("");
 
     // Check if passwords match
     if (password !== confirmPassword) {
@@ -32,20 +32,21 @@ function SignUp() {
     }
 
     // Proceed with signup if passwords match
-    axios.post(`${Base_Url}/api/signup`, {
-      ownerName: name,
-      cnic: cnic,
-      contactNumber: contact,
-      address: address,
-      email: email,
-      password: password,
-      role: 'client',
-    })
-      .then(response => {
-        Toast(response.data, "success", () => navigate('/login'));
+    axios
+      .post(`${Base_Url}/api/signup`, {
+        ownerName: name,
+        cnic: cnic,
+        contactNumber: contact,
+        address: address,
+        email: email,
+        password: password,
+        role: "client",
+      })
+      .then((response) => {
+        Toast(response.data, "success", () => navigate("/login"));
         console.log(response);
       })
-      .catch(error => {
+      .catch((error) => {
         Toast(error.response?.data || "An error occurred", "error");
         console.log(error.response?.data);
       });
@@ -57,13 +58,20 @@ function SignUp() {
       <div className="flex items-center justify-center background min-w-max min-h-screen py-16">
         <div className="w-screen h-fit max-w-md py-5 px-7 bg-gray-300 backdrop-blur-lg bg-white/30 border border-white/10 rounded-3xl p-5 shadow-lg">
           <div className="flex justify-center">
-            <img src="/src/assets/logo.png" className="-ml-4 p w-[100px]" alt="" />
+            <img
+              src="/src/assets/logo.png"
+              className="-ml-4 p w-[100px]"
+              alt=""
+            />
           </div>
           <h2 className="text-3xl font-bold text-[#02073F]">Create Account</h2>
           <form onSubmit={handleSignup} className="mt-8 rounded mb-4">
             {/* Name */}
             <div className="mb-4">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="name">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -79,7 +87,10 @@ function SignUp() {
 
             {/* CNIC */}
             <div className="mb-4">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="cnic">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="cnic"
+              >
                 CNIC
               </label>
               <input
@@ -97,7 +108,10 @@ function SignUp() {
 
             {/* Contact */}
             <div className="mb-4">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="contact">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="contact"
+              >
                 Contact Number
               </label>
               <input
@@ -115,7 +129,10 @@ function SignUp() {
 
             {/* Address */}
             <div className="mb-4">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="address">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="address"
+              >
                 Address
               </label>
               <input
@@ -131,7 +148,10 @@ function SignUp() {
 
             {/* Email */}
             <div className="mb-4">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="email">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -147,7 +167,10 @@ function SignUp() {
 
             {/* Password */}
             <div className="mb-4">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="password">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input
@@ -163,20 +186,23 @@ function SignUp() {
 
             {/* Confirm Password */}
             <div className="mb-6">
-              <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="confirm-password">
+              <label
+                className="text-sm block text-[#02073F] font-bold mb-2"
+                htmlFor="confirm-password"
+              >
                 Confirm Password
               </label>
               <input
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
-                  setPasswordError(''); // Clear error when user types
+                  setPasswordError(""); // Clear error when user types
                 }}
                 type="password"
                 id="confirm-password"
                 placeholder="********"
                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  passwordError ? 'border-red-700' : '' // Add red border if there's an error
+                  passwordError ? "border-red-700" : "" // Add red border if there's an error
                 }`}
                 required
               />

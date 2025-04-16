@@ -24,7 +24,8 @@ function Reason() {
     <div className="bg-[#0B132A] py-12 text-white">
       <h1 className="text-3xl text-center font-bold">Why Choose Us</h1>
       <p className="text-sm text-center mx-4 mt-2">
-        Choose RentRush for our unbeatable prices, extensive location options, and a commitment to exceptional customer service.
+        Choose RentRush for our unbeatable prices, extensive location options,
+        and a commitment to exceptional customer service.
       </p>
       <div className="flex flex-col lg:flex-row justify-center items-center mt-8">
         <div className="hidden lg:block w-[40%]">
@@ -36,7 +37,12 @@ function Reason() {
         </div>
         <div className="w-full lg:w-[50%] flex flex-col space-y-4 px-6">
           {arr.map((item, index) => (
-            <Card key={index} title={item.title} desc={item.desc} img={item.img} />
+            <Card
+              key={index}
+              title={item.title}
+              desc={item.desc}
+              img={item.img}
+            />
           ))}
         </div>
       </div>

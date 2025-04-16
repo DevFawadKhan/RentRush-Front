@@ -1,10 +1,10 @@
-import PropTypes, { bool } from 'prop-types';
-import { useState, useEffect } from 'react';
-import { FiClock, FiCheckCircle, FiAlertTriangle, FiX } from 'react-icons/fi';
+import PropTypes, { bool } from "prop-types";
+import { useState, useEffect } from "react";
+import { FiClock, FiCheckCircle, FiAlertTriangle, FiX } from "react-icons/fi";
 
 const BookingProgressBar = ({ startTime, endTime }) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
-  
+
   // Update current time every minute
   useEffect(() => {
     const interval = setInterval(() => {
@@ -16,56 +16,71 @@ const BookingProgressBar = ({ startTime, endTime }) => {
   // Calculate progress percentage
   const totalDuration = endTime - startTime;
   const elapsedTime = currentTime - startTime;
-  const progress = Math.min(100, Math.max(0, (elapsedTime / totalDuration) * 100));
-  
+  const progress = Math.min(
+    100,
+    Math.max(0, (elapsedTime / totalDuration) * 100),
+  );
+
   // Determine booking status
-  const [status, setStatus] = useState('pending');
-  const [timeLeft, setTimeLeft] = useState('');
+  const [status, setStatus] = useState("pending");
+  const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
     if (currentTime < startTime) {
-      setStatus('pending');
-      setTimeLeft('Booking not started yet');
+      setStatus("pending");
+      setTimeLeft("Booking not started yet");
     } else if (currentTime >= startTime && currentTime <= endTime) {
-      setStatus('active');
+      setStatus("active");
       // Calculate time left
       const remaining = endTime - currentTime;
       const hours = Math.floor(remaining / (1000 * 60 * 60));
       const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
       setTimeLeft(`${hours}h ${minutes}m remaining`);
     } else if (currentTime > endTime) {
-      setStatus('overdue');
-      setTimeLeft('Booking overdue');
+      setStatus("overdue");
+      setTimeLeft("Booking overdue");
     } else {
-      setStatus('completed');
-      setTimeLeft('Booking completed');
+      setStatus("completed");
+      setTimeLeft("Booking completed");
     }
   }, [currentTime, startTime, endTime]);
 
   const getProgressColor = () => {
-    switch(status) {
-      case 'overdue': return 'bg-gradient-to-r from-red-500 to-red-700';
-      case 'completed': return 'bg-gradient-to-r from-green-500 to-green-700';
-      default: return 'bg-gradient-to-r from-blue-500 to-blue-700';
+    switch (status) {
+      case "overdue":
+        return "bg-gradient-to-r from-red-500 to-red-700";
+      case "completed":
+        return "bg-gradient-to-r from-green-500 to-green-700";
+      default:
+        return "bg-gradient-to-r from-blue-500 to-blue-700";
     }
   };
 
   const getStatusMessage = () => {
-    switch(status) {
-      case 'pending': return 'Booking will start soon';
-      case 'active': return 'Booking in progress';
-      case 'completed': return 'Booking completed successfully';
-      case 'overdue': return 'Booking overdue - please return the car';
-      default: return '';
+    switch (status) {
+      case "pending":
+        return "Booking will start soon";
+      case "active":
+        return "Booking in progress";
+      case "completed":
+        return "Booking completed successfully";
+      case "overdue":
+        return "Booking overdue - please return the car";
+      default:
+        return "";
     }
   };
 
   const getStatusIcon = () => {
-    switch(status) {
-      case 'active': return <FiClock className="mr-1" />;
-      case 'completed': return <FiCheckCircle className="mr-1" />;
-      case 'overdue': return <FiAlertTriangle className="mr-1" />;
-      default: return null;
+    switch (status) {
+      case "active":
+        return <FiClock className="mr-1" />;
+      case "completed":
+        return <FiCheckCircle className="mr-1" />;
+      case "overdue":
+        return <FiAlertTriangle className="mr-1" />;
+      default:
+        return null;
     }
   };
 
@@ -97,13 +112,15 @@ const BookingProgressBar = ({ startTime, endTime }) => {
         <div className="flex justify-between items-center mt-3">
           <div className="flex items-center text-sm font-medium">
             {getStatusIcon()}
-            <span className={status === 'overdue' ? 'text-red-600' : 'text-gray-700'}>
+            <span
+              className={
+                status === "overdue" ? "text-red-600" : "text-gray-700"
+              }
+            >
               {getStatusMessage()}
             </span>
           </div>
-          <div className="text-sm text-gray-500">
-            {timeLeft}
-          </div>
+          <div className="text-sm text-gray-500">{timeLeft}</div>
         </div>
       </div>
     </div>
@@ -116,10 +133,10 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
   // Convert booking dates to timestamps
   const startTime = new Date(bookingDetails.startDateTime).getTime();
   const endTime = new Date(bookingDetails.endDateTime).getTime();
-  const StartDate=new Date(bookingDetails.startDateTime)
-  const EndDate=new Date(bookingDetails.endDateTime)
-let totalDays = Math.ceil((EndDate-StartDate) / (1000 * 60 * 60 * 24));
-if (totalDays === 0) totalDays = 1;
+  const StartDate = new Date(bookingDetails.startDateTime);
+  const EndDate = new Date(bookingDetails.endDateTime);
+  let totalDays = Math.ceil((EndDate - StartDate) / (1000 * 60 * 60 * 24));
+  if (totalDays === 0) totalDays = 1;
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -161,35 +178,38 @@ if (totalDays === 0) totalDays = 1;
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border text-sm">
             <tbody>
-            <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Booked By</td>
-    <td className="p-3" colSpan={3}>{localStorage.getItem("name")}</td>
-  </tr>
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Booked By</td>
+                <td className="p-3" colSpan={3}>
+                  {localStorage.getItem("name")}
+                </td>
+              </tr>
 
-  <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Renting Period</td>
-    <td className="p-3" colSpan={3}>
-      {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
-    </td>
-  </tr>
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Renting Period</td>
+                <td className="p-3" colSpan={3}>
+                  {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
+                </td>
+              </tr>
 
-  <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Time Slot</td>
-    <td className="p-3" colSpan={3}>
-     {"StartTime "} {bookingDetails.starttime} - {"EndTime "}{bookingDetails.endtime}
-    </td>
-  </tr>
-  
-  <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Total Duration</td>
-    <td className="p-3 font-medium text-blue-700">
-      {totalDays} Day(s)
-    </td>
-    {/* <td className="p-3 font-medium text-blue-700">
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Time Slot</td>
+                <td className="p-3" colSpan={3}>
+                  {"StartTime "} {bookingDetails.starttime} - {"EndTime "}
+                  {bookingDetails.endtime}
+                </td>
+              </tr>
+
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Total Duration</td>
+                <td className="p-3 font-medium text-blue-700">
+                  {totalDays} Day(s)
+                </td>
+                {/* <td className="p-3 font-medium text-blue-700">
       {bookingDetails.totalHours} Hour(s)
     </td> */}
-    <td className="p-3"></td>
-  </tr>
+                <td className="p-3"></td>
+              </tr>
 
               <tr className="hover:bg-gray-50">
                 <td className="border p-3 font-bold">Car Model</td>

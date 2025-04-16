@@ -20,7 +20,7 @@ const Cars = () => {
         withCredentials: true,
       });
       setCars(response.data);
-      console.log(response.data)
+      console.log(response.data);
     } catch (err) {
       console.log(err);
       Toast(err.data || err.message || "Something went wrong", "error");
@@ -28,22 +28,23 @@ const Cars = () => {
   };
   useEffect(() => {
     fetchVehicles();
-  },[setCars]);
+  }, [setCars]);
   // Filter cars based on dropdown and search input
-  const filteredCars = cars.filter((car) =>
+  const filteredCars = cars
+    .filter((car) =>
       `${car.carBrand} ${car.carModel} ${car.color}`
         .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+        .includes(searchTerm.toLowerCase()),
     )
     .filter((car) =>
       filter === "available"
         ? car.availability === "Available"
-        : car.availability === "Rented Out"
+        : car.availability === "Rented Out",
     );
 
-    const handleRefetch = () => {
-      fetchVehicles();
-    }
+  const handleRefetch = () => {
+    fetchVehicles();
+  };
 
   return (
     <>
@@ -86,7 +87,9 @@ const Cars = () => {
       <div className="bg-white flex justify-center">
         <div className="grid ml-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl py-10 w-full">
           {filteredCars.length > 0 ? (
-            filteredCars.map((car, index) => <UserCard key={index} car={car} handleRefetch={handleRefetch} />)
+            filteredCars.map((car, index) => (
+              <UserCard key={index} car={car} handleRefetch={handleRefetch} />
+            ))
           ) : (
             <p className="text-gray-500 col-span-full text-center">
               {filter === "available"
@@ -96,7 +99,7 @@ const Cars = () => {
           )}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

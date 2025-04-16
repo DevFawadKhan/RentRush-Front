@@ -28,7 +28,7 @@ const UserCard = ({ car, handleRefetch }) => {
           rentalEndDate,
           rentalEndTime,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       console.log("Response received:", response.data);
       Toast(response.data.message);
@@ -46,7 +46,7 @@ const UserCard = ({ car, handleRefetch }) => {
             >
               Click here to download the Invoice
             </a>
-          </>
+          </>,
         );
       }
 

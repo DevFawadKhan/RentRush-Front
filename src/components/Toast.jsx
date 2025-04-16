@@ -1,8 +1,7 @@
 // Toast.jsx
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-
-const Toast = (message, type, navigator=null) => {
+const Toast = (message, type, navigator = null) => {
   const toastOptions = {
     position: "top-right",
     autoClose: 3000,
@@ -13,24 +12,23 @@ const Toast = (message, type, navigator=null) => {
     progress: undefined,
     theme: "light",
     onClose: () => {
-        if (navigator) {
-          navigator();
-        }
-      },
-  
+      if (navigator) {
+        navigator();
+      }
+    },
   };
 
   switch (type) {
-    case 'error':
+    case "error":
       toast.error(message, toastOptions);
       break;
-    case 'warn':
+    case "warn":
       toast.warn(message, toastOptions);
       break;
-    case 'success':
+    case "success":
       toast.success(message, toastOptions);
       break;
-    case 'info':
+    case "info":
       toast.info(message, toastOptions);
       break;
     default:

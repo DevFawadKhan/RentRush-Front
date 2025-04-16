@@ -13,7 +13,7 @@ const MarkCompleteMaintenance = ({ carId, onClose }) => {
       await axios.post(
         `${Base_Url}/api/car/complete-maintenance/${carId}`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       Toast("Maintenance marked as completed!", "success");
       onClose();
@@ -21,7 +21,7 @@ const MarkCompleteMaintenance = ({ carId, onClose }) => {
       console.error("Error marking maintenance complete:", err);
       Toast(
         err?.response?.data?.message || "Failed to mark as complete",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);

@@ -17,7 +17,7 @@ const ShowroomDashboard = () => {
       });
       setCars(response.data); // Set the fetched data to vehicles state
       const hasRentedCars = response.data.some(
-        (car) => car.availability === "Rented Out"
+        (car) => car.availability === "Rented Out",
       );
       setActiveTab(hasRentedCars ? "Rented Out" : "Available");
     } catch (err) {
@@ -44,7 +44,7 @@ const ShowroomDashboard = () => {
   const forMaintenance = cars.filter(
     (car) =>
       car.availability === "Pending Return" ||
-      car.availability === "In Maintenance"
+      car.availability === "In Maintenance",
   );
   // const [activeTab, setActiveTab] = useState(
   //   rentedCars.length > 0 ? "Rented Out" : "Available"
@@ -93,13 +93,13 @@ const ShowroomDashboard = () => {
           ? rentedCars.length > 0 &&
             rentedCars.map((car, index) => <CarCard key={index} car={car} />)
           : activeTab === "Maintenance"
-          ? forMaintenance.map((car, index) => (
-              <CarCard key={index} car={car} />
-            ))
-          : availableCars.length > 0 &&
-            availableCars.map((car, index) => (
-              <CarCard key={index} car={car} />
-            ))}
+            ? forMaintenance.map((car, index) => (
+                <CarCard key={index} car={car} />
+              ))
+            : availableCars.length > 0 &&
+              availableCars.map((car, index) => (
+                <CarCard key={index} car={car} />
+              ))}
       </div>
 
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />

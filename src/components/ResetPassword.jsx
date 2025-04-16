@@ -1,5 +1,5 @@
-import React, { useState} from "react";
-import { useNavigate, useLocation,useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { token } = useParams();
-  console.log("params",token);
+  console.log("params", token);
   const navigate = useNavigate();
   // const location = useLocation();
   // const token = new URLSearchParams(location.search).get("token");
@@ -23,15 +23,17 @@ const ResetPassword = () => {
       return;
     }
     try {
-      const response = await axios.post(`${Base_Url}/api/reset-password/${token}`, {
-        password:password,
-      });
+      const response = await axios.post(
+        `${Base_Url}/api/reset-password/${token}`,
+        {
+          password: password,
+        },
+      );
       if (response.status === 200) {
         Toast("Password reset successfully!", "success");
         navigate("/login");
       }
-    } 
-    catch (error) {
+    } catch (error) {
       Toast(error.response?.data?.message || "An error occurred", "error");
     }
   };

@@ -82,7 +82,7 @@ function ShowroomInventory() {
         const response = await axios.put(
           `${Base_Url}/api/car/update/${vehicles[vehicleToEdit]?._id}`,
           formData,
-          { withCredentials: true }
+          { withCredentials: true },
         );
         fetchVehicles();
         Toast(response.data.message, "success");
@@ -120,7 +120,7 @@ function ShowroomInventory() {
     try {
       const response = await axios.delete(
         `${Base_Url}/api/car/delete/${vehicleToDelete}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       Toast(response?.data?.message || "Car deleted successfully", "success");

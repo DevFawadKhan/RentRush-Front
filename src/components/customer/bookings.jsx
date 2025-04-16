@@ -40,14 +40,14 @@ const UserBookings = () => {
             !["AM", "PM"].includes(modifier.toUpperCase())
           ) {
             throw new Error(
-              "Invalid time format. Expected format like '03:45 PM'."
+              "Invalid time format. Expected format like '03:45 PM'.",
             );
           }
 
           const [hoursStr, minutesStr] = timePart.split(":");
           if (!hoursStr || !minutesStr) {
             throw new Error(
-              "Invalid time component. Hours and minutes are required."
+              "Invalid time component. Hours and minutes are required.",
             );
           }
 
@@ -139,7 +139,7 @@ const UserBookings = () => {
         console.log("booking from array", response.data);
         console.log(
           "bookings from showrrrom",
-          selectedBookingDetails?.showroomDetails?.showroomName
+          selectedBookingDetails?.showroomDetails?.showroomName,
         );
         setError("");
       } else if (response.status === 204) {
@@ -177,7 +177,7 @@ const UserBookings = () => {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       if (response.status === 200) {
         toast(response.data.message, "success");
@@ -197,10 +197,10 @@ const UserBookings = () => {
         `${Base_Url}/api/bookcar/cancel/${bookingId}`,
         {
           withCredentials: true,
-        }
+        },
       );
       setBookings((prevBookings) =>
-        prevBookings.filter((booking) => booking._id !== bookingId)
+        prevBookings.filter((booking) => booking._id !== bookingId),
       );
       Toast("BOOKING DELETED SUCCESSFULLY", "success");
     } catch (error) {

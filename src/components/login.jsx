@@ -21,7 +21,7 @@ function Login() {
       const response = await axios.post(
         `${Base_Url}/api/login`,
         { email: email, password: password },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       const userRole = response.data.role;
       localStorage.setItem("token", response.data.token);
