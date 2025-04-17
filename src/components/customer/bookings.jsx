@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "./Navbar";
-import Toast from "../Toast";
-import EditBookingModal from "./EditBooking.jsx";
-import ConfirmationDialog from "./ConfirmationDialog.jsx";
-import Dialog from "./Dialog";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Toast from "../Toast";
+import ConfirmationDialog from "./ConfirmationDialog.jsx";
+import Dialog from "./Dialog";
+import EditBookingModal from "./EditBooking.jsx";
+import Navbar from "./Navbar";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -137,6 +137,16 @@ const UserBookings = () => {
     setCar(null);
   };
 
+  const handleViewInvoice = (invoiceUrl) => {
+    // Open invoice in a new tab or modal
+    window.open(`${invoiceUrl}`, "_blank");
+  };
+
+  const handleDownloadInvoice = (invoiceUrl) => {
+    // Trigger download
+    window.location.href = `${invoiceUrl}`;
+  };
+
   // Fetch my booking
   const fetchBookings = async () => {
     setLoading(true);
@@ -239,78 +249,67 @@ const UserBookings = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="px-6 py-8">
-        <h2 className="text-3xl font-semibold mb-6">Bookings</h2>
+      <div className="px-6 py-10">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">
+          🚘 Your Bookings
+        </h2>
+
         {bookings.length === 0 ? (
           <p className="text-lg text-gray-500">No active bookings found.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {bookings.map((booking) => {
-              if (!booking.carDetails) return null; // Skip if carDetails is not available
+              if (!booking.carDetails) return null;
+
               const CurrentDate = new Date();
               const BookingStartDate = new Date(booking?.rentalStartDate);
               const BookingEndDate = new Date(booking?.rentalEndDate);
+
               const [time, modifier] = booking?.StartTime.split(" ");
               let [hours, minutes] = time.split(":").map(Number);
               if (modifier === "PM" && hours !== 12) hours += 12;
               if (modifier === "AM" && hours === 12) hours = 0;
-              // Date + Time ko combine karo
-              BookingStartDate.setHours(hours);
-              BookingStartDate.setMinutes(minutes);
-              BookingStartDate.setSeconds(0);
+              BookingStartDate.setHours(hours, minutes, 0);
+
               const [time1, modifier1] = booking?.rentalEndTime.split(" ");
               let [hours1, minutes1] = time1.split(":").map(Number);
               if (modifier1 === "PM" && hours1 !== 12) hours1 += 12;
               if (modifier1 === "AM" && hours1 === 12) hours1 = 0;
-              // Date + Time ko combine karo
-              BookingEndDate.setHours(hours1);
-              BookingEndDate.setMinutes(minutes1);
-              BookingEndDate.setSeconds(0);
+              BookingEndDate.setHours(hours1, minutes1, 0);
 
               return (
                 <div
                   key={booking._id}
-                  className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col"
-                  style={{ width: "100%" }}
+                  className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:shadow-2xl"
                 >
-                  <div className="flex justify-between items-center p-4 border-b">
-                    <div>
-                      <h3 className="font-semibold text-lg">
-                        {booking.carDetails.carBrand}{" "}
-                        {booking.carDetails.carModel}
-                      </h3>
-                      <p className="text-gray-500">
-                        {booking.carDetails.carType}
-                      </p>
-                    </div>
-                    <div>
-                      <button
-                        onClick={() => openDialog(booking)}
-                        className="text-blue-600 font-semibold"
-                      >
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-
                   <img
                     src={`/uploads/${booking.carDetails.images[0]}`}
                     alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
-                    className="w-full h-48 object-cover rounded-t-lg"
+                    className="w-full h-52 object-cover"
                   />
 
-                  <div className="p-4 flex justify-between items-center">
-                    <p className="flex items-center text-sm text-purple-600">
-                      <span className="mr-2">
+                  <div className="p-5 flex flex-col flex-grow justify-between">
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-gray-800">
+                        {booking.carDetails.carBrand}{" "}
+                        {booking.carDetails.carModel}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {booking.carDetails.carType}
+                      </p>
+                    </div>
+
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="flex items-center text-sm text-purple-600 font-medium">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
+                          className="w-5 h-5 mr-1"
                           fill="none"
                           viewBox="0 0 24 24"
                           strokeWidth="1.5"
                           stroke="currentColor"
-                          className="w-5 h-5"
                         >
                           <path
                             strokeLinecap="round"
@@ -318,71 +317,86 @@ const UserBookings = () => {
                             d="M9.75 9.75L12 6.75m0 0l2.25 3m-2.25-3v10.5"
                           />
                         </svg>
-                      </span>
-                      {booking.carDetails.transmission}
+                        {booking.carDetails.transmission}
+                      </p>
+
+                      {new Date().toDateString() >=
+                        new Date(booking.rentalStartDate).toDateString() && (
+                        <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
+                          <button className="text-sm text-blue-600 hover:underline">
+                            Extend Booking
+                          </button>
+                        </Link>
+                      )}
+                    </div>
+
+                    <p className="text-lg font-semibold text-gray-800">
+                      PKR {booking.carDetails.rentRate} / day
                     </p>
 
-                    {new Date(Date.now()).toDateString() >=
-                    new Date(booking.rentalStartDate).toDateString() ? (
-                      <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-                        <button className="text-blue-600 hover:underline text-sm">
-                          Extend Booking
+                    <div className="mt-4 flex flex-col gap-2">
+                      {booking?.status === "returned" ? (
+                        <p className="text-green-600 font-bold">✔️ Completed</p>
+                      ) : booking?.carDetails.availability ===
+                        "In Maintenance" ? (
+                        <>
+                          <p className="text-red-600 font-bold">
+                            🛠️ In Maintenance
+                          </p>
+                          <p className="text-red-600 font-bold">
+                            ⏳ Payment Due
+                          </p>
+                          <button
+                            onClick={() => handleSeeDetails(booking)}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                          >
+                            See Details
+                          </button>
+                        </>
+                      ) : booking?.status === "return initiated" ? (
+                        <p className="text-red-600 font-bold">
+                          ⏳ Pending Return
+                        </p>
+                      ) : CurrentDate >= BookingEndDate ? (
+                        <button
+                          onClick={() => ReturnCar(booking._id)}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                        >
+                          🔙 Return Car
                         </button>
-                      </Link>
-                    ) : null}
+                      ) : CurrentDate > BookingStartDate ? (
+                        <p className="text-blue-600 font-semibold">
+                          🚀 Your Booking Starts Now
+                        </p>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => setModelOpen(true)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                          >
+                            ✏️ Update Booking
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedBooking(booking._id);
+                              setShowDialog(true);
+                            }}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                          >
+                            ❌ Cancel Booking
+                          </button>
+                        </>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => openDialog(booking)}
+                      className="mt-4 text-sm text-blue-600 font-medium hover:underline"
+                    >
+                      📄 View Details
+                    </button>
                   </div>
 
-                  <p className="px-4 text-lg font-semibold">
-                    {booking.carDetails.rentRate} Rs/d
-                  </p>
-
-                  <div className="p-4 flex flex-col gap-3">
-                    {booking?.status === "returned" ? (
-                      <p className="text-green-600 font-bold">Completed</p>
-                    ) : booking?.carDetails.availability ===
-                      "In Maintenance" ? (
-                      <>
-                        <p className="text-red-600 font-bold">In Maintenance</p>
-                        <button
-                          onClick={() => handleSeeDetails(booking)}
-                          className="bg-red-600 text-white px-4 py-2 rounded-lg"
-                        >
-                          See Details
-                        </button>
-                      </>
-                    ) : booking?.status === "return initiated" ? (
-                      <p className="text-red-600 font-bold">Pending Return</p>
-                    ) : CurrentDate >= BookingEndDate ? (
-                      <button
-                        onClick={() => ReturnCar(booking._id)}
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg"
-                      >
-                        Return Car
-                      </button>
-                    ) : CurrentDate > BookingStartDate ? (
-                      "YOUR BOOKING STARTS NOW"
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => setModelOpen(true)}
-                          className="bg-blue-300 px-4 py-2 rounded-lg"
-                        >
-                          Update Booking
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedBooking(booking._id);
-                            setShowDialog(true);
-                          }}
-                          className="bg-red-600 text-white px-4 py-2 rounded-lg"
-                        >
-                          Cancel Booking
-                        </button>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Edit Booking Modal */}
                   <EditBookingModal
                     booking={booking}
                     isOpen={ModelOpen}
@@ -553,6 +567,26 @@ const UserBookings = () => {
                   No maintenance logs found for this car.
                 </p>
               )}
+            </div>
+            <div className="mt-8 flex flex-col md:flex-row justify-center gap-4">
+              <button
+                onClick={() =>
+                  handleViewInvoice(selectedBookingDetails.currentInvoiceUrl)
+                }
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition duration-300"
+              >
+                📄 View Invoice
+              </button>
+              <button
+                onClick={() =>
+                  handleDownloadInvoice(
+                    selectedBookingDetails.currentInvoiceUrl
+                  )
+                }
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-md transition duration-300"
+              >
+                ⬇️ Download Invoice
+              </button>
             </div>
           </div>
         </div>
