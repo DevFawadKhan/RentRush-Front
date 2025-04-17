@@ -236,7 +236,7 @@ function SignUp() {
                 <p className="text-red-700 text-xs mt-1">{passwordError}</p>
               )}
               {password && !passwordError && (
-                <p className="text-green-700 text-xs mt-1">Password meets requirements</p>
+                <p className="text-black text-xs mt-1">Password meets requirements</p>
               )}
             </div>
 
@@ -263,7 +263,7 @@ function SignUp() {
                 <p className="text-red-700 text-xs mt-1">{passwordError}</p>
               )}
               {confirmPassword && password === confirmPassword && !passwordError && (
-                <p className="text-green-700 text-xs mt-1">Passwords match</p>
+                <p className="text-black text-xs mt-1">Passwords match</p>
               )}
             </div>
 
