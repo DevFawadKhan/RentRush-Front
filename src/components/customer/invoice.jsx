@@ -63,7 +63,6 @@ useEffect(() => {
       });
       console.log("Fetched Invoice", response?.data);
        setInvoices(response?.data?.data);
-      console.log("state",invoices)
     } catch (error) {
       console.error("Error fetching invoices:", error);
       setError(error.response?.data?.message || "Failed to fetch invoices");
@@ -148,7 +147,7 @@ const Filterdata=invoices.filter(item =>item?.bookingId.toLowerCase().includes(s
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Car Name</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renting Price</th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -162,8 +161,8 @@ const Filterdata=invoices.filter(item =>item?.bookingId.toLowerCase().includes(s
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{invoice.bookingId}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{localStorage.getItem("name")}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">honda</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">5000</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{invoice.carName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{invoice?.balance}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end space-x-2">
                       <button className="text-blue-600 hover:text-blue-900">
