@@ -3,32 +3,33 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   function scrollToHome() {
-    const element = document.getElementById('Home');
+    const element = document.getElementById("Home");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
   function scrollToSteps() {
-    const element = document.getElementById('steps');
+    const element = document.getElementById("steps");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
   function scrollToRequirements() {
-    const element = document.getElementById('requirements');
+    const element = document.getElementById("requirements");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
   function scrollToDetails() {
-    const element = document.getElementById('detail');
+    const element = document.getElementById("detail");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
-  }function scrollToTest() {
-    const element = document.getElementById('rent');
+  }
+  function scrollToTest() {
+    const element = document.getElementById("rent");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
   return (
@@ -36,14 +37,16 @@ const Navbar = () => {
       <div className="mx-auto px-4 flex justify-between items-center w-[100%]">
         <div className="flex items-center">
           <Link to="/">
-          <div className="flex items-center">
-          <img
-    src="/src/assets/logo.png"
-    alt="Logo"
-    className="-my-3 h-[80px] mr-2"
-  />
-  <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">RentRush</h1>
-</div>
+            <div className="flex items-center">
+              <img
+                src="/src/assets/logo.png"
+                alt="Logo"
+                className="-my-3 h-[80px] mr-2"
+              />
+              <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
+                RentRush
+              </h1>
+            </div>
           </Link>
         </div>
 

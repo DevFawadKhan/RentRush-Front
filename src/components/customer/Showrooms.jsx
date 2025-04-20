@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import ShowroomCard from "./ShowroomCard";
 import Navbar from "./Navbar";
 import { Search } from "lucide-react";
-import axios from 'axios';
-import PropTypes from 'prop-types';
+import axios from "axios";
+import PropTypes from "prop-types";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -17,8 +17,8 @@ const Showrooms = () => {
     try {
       const response = await axios.get(`${Base_Url}/api/admin/adminview`);
       setData(response.data.showroomSection);
-      console.log("showroom",response.data.showroomSection)
-      console.log("data",data)
+      console.log("showroom", response.data.showroomSection);
+      console.log("data", data);
     } catch (error) {
       setError(error.message);
       console.error("Error fetching data:", error.message);
@@ -32,7 +32,7 @@ const Showrooms = () => {
   }, []);
 
   const filteredData = data.filter((showroom) =>
-    showroom.showroomName.toLowerCase().includes(searchQuery.toLowerCase())
+    showroom.showroomName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

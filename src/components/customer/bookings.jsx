@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "./Navbar";
-import Toast from "../Toast";
-import EditBookingModal from "./EditBooking.jsx";
-import ConfirmationDialog from "./ConfirmationDialog.jsx";
-import Dialog from "./Dialog";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Toast from "../Toast";
+import ConfirmationDialog from "./ConfirmationDialog.jsx";
+import Dialog from "./Dialog";
+import EditBookingModal from "./EditBooking.jsx";
+import Navbar from "./Navbar";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -19,10 +19,18 @@ const UserBookings = () => {
   const [ShowDialog, setShowDialog] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [car, setCar] = useState(null);
-  const currentDate = new Date().toLocaleDateString("en-CA");
+  const currentDate = new Date().toLocaleDateString("en-PK");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBookingDetails, setSelectedBookingDetails] = useState(null); // Track the selected booking for the dialog
   const [progress, setProgress] = useState(0);
+  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
+  const [maintenanceDetails, setMaintenanceDetails] = useState(null);
+
+  const handleSeeDetails = (booking) => {
+    setSelectedBookingDetails(booking);
+    setShowMaintenanceModal(true);
+  };
+
   useEffect(() => {
     if (selectedBookingDetails) {
       const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime } =
@@ -67,6 +75,12 @@ const UserBookings = () => {
 
           if (modifier.toUpperCase() === "PM" && hours !== 12) hours += 12;
           if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
+
+          setMaintenanceDetails(
+            selectedBookingDetails?.carDetails?.maintenanceLogs.filter(
+              (log) => log.bookingId === selectedBookingDetails._id
+            )
+          );
 
           return { hours, minutes };
         } catch (error) {
@@ -122,6 +136,17 @@ const UserBookings = () => {
     setShowDetailsModal(false);
     setCar(null);
   };
+
+  const handleViewInvoice = (invoiceUrl) => {
+    // Open invoice in a new tab or modal
+    window.open(`${invoiceUrl}`, "_blank");
+  };
+
+  const handleDownloadInvoice = (invoiceUrl) => {
+    // Trigger download
+    window.location.href = `${invoiceUrl}`;
+  };
+
   // Fetch my booking
   const fetchBookings = async () => {
     setLoading(true);
@@ -224,133 +249,160 @@ const UserBookings = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="px-10">
-        <h2 className="flex justify-start items-start text-2xl font-bold my-4">
-          Bookings
+      <div className="px-6 py-10">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">
+          🚘 Your Bookings
         </h2>
+
         {bookings.length === 0 ? (
-          <p>No active bookings found.</p>
+          <p className="text-lg text-gray-500">No active bookings found.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {bookings.map((booking) => {
-              if (!booking.carDetails) return null; // Skip if carDetails is not available
+              if (!booking.carDetails) return null;
+
               const CurrentDate = new Date();
-              const BookingStartDate = new Date(booking?.startDate);
+              const BookingStartDate = new Date(booking?.rentalStartDate);
+              const BookingEndDate = new Date(booking?.rentalEndDate);
+
               const [time, modifier] = booking?.StartTime.split(" ");
               let [hours, minutes] = time.split(":").map(Number);
               if (modifier === "PM" && hours !== 12) hours += 12;
               if (modifier === "AM" && hours === 12) hours = 0;
-              // Date + Time ko combine karo
-              BookingStartDate.setHours(hours);
-              BookingStartDate.setMinutes(minutes);
-              BookingStartDate.setSeconds(0);
+              BookingStartDate.setHours(hours, minutes, 0);
+
+              const [time1, modifier1] = booking?.rentalEndTime.split(" ");
+              let [hours1, minutes1] = time1.split(":").map(Number);
+              if (modifier1 === "PM" && hours1 !== 12) hours1 += 12;
+              if (modifier1 === "AM" && hours1 === 12) hours1 = 0;
+              BookingEndDate.setHours(hours1, minutes1, 0);
+
               return (
-                <>
-                  <div
-                    key={booking._id}
-                    className="bg-white shadow-md rounded-lg p-4 relative"
-                    style={{ width: "400px", height: "350px" }}
-                  >
-                    <div className="flex justify-between items-center mb-3">
-                      <div>
-                        <h3 className="font-bold text-lg">
-                          {booking.carDetails.carBrand}{" "}
-                          {booking.carDetails.carModel}
-                        </h3>
-                        <p className="text-gray-500">
-                          {booking.carDetails.carType}
-                        </p>
-                      </div>
-                      {/* this will change  */}
-                      <div className="text-blue-400 font-bold">
-                        <button onClick={() => openDialog(booking)}>
-                          View Details
-                        </button>
-                      </div>
+                <div
+                  key={booking._id}
+                  className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:shadow-2xl"
+                >
+                  <img
+                    src={`/uploads/${booking.carDetails.images[0]}`}
+                    alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
+                    className="w-full h-52 object-cover"
+                  />
+
+                  <div className="p-5 flex flex-col flex-grow justify-between">
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-gray-800">
+                        {booking.carDetails.carBrand}{" "}
+                        {booking.carDetails.carModel}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {booking.carDetails.carType}
+                      </p>
                     </div>
-                    <img
-                      src={`/uploads/${booking.carDetails.images[0]}`}
-                      alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
-                      className="w-full h-40 object-cover rounded-md mb-3"
-                    />
-                    <div className="flex justify-between items-center mb-2">
-                      <p className="flex items-center">
-                        <span className="text-purple-600 mr-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-5 h-5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M9.75 9.75L12 6.75m0 0l2.25 3m-2.25-3v10.5"
-                            />
-                          </svg>
-                        </span>
+
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="flex items-center text-sm text-purple-600 font-medium">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-5 h-5 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9.75 9.75L12 6.75m0 0l2.25 3m-2.25-3v10.5"
+                          />
+                        </svg>
                         {booking.carDetails.transmission}
                       </p>
-                      {/* Show extend booking button */}
-                      {new Date(Date.now()).toDateString() >=
-                        new Date(booking.startDate).toDateString() && (
+
+                      {new Date().toDateString() >=
+                        new Date(booking.rentalStartDate).toDateString() && (
                         <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-                          <button className="text-blue-600 hover:underline">
+                          <button className="text-sm text-blue-600 hover:underline">
                             Extend Booking
                           </button>
                         </Link>
                       )}
                     </div>
-                    <p className="text-lg font-bold">
-                      {booking.carDetails.rentRate} Rs/d
+
+                    <p className="text-lg font-semibold text-gray-800">
+                      PKR {booking.carDetails.rentRate} / day
                     </p>
-                    <div className="space-x-12">
-                      {/* Return car button based on EndDate and time */}
+
+                    <div className="mt-4 flex flex-col gap-2">
                       {booking?.status === "returned" ? (
-                        <p className="text-green-600 font-bold">Completed</p>
+                        <p className="text-green-600 font-bold">✔️ Completed</p>
+                      ) : booking?.carDetails.availability ===
+                        "In Maintenance" ? (
+                        <>
+                          <p className="text-red-600 font-bold">
+                            🛠️ In Maintenance
+                          </p>
+                          <p className="text-red-600 font-bold">
+                            ⏳ Payment Due
+                          </p>
+                          <button
+                            onClick={() => handleSeeDetails(booking)}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                          >
+                            See Details
+                          </button>
+                        </>
                       ) : booking?.status === "return initiated" ? (
-                        <p className="text-red-600 font-bold">Pending Return</p>
-                      ) : currentDate === booking?.EndDate ? (
+                        <p className="text-red-600 font-bold">
+                          ⏳ Pending Return
+                        </p>
+                      ) : CurrentDate >= BookingEndDate ? (
                         <button
                           onClick={() => ReturnCar(booking._id)}
-                          className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg"
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
                         >
-                          Return Car
+                          🔙 Return Car
                         </button>
                       ) : CurrentDate > BookingStartDate ? (
-                        "YOUR  BOOKING START NOW"
+                        <p className="text-blue-600 font-semibold">
+                          🚀 Your Booking Starts Now
+                        </p>
                       ) : (
                         <>
                           <button
                             onClick={() => setModelOpen(true)}
-                            className="px-3 py-2 bg-blue-300 rounded-lg"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                           >
-                            Update booking
+                            ✏️ Update Booking
                           </button>
                           <button
                             onClick={() => {
                               setSelectedBooking(booking._id);
                               setShowDialog(true);
                             }}
-                            className="bg-red-600 text-white px-2 py-3 font-bold rounded-lg"
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                           >
-                            Cancel booking
+                            ❌ Cancel Booking
                           </button>
                         </>
                       )}
                     </div>
-                    {/* Edit Booking Modal */}
-                    <EditBookingModal
-                      booking={booking}
-                      isOpen={ModelOpen}
-                      onClose={() => setModelOpen(false)}
-                    />
+
+                    <button
+                      onClick={() => openDialog(booking)}
+                      className="mt-4 text-sm text-blue-600 font-medium hover:underline"
+                    >
+                      📄 View Details
+                    </button>
                   </div>
-                </>
+
+                  <EditBookingModal
+                    booking={booking}
+                    isOpen={ModelOpen}
+                    onClose={() => setModelOpen(false)}
+                  />
+                </div>
               );
             })}
           </div>
@@ -393,48 +445,7 @@ const UserBookings = () => {
                     <td className="border p-2 font-bold">Model</td>
                     <td className="border p-2">{car.carModel}</td>
                   </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Color</td>
-                    <td className="border p-2">{car.color}</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Mileage</td>
-                    <td className="border p-2">{car.mileage} miles</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Body Type</td>
-                    <td className="border p-2">{car.bodyType}</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Transmission</td>
-                    <td className="border p-2">{car.transmission}</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Engine Type</td>
-                    <td className="border p-2">{car.engineType || "N/A"}</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Registration Year</td>
-                    <td className="border p-2">{car.year || "N/A"}</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-              <td className="border p-2 font-bold">Seat Capacity</td>
-              <td className="border p-2">{car.seatCapacity} </td>
-            </tr>
-            <tr className="hover:bg-gray-50">
-              <td className="border p-2 font-bold">Luggage Capacity</td>
-              <td className="border p-2">{car.luggageCapacity} </td>
-            </tr>
-            <tr className="hover:bg-gray-50">
-              <td className="border p-2 font-bold">Fuel Type</td>
-              <td className="border p-2">{car.fuelType} </td>
-            </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="border p-2 font-bold">Price</td>
-                    <td className="border p-2 font-bold">
-                      {car.rentRate} rs/Day
-                    </td>
-                  </tr>
+                  {/* More rows for car details */}
                 </tbody>
               </table>
             </div>
@@ -451,22 +462,135 @@ const UserBookings = () => {
         />
       )}
 
-{isDialogOpen && selectedBookingDetails && (
-  <Dialog
-    isOpen={isDialogOpen}
-    onClose={closeDialog}
-    car={selectedBookingDetails.carDetails}
-    showroom={selectedBookingDetails.showroomDetails}
-    bookingDetails={{
-      customerName: selectedBookingDetails.customerName,
-      startDateTime: selectedBookingDetails.rentalStartDate,
-      endDateTime: selectedBookingDetails.rentalEndDate,
-      starttime:selectedBookingDetails.rentalStartTime,
-      endtime:selectedBookingDetails.rentalEndTime,
-    }}
-    progress={progress} // Pass the progress state
-  />
-)}
+      {/* Booking Details Dialog */}
+      {isDialogOpen && selectedBookingDetails && (
+        <Dialog
+          isOpen={isDialogOpen}
+          onClose={closeDialog}
+          car={selectedBookingDetails.carDetails}
+          showroom={selectedBookingDetails.showroomDetails}
+          bookingDetails={{
+            customerName: selectedBookingDetails.customerName,
+            startDateTime: selectedBookingDetails.rentalStartDate,
+            endDateTime: selectedBookingDetails.rentalEndDate,
+            starttime: selectedBookingDetails.rentalStartTime,
+            endtime: selectedBookingDetails.rentalEndTime,
+          }}
+          progress={progress} // Pass the progress state
+        />
+      )}
+      {showMaintenanceModal && maintenanceDetails && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm"
+          onClick={() => setShowMaintenanceModal(false)}
+        >
+          <div
+            className="bg-white p-8 rounded-2xl relative w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowMaintenanceModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-3xl font-bold transition duration-300"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+
+            <h2 className="text-4xl font-bold text-center text-gray-800 mb-6 border-b pb-2">
+              🚗 Maintenance Details
+            </h2>
+
+            <div className="space-y-6">
+              {maintenanceDetails.length > 0 ? (
+                maintenanceDetails.map((log, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-50 p-5 rounded-lg shadow-sm border border-gray-200 transition hover:shadow-md"
+                  >
+                    <p className="text-lg font-semibold text-gray-700 mb-2">
+                      🗓️ Date:{" "}
+                      <span className="font-normal">
+                        {new Date(log.date).toLocaleDateString()}
+                      </span>
+                    </p>
+
+                    <div className="mb-3">
+                      <p className="font-semibold text-gray-600 mb-1">
+                        🔧 Repair Tasks Performed On:
+                      </p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1">
+                        {log.tasks.map((task, taskIndex) => (
+                          <li key={taskIndex}>
+                            <span className="font-medium">
+                              {Object.keys(task)[0]}
+                            </span>{" "}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mb-3">
+                      <p className="font-semibold text-gray-600 mb-1">
+                        📝 Repair Descriptions:
+                      </p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1">
+                        {log.repairDescriptions.map((desc, descIndex) => (
+                          <li key={descIndex}>
+                            <span className="font-medium">
+                              {Object.keys(desc)[0]}:
+                            </span>{" "}
+                            {desc[Object.keys(desc)[0]]}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold text-gray-600 mb-1">
+                        💰 Repair Costs:
+                      </p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1">
+                        {log.repairCosts.map((cost, costIndex) => (
+                          <li key={costIndex}>
+                            <span className="font-medium">
+                              {Object.keys(cost)[0]}:
+                            </span>{" "}
+                            Rs. {cost[Object.keys(cost)[0]]}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-600 font-medium">
+                  No maintenance logs found for this car.
+                </p>
+              )}
+            </div>
+            <div className="mt-8 flex flex-col md:flex-row justify-center gap-4">
+              <button
+                onClick={() =>
+                  handleViewInvoice(selectedBookingDetails.currentInvoiceUrl)
+                }
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition duration-300"
+              >
+                📄 View Invoice
+              </button>
+              <button
+                onClick={() =>
+                  handleDownloadInvoice(
+                    selectedBookingDetails.currentInvoiceUrl
+                  )
+                }
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-md transition duration-300"
+              >
+                ⬇️ Download Invoice
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

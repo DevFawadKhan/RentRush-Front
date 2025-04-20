@@ -36,7 +36,9 @@ function TestContainer() {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [testimonialsPerPage, setTestimonialsPerPage] = useState(window.innerWidth <= 640 ? 1 : 3);
+  const [testimonialsPerPage, setTestimonialsPerPage] = useState(
+    window.innerWidth <= 640 ? 1 : 3,
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,7 +88,9 @@ function TestContainer() {
           <span>Previous</span>
         </button>
         <div className="flex gap-2">
-          {Array.from({ length: Math.ceil(reviews.length / testimonialsPerPage) }).map((_, index) => (
+          {Array.from({
+            length: Math.ceil(reviews.length / testimonialsPerPage),
+          }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index * testimonialsPerPage)}

@@ -19,7 +19,7 @@ const ForgotPassword = () => {
       const response = await axios.post(`${Base_Url}/api/forgot-password`, {
         email,
       });
-      console.log("response",response.data.url)
+      console.log("response", response.data.url);
       if (response.status === 200) {
         Toast("Password reset email sent!", "success");
         navigate("/reset-confirmation", { state: { email } });

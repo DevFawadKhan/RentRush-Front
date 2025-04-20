@@ -38,21 +38,35 @@ const Navbar = () => {
               className="-my-3 h-[80px] mr-2"
             />
           </Link>
-          <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">RentRush</h1>
+          <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
+            RentRush
+          </h1>
         </div>
 
         {/* Navigation Links */}
         <div className="flex items-center space-x-8">
-          <Link to="/customer/cars" className="text-gray-700 hover:text-primary transition-colors">
+          <Link
+            to="/customer/cars"
+            className="text-gray-700 hover:text-primary transition-colors"
+          >
             Cars
           </Link>
-          <Link to="/customer/showrooms" className="text-gray-700 hover:text-primary transition-colors">
+          <Link
+            to="/customer/showrooms"
+            className="text-gray-700 hover:text-primary transition-colors"
+          >
             Showrooms
           </Link>
-          <Link to="/customer/bookings" className="text-gray-700 hover:text-primary transition-colors">
+          <Link
+            to="/customer/bookings"
+            className="text-gray-700 hover:text-primary transition-colors"
+          >
             Bookings
           </Link>
-          <Link to="/customer/invoice" className="text-gray-700 hover:text-primary transition-colors">
+          <Link
+            to="/customer/invoice"
+            className="text-gray-700 hover:text-primary transition-colors"
+          >
             Invoice
           </Link>
         </div>

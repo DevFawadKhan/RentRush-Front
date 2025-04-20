@@ -16,10 +16,13 @@ function LandingPage() {
         <div className="background bg-cover bg-center w-full h-screen flex flex-col justify-center px-6 sm:px-14">
           <div className="info lg:w-[50%]">
             <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white font-poppins">
-              FAST AND EASY WAY TO <span className="text-[#C17D3C]">RENT</span> A CAR
+              FAST AND EASY WAY TO <span className="text-[#C17D3C]">RENT</span>{" "}
+              A CAR
             </h1>
             <p className="text-md sm:text-lg lg:text-xl font-poppins py-6 text-white lg:pr-40">
-              Our RentRush online booking system is designed to meet the specific needs of car rental business owners. This easy-to-use car rental software will let you manage.
+              Our RentRush online booking system is designed to meet the
+              specific needs of car rental business owners. This easy-to-use car
+              rental software will let you manage.
             </p>
             <div className="buttons flex flex-col sm:flex-row gap-4">
               <Link

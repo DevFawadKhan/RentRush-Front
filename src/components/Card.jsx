@@ -4,7 +4,11 @@ const Card = ({ title, desc, img }) => {
   return (
     <div className="p-4 rounded-lg flex items-center space-x-4">
       <div className="bg-[#C17D3C] rounded-md flex items-center justify-center p-4">
-        <img src={`/src/assets/choose/${img}.png`} className="w-8" alt={title} />
+        <img
+          src={`/src/assets/choose/${img}.png`}
+          className="w-8"
+          alt={title}
+        />
       </div>
       <div>
         <h2 className="text-white font-bold text-lg">{title}</h2>

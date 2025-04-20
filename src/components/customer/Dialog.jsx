@@ -1,6 +1,6 @@
-import PropTypes, { bool } from 'prop-types';
-import { useState, useEffect } from 'react';
-import { FiClock, FiCheckCircle, FiAlertTriangle, FiX } from 'react-icons/fi';
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { FiAlertTriangle, FiClock, FiX } from "react-icons/fi";
 
 const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -17,26 +17,26 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
   // Parse AM/PM time and date to timestamp
   const parseDateTimeToTimestamp = (dateStr, timeStr) => {
     try {
-      const [time, period] = timeStr.split(' ');
-      let [hours, minutes] = time.split(':').map(Number);
-      
+      const [time, period] = timeStr.split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
+
       // Convert to 24-hour format
-      if (period.toUpperCase() === 'PM' && hours !== 12) hours += 12;
-      if (period.toUpperCase() === 'AM' && hours === 12) hours = 0;
+      if (period.toUpperCase() === "PM" && hours !== 12) hours += 12;
+      if (period.toUpperCase() === "AM" && hours === 12) hours = 0;
 
       // Parse date (assuming format like "2025-04-20")
-      const [year, month, day] = dateStr.split('-').map(Number);
-      
+      const [year, month, day] = dateStr.split("-").map(Number);
+
       // Create Date object (month is 0-indexed in JavaScript)
       const date = new Date(year, month - 1, day, hours, minutes);
-      
+
       if (isNaN(date.getTime())) {
-        throw new Error('Invalid date/time');
+        throw new Error("Invalid date/time");
       }
-      
+
       return date.getTime();
     } catch (err) {
-      console.error('Error parsing date/time:', err, { dateStr, timeStr });
+      console.error("Error parsing date/time:", err, { dateStr, timeStr });
       return null;
     }
   };
@@ -50,7 +50,9 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
     const absTimeDiff = Math.max(0, Math.floor(timeDiff));
 
     const days = Math.floor(absTimeDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((absTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (absTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
     const minutes = Math.floor((absTimeDiff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((absTimeDiff % (1000 * 60)) / 1000);
 
@@ -60,87 +62,122 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
     if (minutes > 0 || hours > 0 || days > 0) result.push(`${minutes}m`);
     result.push(`${seconds}s`);
 
-    return result.join(' ') || '0s';
+    return result.join(" ") || "0s";
   };
 
   // Validate inputs
   useEffect(() => {
-    if (!startTime || !endTime || !StartDate || !EndDate || !startTimestamp || !endTimestamp) {
-      setError('Invalid date or time inputs');
+    if (
+      !startTime ||
+      !endTime ||
+      !StartDate ||
+      !EndDate ||
+      !startTimestamp ||
+      !endTimestamp
+    ) {
+      setError("Invalid date or time inputs");
     } else if (startTimestamp >= endTimestamp) {
-      setError('Start time must be before end time');
+      setError("Start time must be before end time");
     } else {
       setError(null);
     }
   }, [startTime, endTime, StartDate, EndDate, startTimestamp, endTimestamp]);
 
   // Calculate progress percentage
-  const totalDuration = endTimestamp && startTimestamp ? endTimestamp - startTimestamp : 0;
+  const totalDuration =
+    endTimestamp && startTimestamp ? endTimestamp - startTimestamp : 0;
   const elapsedTime = startTimestamp ? currentTime - startTimestamp : 0;
-  const progress = totalDuration > 0 
-    ? Math.min(100, Math.max(0, (elapsedTime / totalDuration) * 100)) 
-    : 0;
+  const progress =
+    totalDuration > 0
+      ? Math.min(100, Math.max(0, (elapsedTime / totalDuration) * 100))
+      : 0;
 
   // Determine booking status
-  const [status, setStatus] = useState('pending');
-  const [timeDisplay, setTimeDisplay] = useState('');
+  const [status, setStatus] = useState("pending");
+  const [timeDisplay, setTimeDisplay] = useState("");
 
   useEffect(() => {
     // Debug logging
-    console.log('Current Time:', new Date(currentTime).toISOString(), currentTime);
-    console.log('Start Time:', startTimestamp ? new Date(startTimestamp).toISOString() : 'Invalid', startTimestamp);
-    console.log('End Time:', endTimestamp ? new Date(endTimestamp).toISOString() : 'Invalid', endTimestamp);
+    console.log(
+      "Current Time:",
+      new Date(currentTime).toISOString(),
+      currentTime
+    );
+    console.log(
+      "Start Time:",
+      startTimestamp ? new Date(startTimestamp).toISOString() : "Invalid",
+      startTimestamp
+    );
+    console.log(
+      "End Time:",
+      endTimestamp ? new Date(endTimestamp).toISOString() : "Invalid",
+      endTimestamp
+    );
 
     if (error) {
-      setTimeDisplay('Error: Invalid times');
-      setStatus('error');
+      setTimeDisplay("Error: Invalid times");
+      setStatus("error");
       return;
     }
 
     if (currentTime < startTimestamp) {
       const timeToStart = startTimestamp - currentTime;
-      console.log('Pending - Time to start:', timeToStart);
-      setStatus('pending');
+      console.log("Pending - Time to start:", timeToStart);
+      setStatus("pending");
       setTimeDisplay(`Time left: ${formatTimeDifference(timeToStart)}`);
     } else if (currentTime >= startTimestamp && currentTime <= endTimestamp) {
       const remaining = endTimestamp - currentTime;
-      console.log('Active - Time remaining:', remaining);
-      setStatus('active');
+      console.log("Active - Time remaining:", remaining);
+      setStatus("active");
       setTimeDisplay(`Time left: ${formatTimeDifference(remaining)}`);
     } else if (currentTime > endTimestamp) {
       const overdueTime = currentTime - endTimestamp;
-      console.log('Overdue - Time overdue:', overdueTime);
-      setStatus('overdue');
+      console.log("Overdue - Time overdue:", overdueTime);
+      setStatus("overdue");
       setTimeDisplay(`Overdue by: ${formatTimeDifference(overdueTime)}`);
     }
   }, [currentTime, startTimestamp, endTimestamp, error]);
 
   const getProgressColor = () => {
-    switch(status) {
-      case 'overdue': return 'bg-gradient-to-r from-red-500 to-red-700';
-      case 'pending': return 'bg-gradient-to-r from-gray-500 to-gray-700';
-      case 'error': return 'bg-gradient-to-r from-red-300 to-red-500';
-      default: return 'bg-gradient-to-r from-blue-500 to-blue-700';
+    switch (status) {
+      case "overdue":
+        return "bg-gradient-to-r from-red-500 to-red-700";
+      case "pending":
+        return "bg-gradient-to-r from-gray-500 to-gray-700";
+      case "error":
+        return "bg-gradient-to-r from-red-300 to-red-500";
+      default:
+        return "bg-gradient-to-r from-blue-500 to-blue-700";
     }
   };
 
   const getStatusMessage = () => {
-    switch(status) {
-      case 'pending': return 'Booking will start soon';
-      case 'active': return 'Booking in progress';
-      case 'overdue': return 'Overdue';
-      case 'error': return 'Error';
-      default: return '';
+    switch (status) {
+      case "pending":
+        return "Booking will start soon";
+      case "active":
+        return "Booking in progress";
+      case "overdue":
+        return "Overdue";
+      case "error":
+        return "Error";
+      default:
+        return "";
     }
   };
 
   const getStatusIcon = () => {
-    switch(status) {
-      case 'pending': return <FiClock className="mr-1" />;
-      case 'active': return <FiClock className="mr-1" />;
-      case 'overdue': return <FiAlertTriangle className="mr-1" />;
-      case 'error': return <FiAlertTriangle className="mr-1" />;
-      default: return null;
+    switch (status) {
+      case "pending":
+        return <FiClock className="mr-1" />;
+      case "active":
+        return <FiClock className="mr-1" />;
+      case "overdue":
+        return <FiAlertTriangle className="mr-1" />;
+      case "error":
+        return <FiAlertTriangle className="mr-1" />;
+      default:
+        return null;
     }
   };
 
@@ -152,12 +189,14 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
           {/* Progress Indicator */}
           <div
             className={`h-full rounded-full ${getProgressColor()} shadow-md transition-all duration-300`}
-            style={{ width: `${status === 'pending' || status === 'error' ? 0 : progress}%` }}
+            style={{
+              width: `${status === "pending" || status === "error" ? 0 : progress}%`,
+            }}
           ></div>
         </div>
 
         {/* Moving Car Icon - Only show when booking is active or overdue */}
-        {(status === 'active' || status === 'overdue') && (
+        {(status === "active" || status === "overdue") && (
           <div
             className="absolute top-0 transform -translate-y-1/2 transition-all duration-300"
             style={{ left: `calc(${progress}% - 35px)` }}
@@ -175,13 +214,17 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
         <div className="flex justify-between items-center mt-3">
           <div className="flex items-center text-sm font-medium">
             {getStatusIcon()}
-            <span className={status === 'overdue' || status === 'error' ? 'text-red-600' : 'text-gray-700'}>
+            <span
+              className={
+                status === "overdue" || status === "error"
+                  ? "text-red-600"
+                  : "text-gray-700"
+              }
+            >
               {getStatusMessage()}
             </span>
           </div>
-          <div className="text-sm text-gray-500">
-            {timeDisplay}
-          </div>
+          <div className="text-sm text-gray-500">{timeDisplay}</div>
         </div>
       </div>
     </div>
@@ -194,10 +237,10 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
   // Convert booking dates to timestamps
   const startTime = new Date(bookingDetails.startDateTime).getTime();
   const endTime = new Date(bookingDetails.endDateTime).getTime();
-  const StartDate=new Date(bookingDetails.startDateTime)
-  const EndDate=new Date(bookingDetails.endDateTime)
-let totalDays = Math.ceil((EndDate-StartDate) / (1000 * 60 * 60 * 24));
-if (totalDays === 0) totalDays = 1;
+  const StartDate = new Date(bookingDetails.startDateTime);
+  const EndDate = new Date(bookingDetails.endDateTime);
+  let totalDays = Math.ceil((EndDate - StartDate) / (1000 * 60 * 60 * 24));
+  if (totalDays === 0) totalDays = 1;
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -233,42 +276,49 @@ if (totalDays === 0) totalDays = 1;
         </div>
 
         {/* Progress Bar */}
-        <BookingProgressBar startTime={bookingDetails.starttime} endTime={bookingDetails.endtime} 
-        StartDate={bookingDetails.startDateTime} EndDate={bookingDetails.endDateTime} />
+        <BookingProgressBar
+          startTime={bookingDetails.starttime}
+          endTime={bookingDetails.endtime}
+          StartDate={bookingDetails.startDateTime}
+          EndDate={bookingDetails.endDateTime}
+        />
 
         {/* Combined Table for Booking and Car Details */}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border text-sm">
             <tbody>
-            <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Booked By</td>
-    <td className="p-3" colSpan={3}>{localStorage.getItem("name")}</td>
-  </tr>
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Booked By</td>
+                <td className="p-3" colSpan={3}>
+                  {localStorage.getItem("name")}
+                </td>
+              </tr>
 
-  <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Renting Period</td>
-    <td className="p-3" colSpan={3}>
-      {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
-    </td>
-  </tr>
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Renting Period</td>
+                <td className="p-3" colSpan={3}>
+                  {bookingDetails.startDateTime} - {bookingDetails.endDateTime}
+                </td>
+              </tr>
 
-  <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Time Slot</td>
-    <td className="p-3" colSpan={3}>
-     {"StartTime "} {bookingDetails.starttime} - {"EndTime "}{bookingDetails.endtime}
-    </td>
-  </tr>
-  
-  <tr className="hover:bg-gray-50 border-t">
-    <td className="p-3 font-bold">Total Duration</td>
-    <td className="p-3 font-medium text-blue-700">
-      {totalDays} Day(s)
-    </td>
-    {/* <td className="p-3 font-medium text-blue-700">
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Time Slot</td>
+                <td className="p-3" colSpan={3}>
+                  {"StartTime "} {bookingDetails.starttime} - {"EndTime "}
+                  {bookingDetails.endtime}
+                </td>
+              </tr>
+
+              <tr className="hover:bg-gray-50 border-t">
+                <td className="p-3 font-bold">Total Duration</td>
+                <td className="p-3 font-medium text-blue-700">
+                  {totalDays} Day(s)
+                </td>
+                {/* <td className="p-3 font-medium text-blue-700">
       {bookingDetails.totalHours} Hour(s)
     </td> */}
-    <td className="p-3"></td>
-  </tr>
+                <td className="p-3"></td>
+              </tr>
 
               <tr className="hover:bg-gray-50">
                 <td className="border p-3 font-bold">Car Model</td>

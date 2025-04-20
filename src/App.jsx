@@ -1,26 +1,26 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/login.jsx";
 import SignUp from "./components/signup.jsx";
-import ShowroomSignUp from "./components/showroom/signup.jsx"
+import ShowroomSignUp from "./components/showroom/signup.jsx";
 import ShowroomDashboard from "./components/showroom/dashboard.jsx";
-import ShowroomInventory from "./components/showroom/inventory.jsx"
+import ShowroomInventory from "./components/showroom/inventory.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import CarsDashboard from "./components/customer/Dashboard.jsx";
 import UserProfile from "./components/customer/profile.jsx";
-import Cars from  "./components/customer/cars.jsx";
+import Cars from "./components/customer/cars.jsx";
 import Showrooms from "./components/customer/showrooms.jsx";
 import Bookings from "./components/customer/bookings.jsx";
 import Adminpage from "./components/admin/Adminpage.jsx";
 import ProtectedLayout from "./auth/protectedRoute.jsx";
-import EditBookingModal from '../src/components/customer/EditBooking.jsx'
-import CarDetailsScreen from '../src/components/customer/CarDetailsScreen.jsx'
-import Invoice from "../src/components/customer/invoice.jsx"
+import EditBookingModal from "../src/components/customer/EditBooking.jsx";
+import CarDetailsScreen from "../src/components/customer/CarDetailsScreen.jsx";
+import Invoice from "../src/components/customer/invoice.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
 import ResetConfirmation from "./components/ResetConfirmation.jsx";
-import Maintenance from "./components/showroom/maintenance.jsx";
 import Services from "./components/customer/Services.jsx";
 import Reviews from "./components/customer/Reviews.jsx";
+import CarMaintenancePage from "./components/showroom/maintenance.jsx";
 import Showroomcars from "./components/customer/Showroomcars.jsx";
 function App() {
   return (
@@ -32,15 +32,24 @@ function App() {
           <Route path="/showroom/signup" element={<ShowroomSignUp />}></Route>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-        <Route path="/reset-password/:token" element={<ResetPassword />}></Route>
-        <Route path="/reset-confirmation" element={<ResetConfirmation />}></Route>
-        <Route path="/showroom/maintenance" element={<Maintenance />}></Route>
+          <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+          <Route
+            path="/reset-password/:token"
+            element={<ResetPassword />}
+          ></Route>
+          <Route
+            path="/reset-confirmation"
+            element={<ResetConfirmation />}
+          ></Route>
+          <Route
+            path="/showroom/maintenance"
+            element={<CarMaintenancePage />}
+          ></Route>
 
           {/* Protected Routes */}
           <Route element={<ProtectedLayout />}>
             <Route
-             path="/showroom/Dashboard"
+              path="/showroom/Dashboard"
               element={<ShowroomDashboard />}
             ></Route>
             <Route

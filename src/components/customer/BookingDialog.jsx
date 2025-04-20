@@ -1,6 +1,6 @@
 // import PropTypes from 'prop-types';
 
-const Dialog = ({ isOpen, onClose, car, bookingDetails}) => {
+const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
   if (!isOpen) return null;
   return (
     <div
@@ -35,23 +35,23 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails}) => {
             />
           ))}
         </div>
-        
-       {/* Progress Bar - Centered */}
 
-<div className="flex justify-center mb-6">
-  <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
-    {/* Progress Bar Container */}
-    <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
-      {/* Progress Indicator */}
-      {/* <div
+        {/* Progress Bar - Centered */}
+
+        <div className="flex justify-center mb-6">
+          <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
+            {/* Progress Bar Container */}
+            <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
+              {/* Progress Indicator */}
+              {/* <div
         className="h-full rounded-full bg-gradient-to-r from-blue-600 to-brown-600 shadow-md transition-all duration-300"
         style={{ width: `${progress}%` }}
       ></div> */}
-    </div>
+            </div>
 
-    {/* Moving Car Icon */}
+            {/* Moving Car Icon */}
 
-    {/* <div
+            {/* <div
       className="absolute top-0 transform -translate-y-1/2"
       style={{ left: `calc(${progress}% - 35px)` }} // Adjust the car position based on progress
     >
@@ -63,12 +63,12 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails}) => {
         <path d="M5 14v-2h14v2H5zM4 6h16v2H4V6zm1 10h14v2H5v-2z" />
     </div> */}
 
-    {/* Progress Label */}
-    {/* <p className="text-sm text-gray-500 mt-2 text-center">
+            {/* Progress Label */}
+            {/* <p className="text-sm text-gray-500 mt-2 text-center">
       {progress === 100 ? "Booking complete" : "Time Left"}
     </p> */}
-  </div>
-</div>
+          </div>
+        </div>
 
         {/* Combined Table for Booking and Car Details */}
         <div className="overflow-x-auto">
@@ -129,7 +129,9 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails}) => {
                 <td className="border p-2 font-bold">Showroom Name</td>
                 <td className="border p-2">RentRush</td>
                 <td className="border p-2 font-bold">Showroom Address</td>
-                <td className="border p-2">DHA 1, Sector C, Street#1, House#4</td>
+                <td className="border p-2">
+                  DHA 1, Sector C, Street#1, House#4
+                </td>
               </tr>
             </tbody>
           </table>
