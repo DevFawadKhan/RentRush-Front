@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { CircleGauge, Fuel, GripHorizontal } from "lucide-react";
 import axios from "axios";
+import { CircleGauge, Fuel, GripHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
 import Toast from "../Toast";
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -14,6 +14,11 @@ const UserCard = ({ car, handleRefetch }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [ShowDialog, setShowDialog] = useState(false);
   const [ModelVisible, setModelVisible] = useState(false);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const minDate = tomorrow.toISOString().split("T")[0];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
@@ -28,7 +33,7 @@ const UserCard = ({ car, handleRefetch }) => {
           rentalEndDate,
           rentalEndTime,
         },
-        { withCredentials: true },
+        { withCredentials: true }
       );
       console.log("Response received:", response.data);
       Toast(response.data.message);
@@ -46,7 +51,7 @@ const UserCard = ({ car, handleRefetch }) => {
             >
               Click here to download the Invoice
             </a>
-          </>,
+          </>
         );
       }
 
@@ -277,6 +282,7 @@ const UserCard = ({ car, handleRefetch }) => {
                     onChange={(e) => setRentalStartDate(e.target.value)}
                     className="border p-2 rounded-md"
                     required
+                    min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
 
@@ -291,6 +297,7 @@ const UserCard = ({ car, handleRefetch }) => {
                     onChange={(e) => setRentalEndDate(e.target.value)}
                     className="border p-2 rounded-md"
                     required
+                    min={minDate}
                   />
                 </div>
 

@@ -18,9 +18,10 @@ import Invoice from "../src/components/customer/invoice.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
 import ResetConfirmation from "./components/ResetConfirmation.jsx";
-import Services from "./components/showroom/Services.jsx";
-import Reviews from "./components/showroom/Reviews.jsx";
+import Services from "./components/customer/Services.jsx";
+import Reviews from "./components/customer/Reviews.jsx";
 import CarMaintenancePage from "./components/showroom/maintenance.jsx";
+import Showroomcars from "./components/customer/Showroomcars.jsx";
 function App() {
   return (
     <>
@@ -64,20 +65,15 @@ function App() {
             <Route path="/customer/Showrooms" element={<Showrooms />}></Route>
             <Route path="/customer/bookings" element={<Bookings />}></Route>
             <Route path="/admin/Adminpage" element={<Adminpage />}></Route>
-            <Route
-              path="/customer/editbooking"
-              element={<EditBookingModal></EditBookingModal>}
-            ></Route>
-            <Route
-              path="/customer/CarDetailsScreen/:bookingId"
-              element={<CarDetailsScreen></CarDetailsScreen>}
-            ></Route>
-            <Route
-              path="/customer/invoice"
-              element={<Invoice></Invoice>}
-            ></Route>
-            <Route path="/showroom/services" element={<Services />}></Route>
-            <Route path="/showroom/reviews" element={<Reviews />}></Route>
+            <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
+            <Route path="/customer/CarDetailsScreen/:bookingId" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
+            <Route path="/customer/invoice" element={<Invoice></Invoice>}></Route>
+            <Route path="/customer/services" element={<Services/>}></Route>
+            <Route path="/customer/reviews" element={<Reviews/>}></Route> 
+            <Route path="/customer/detailcars/:id" element={<Showroomcars/>}></Route> 
+            
+            
+            
           </Route>
         </Routes>
       </BrowserRouter>

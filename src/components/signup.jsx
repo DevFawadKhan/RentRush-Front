@@ -9,41 +9,92 @@ const Base_Url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
   const navigate = useNavigate();
-  const [name, setname] = useState("");
-  const [email, setemail] = useState("");
-  const [contact, setcontact] = useState("");
-  const [cnic, setcnic] = useState("");
-  const [address, setaddress] = useState("");
-  const [password, setpassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(""); // State for password mismatch error
+  const [name, setname] = useState('');
+  const [email, setemail] = useState('');
+  const [contact, setcontact] = useState('');
+  const [cnic, setcnic] = useState('');
+  const [address, setaddress] = useState('');
+  const [password, setpassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const validateName = (name) => {
+    const regex = /^[a-zA-Z\s]+$/;
+    if (!regex.test(name)) {
+      setNameError("Name should contain only letters");
+      return false;
+    }
+    setNameError("");
+    return true;
+  };
+
+  const validateEmail = (email) => {
+    // Standard email regex that allows alphabets, numbers, and certain special characters
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!regex.test(email)) {
+      setEmailError("Please enter a valid email address");
+      return false;
+    }
+    setEmailError("");
+    return true;
+  };
+
+  const validatePassword = (password) => {
+    // Password should contain at least one letter, one number and one special character
+    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+    if (!regex.test(password)) {
+      setPasswordError("Password must contain letters, numbers, and special characters");
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
 
   const handleSignup = (e) => {
     e.preventDefault();
 
-    // Reset password error
-    setPasswordError("");
+    // Reset errors
+    setPasswordError('');
+    setNameError('');
+    setEmailError('');
+
+    // Validate fields
+    if (!validateName(name)) {
+      Toast("Name should contain only letters", "error");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Toast("Please enter a valid email address", "error");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      Toast("Password must contain letters, numbers, and special characters", "error");
+      return;
+    }
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      setPasswordError("Passwords do not match"); // Set error message
-      Toast("Passwords do not match", "error"); // Show toast notification
-      return; // Stop the function if passwords don't match
+      setPasswordError("Passwords do not match");
+      Toast("Passwords do not match", "error");
+      return;
     }
 
-    // Proceed with signup if passwords match
-    axios
-      .post(`${Base_Url}/api/signup`, {
-        ownerName: name,
-        cnic: cnic,
-        contactNumber: contact,
-        address: address,
-        email: email,
-        password: password,
-        role: "client",
-      })
-      .then((response) => {
-        Toast(response.data, "success", () => navigate("/login"));
+    // Proceed with signup if all validations pass
+    axios.post(`${Base_Url}/api/signup`, {
+      ownerName: name,
+      cnic: cnic,
+      contactNumber: contact,
+      address: address,
+      email: email,
+      password: password,
+      role: 'client',
+    })
+      .then(response => {
+        Toast(response.data, "success", () => navigate('/login'));
         console.log(response);
       })
       .catch((error) => {
@@ -76,13 +127,21 @@ function SignUp() {
               </label>
               <input
                 value={name}
-                onChange={(e) => setname(e.target.value)}
+                onChange={(e) => {
+                  setname(e.target.value);
+                  validateName(e.target.value);
+                }}
                 type="text"
                 id="name"
                 placeholder="John Doe"
-                className="shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+                  nameError ? 'border-red-700' : ''
+                }`}
                 required
               />
+              {nameError && (
+                <p className="text-red-700 text-xs mt-1">{nameError}</p>
+              )}
             </div>
 
             {/* CNIC */}
@@ -156,13 +215,21 @@ function SignUp() {
               </label>
               <input
                 value={email}
-                onChange={(e) => setemail(e.target.value)}
+                onChange={(e) => {
+                  setemail(e.target.value);
+                  validateEmail(e.target.value);
+                }}
                 type="email"
                 id="email"
                 placeholder="you@example.com"
-                className="shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+                  emailError ? 'border-red-700' : ''
+                }`}
                 required
               />
+              {emailError && (
+                <p className="text-red-700 text-xs mt-1">{emailError}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -175,13 +242,24 @@ function SignUp() {
               </label>
               <input
                 value={password}
-                onChange={(e) => setpassword(e.target.value)}
+                onChange={(e) => {
+                  setpassword(e.target.value);
+                  validatePassword(e.target.value);
+                }}
                 type="password"
                 id="password"
-                placeholder="********"
-                className="shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Must contain letters, numbers, and special characters"
+                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+                  passwordError ? 'border-red-700' : ''
+                }`}
                 required
               />
+              {passwordError && password !== confirmPassword && (
+                <p className="text-red-700 text-xs mt-1">{passwordError}</p>
+              )}
+              {password && !passwordError && (
+                <p className="text-black text-xs mt-1">Password meets requirements</p>
+              )}
             </div>
 
             {/* Confirm Password */}
@@ -196,19 +274,21 @@ function SignUp() {
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
-                  setPasswordError(""); // Clear error when user types
+                  setPasswordError('');
                 }}
                 type="password"
                 id="confirm-password"
                 placeholder="********"
                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  passwordError ? "border-red-700" : "" // Add red border if there's an error
+                  passwordError ? 'border-red-700' : ''
                 }`}
                 required
               />
-              {/* Display error message if passwords don't match */}
-              {passwordError && (
+              {passwordError && password === confirmPassword && (
                 <p className="text-red-700 text-xs mt-1">{passwordError}</p>
+              )}
+              {confirmPassword && password === confirmPassword && !passwordError && (
+                <p className="text-black text-xs mt-1">Passwords match</p>
               )}
             </div>
 

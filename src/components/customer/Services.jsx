@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
-import Navbar from "../Navbar";
+import Navbar from "./Navbar";
 import Footer from "../Footer";
 function Services() {
   return (

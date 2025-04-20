@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-const Base_Url = import.meta.env.VITE_API_URL;
+import React, { useState } from "react";
 import Toast from "../Toast";
+const Base_Url = import.meta.env.VITE_API_URL;
 
 const CarMaintenanceChecklist = ({ car, onClose }) => {
   const [checkedParts, setCheckedParts] = useState({
@@ -83,8 +83,13 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
           </>
         );
       }
+      Toast("Maintenance log submitted", "success");
     } catch (err) {
       console.log(err);
+      Toast(
+        err?.response?.data || err.message || "Something went wrong",
+        "error"
+      );
       Toast(
         err?.response?.data || err.message || "Something went wrong",
         "error"

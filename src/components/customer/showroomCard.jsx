@@ -196,6 +196,7 @@ const ShowroomCard = ({ value }) => {
 };
 ShowroomCard.propTypes = {
   value: PropTypes.shape({
+    _id: PropTypes.string.isRequired, // make sure this is added
     images: PropTypes.string.isRequired,
     showroomName: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,

@@ -114,6 +114,9 @@ const CarCard = ({ car }) => {
                 <strong>Email:</strong> {car.rentalInfo?.userId?.email || "N/A"}
               </p>
               <p className="text-gray-700">
+                <strong>CNIC:</strong> {car.rentalInfo?.userId?.cnic || "N/A"}
+              </p>
+              <p className="text-gray-700">
                 <strong>Phone:</strong>{" "}
                 {car.rentalInfo?.userId?.contactNumber || "N/A"}
               </p>
