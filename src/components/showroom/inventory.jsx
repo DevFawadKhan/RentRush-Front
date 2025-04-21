@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ShowroomNavbar from "./showroomNavbar";
 import Drawer from "./drawer";
 import Dialog from "./dialog";

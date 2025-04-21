@@ -124,7 +124,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                 <label className="block text-xl font-bold mb-1">Brand</label>
                 <input
                   type="text"
-                  name="brand"
+                  name="make"
                   value={formData.make}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
