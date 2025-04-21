@@ -60,23 +60,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // If the input is the brand field, validate it
-    if (name === "brand") {
-      // Use a regular expression to allow only letters, spaces, and hyphens
-      if (/^[a-zA-Z\s-]*$/.test(value)) {
-        setFormData({
-          ...formData,
-          [name]: value
-        });
-      }
-    } else {
-      // For other fields, update normally
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleImageChange = (e) => {
@@ -137,16 +121,16 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
             <form className="space-y-4" onSubmit={handleSubmit}>
               {/* Existing fields */}
               <div>
-  <label className="block text-xl font-bold mb-1">Brand</label>
-  <input
-    type="text"
-    name="brand"
-    value={formData.make}
-    onChange={handleInputChange}
-    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-    placeholder="Honda"
-  />
-</div>
+                <label className="block text-xl font-bold mb-1">Brand</label>
+                <input
+                  type="text"
+                  name="make"
+                  value={formData.make}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+                  placeholder="Honda"
+                />
+              </div>
               <div>
                 <label className="block text-xl font-bold mb-1">Model</label>
                 <input
