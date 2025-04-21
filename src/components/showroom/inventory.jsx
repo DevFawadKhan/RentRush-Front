@@ -149,7 +149,7 @@ function ShowroomInventory() {
                   Image
                 </th>
                 <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
-                  Make
+                  Brand
                 </th>
                 <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
                   Model
