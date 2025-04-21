@@ -58,9 +58,58 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     }
   }, [isEditing, vehicle]);
 
+  
+  const [errors, setErrors] = useState({});
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  
+    // BRAND VALIDATION (only letters and spaces)
+    if (name === "make") {
+      if (/^[a-zA-Z\s]*$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+        setErrors({ ...errors, [name]: "" });
+      }
+    }
+    // MILEAGE VALIDATION (only numbers)
+    else if (name === "mileage") {
+      if (value === "" || /^\d+$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+        setErrors({ ...errors, [name]: "" });
+      }
+    }
+    // YEAR VALIDATION (2015-current year)
+    else if (name === "year") {
+      const currentYear = new Date().getFullYear();
+      const numericValue = parseInt(value, 10);
+  
+      if (value === "" || (!isNaN(numericValue) && numericValue >= 2015 && numericValue <= currentYear)) {
+        setFormData({ ...formData, [name]: value });
+        setErrors({ ...errors, [name]: "" });
+      } else {
+        setErrors({ ...errors, [name]: `Year must be between 2015 and ${currentYear}` });
+      }
+    }
+    // All other fields (no validation)
+    else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+  
+  // Optional: Keydown prevention for better UX
+  const handleKeyDown = (e) => {
+    if (e.target.name === "mileage") {
+      const allowedKeys = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"];
+      if (!allowedKeys.includes(e.key) && isNaN(Number(e.key))) {
+        e.preventDefault();
+      }
+    }
+    else if (e.target.name === "make") {
+      const allowedKeys = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", " "];
+      if (!allowedKeys.includes(e.key) && !/^[a-zA-Z]$/.test(e.key)) {
+        e.preventDefault();
+      }
+    }
   };
 
   const handleImageChange = (e) => {
@@ -121,16 +170,18 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
             <form className="space-y-4" onSubmit={handleSubmit}>
               {/* Existing fields */}
               <div>
-                <label className="block text-xl font-bold mb-1">Brand</label>
-                <input
-                  type="text"
-                  name="make"
-                  value={formData.make}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="Honda"
-                />
-              </div>
+  <label className="block text-xl font-bold mb-1">Brand</label>
+  <input
+    type="text"
+    name="make"
+    value={formData.make}
+    onChange={handleInputChange}
+    onKeyDown={handleKeyDown}
+    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+    placeholder="Honda"
+  />
+  {errors.make && <p className="text-red-500 text-sm mt-1">Only letters allowed</p>}
+</div>
               <div>
                 <label className="block text-xl font-bold mb-1">Model</label>
                 <input
@@ -142,32 +193,36 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   placeholder="Civic"
                 />
               </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">Mileage</label>
-                <input
-                  type="number"
-                  name="mileage"
-                  value={formData.mileage}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="200km"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Registration Year
-                </label>
-                <input
-                  type="number"
-                  name="year"
-                  value={formData.year}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="2025"
-                  min="2000"
-                  max={new Date().getFullYear()}
-                />
-              </div>
+              {/* Mileage Input */}
+<div>
+  <label className="block text-xl font-bold mb-1">Mileage</label>
+  <input
+    type="number"
+    name="mileage"
+    value={formData.mileage}
+    onChange={handleInputChange}
+    onKeyDown={handleKeyDown}
+    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+    placeholder="200km"
+  />
+  {errors.mileage && <p className="text-red-500 text-sm mt-1">Only numbers allowed</p>}
+</div>
+
+{/* Year Input */}
+<div>
+  <label className="block text-xl font-bold mb-1">Registration Year</label>
+  <input
+    type="number"
+    name="year"
+    value={formData.year}
+    onChange={handleInputChange}
+    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
+    placeholder="2025"
+    min="2015"
+    max={new Date().getFullYear()}
+  />
+  {errors.year && <p className="text-red-500 text-sm mt-1">{errors.year}</p>}
+</div>
               <div>
                 <label className="block text-xl font-bold mb-1">
                   Engine Displacement
