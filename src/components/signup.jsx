@@ -4,7 +4,7 @@ import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-
+import { Eye, EyeOff } from 'lucide-react';
 const Base_Url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
@@ -19,6 +19,7 @@ function SignUp() {
   const [passwordError, setPasswordError] = useState('');
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
+const [showPassword, setShowPassword] = useState(false);
 
   const validateName = (name) => {
     const regex = /^[a-zA-Z\s]+$/;
@@ -233,64 +234,54 @@ function SignUp() {
             </div>
 
             {/* Password */}
-            <div className="mb-4">
-              <label
-                className="text-sm block text-[#02073F] font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                value={password}
-                onChange={(e) => {
-                  setpassword(e.target.value);
-                  validatePassword(e.target.value);
-                }}
-                type="password"
-                id="password"
-                placeholder="Must contain letters, numbers, and special characters"
-                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  passwordError ? 'border-red-700' : ''
-                }`}
-                required
-              />
-              {passwordError && password !== confirmPassword && (
-                <p className="text-red-700 text-xs mt-1">{passwordError}</p>
-              )}
-              {password && !passwordError && (
-                <p className="text-black text-xs mt-1">Password meets requirements</p>
-              )}
-            </div>
+      <div className="mb-2 relative">
+    <label
+      className="block text-[#02073F] text-sm font-bold mb-2"
+      htmlFor="password"
+    >
+      Password
+    </label>
+    <input
+      type={showPassword ? 'text' : 'password'}
+      value={password}
+      id="password"
+      onChange={(e) => setpassword(e.target.value)}
+      placeholder="Password"
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+      required
+    />
+    <span
+      className="absolute top-9 right-3 cursor-pointer"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+    </span>
+    </div>
 
-            {/* Confirm Password */}
-            <div className="mb-6">
-              <label
-                className="text-sm block text-[#02073F] font-bold mb-2"
-                htmlFor="confirm-password"
-              >
-                Confirm Password
-              </label>
-              <input
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  setPasswordError('');
-                }}
-                type="password"
-                id="confirm-password"
-                placeholder="********"
-                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  passwordError ? 'border-red-700' : ''
-                }`}
-                required
-              />
-              {passwordError && password === confirmPassword && (
-                <p className="text-red-700 text-xs mt-1">{passwordError}</p>
-              )}
-              {confirmPassword && password === confirmPassword && !passwordError && (
-                <p className="text-black text-xs mt-1">Passwords match</p>
-              )}
-            </div>
+        {/* Confirm Password */}
+    <div className="mb-2 relative">
+    <label
+      className="block text-[#02073F] text-sm font-bold mb-2"
+      htmlFor="password"
+    >
+      Password
+    </label>
+    <input
+      type={showPassword ? 'text' : 'password'}
+      value={confirmPassword}
+      id="password"
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      placeholder="Password"
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+      required
+    />
+    <span
+      className="absolute top-9 right-3 cursor-pointer"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+    </span>
+    </div>
 
             {/* Centered Sign Up Button */}
             <div className="flex items-center justify-center">
@@ -322,357 +313,3 @@ function SignUp() {
 }
 
 export default SignUp;
-
-
-
-
-
-// import { Link, useNavigate } from "react-router-dom";
-// import { useState } from "react";
-// import axios from 'axios';
-// import Toast from "./Toast";
-// import Navbar from "./Navbar";
-// import Footer from "./Footer";
-
-// const Base_Url = import.meta.env.VITE_API_URL;
-
-// function SignUp() {
-//   const navigate = useNavigate();
-//   const [formData, setFormData] = useState({
-//     name: '',
-//     email: '',
-//     contact: '',
-//     cnic: '',
-//     address: '',
-//     password: '',
-//     confirmPassword: ''
-//   });
-//   const [errors, setErrors] = useState({
-//     name: '',
-//     email: '',
-//     contact: '',
-//     cnic: '',
-//     address: '',
-//     password: '',
-//     confirmPassword: ''
-//   });
-
-//   // Validation functions
-//   const validateName = (name) => {
-//     const regex = /^[a-zA-Z\s]+$/;
-//     if (!name) return "Name is required";
-//     if (!regex.test(name)) return "Name should contain only letters";
-//     return "";
-//   };
-
-//   const validateEmail = (email) => {
-//     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-//     if (!email) return "Email is required";
-//     if (!regex.test(email)) return "Please enter a valid email address";
-//     return "";
-//   };
-
-//   const validateContact = (contact) => {
-//     const regex = /^[0-9]{4}-[0-9]{7}$/;
-//     if (!contact) return "Contact number is required";
-//     if (!regex.test(contact)) return "Format: 0300-1234567";
-//     return "";
-//   };
-
-//   const validateCnic = (cnic) => {
-//     const regex = /^[0-9]{5}-[0-9]{7}-[0-9]{1}$/;
-//     if (!cnic) return "CNIC is required";
-//     if (!regex.test(cnic)) return "Format: 12345-6789012-3";
-//     return "";
-//   };
-
-//   const validateAddress = (address) => {
-//     const regex = /^[a-zA-Z0-9\s,.-]+$/;
-//     if (!address) return "Address is required";
-//     if (!regex.test(address)) return "Address can contain letters, numbers, and ,.-";
-//     return "";
-//   };
-
-//   const validatePassword = (password) => {
-//     const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-//     if (!password) return "Password is required";
-//     if (!regex.test(password)) return "Must contain letters, numbers, and special characters";
-//     return "";
-//   };
-
-//   const validateConfirmPassword = (confirmPassword, password) => {
-//     if (!confirmPassword) return "Please confirm your password";
-//     if (confirmPassword !== password) return "Passwords do not match";
-//     return "";
-//   };
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData(prev => ({ ...prev, [name]: value }));
-    
-//     // Validate on change
-//     let error = '';
-//     switch(name) {
-//       case 'name':
-//         error = validateName(value);
-//         break;
-//       case 'email':
-//         error = validateEmail(value);
-//         break;
-//       case 'contact':
-//         error = validateContact(value);
-//         break;
-//       case 'cnic':
-//         error = validateCnic(value);
-//         break;
-//       case 'address':
-//         error = validateAddress(value);
-//         break;
-//       case 'password':
-//         error = validatePassword(value);
-//         break;
-//       case 'confirmPassword':
-//         error = validateConfirmPassword(value, formData.password);
-//         break;
-//       default:
-//         break;
-//     }
-    
-//     setErrors(prev => ({ ...prev, [name]: error }));
-//   };
-
-//   const handleSignup = async (e) => {
-//     e.preventDefault();
-
-//     // Validate all fields
-//     const validationErrors = {
-//       name: validateName(formData.name),
-//       email: validateEmail(formData.email),
-//       contact: validateContact(formData.contact),
-//       cnic: validateCnic(formData.cnic),
-//       address: validateAddress(formData.address),
-//       password: validatePassword(formData.password),
-//       confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password)
-//     };
-
-//     setErrors(validationErrors);
-
-//     // Check if any errors exist
-//     if (Object.values(validationErrors).some(error => error)) {
-//       Toast("Please fix the errors in the form", "error");
-//       return;
-//     }
-
-//     try {
-//       // FR-1.6: Check for duplicate email, contact, CNIC
-//       const checkResponse = await axios.post(`${Base_Url}/api/check-existing`, {
-//         email: formData.email,
-//         contactNumber: formData.contact,
-//         cnic: formData.cnic
-//       });
-
-//       if (checkResponse.data.exists) {
-//         Toast(checkResponse.data.message, "error");
-//         return;
-//       }
-
-//       // FR-1.3: Store in database
-//       const response = await axios.post(`${Base_Url}/api/signup`, {
-//         ownerName: formData.name,
-//         cnic: formData.cnic,
-//         contactNumber: formData.contact,
-//         address: formData.address,
-//         email: formData.email,
-//         password: formData.password,
-//         role: 'client',
-//       });
-
-//       // FR-1.4: Show confirmation
-//       Toast(response.data.message || "Registration successful!", "success", () => navigate('/login'));
-      
-//     } catch (error) {
-//       Toast(error.response?.data?.message || "An error occurred during registration", "error");
-//       console.error("Registration error:", error);
-//     }
-//   };
-
-//   return (
-//     <>
-//       <Navbar />
-//       <div className="flex items-center justify-center background min-w-max min-h-screen py-16">
-//         <div className="w-screen h-fit max-w-md py-5 px-7 bg-gray-300 backdrop-blur-lg bg-white/30 border border-white/10 rounded-3xl p-5 shadow-lg">
-//           <div className="flex justify-center">
-//             <img src="/src/assets/logo.png" className="-ml-4 p w-[100px]" alt="" />
-//           </div>
-//           <h2 className="text-3xl font-bold text-[#02073F]">Create Account</h2>
-//           <form onSubmit={handleSignup} className="mt-8 rounded mb-4">
-//             {/* Name - FR-1.1.1 */}
-//             <div className="mb-4">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="name">
-//                 Name
-//               </label>
-//               <input
-//                 name="name"
-//                 value={formData.name}
-//                 onChange={handleChange}
-//                 type="text"
-//                 id="name"
-//                 placeholder="John Doe"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.name ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.name && <p className="text-red-700 text-xs mt-1">{errors.name}</p>}
-//             </div>
-
-//             {/* CNIC - FR-1.1.6 */}
-//             <div className="mb-4">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="cnic">
-//                 CNIC
-//               </label>
-//               <input
-//                 name="cnic"
-//                 value={formData.cnic}
-//                 onChange={handleChange}
-//                 type="text"
-//                 id="cnic"
-//                 placeholder="12345-6789012-3"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.cnic ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.cnic && <p className="text-red-700 text-xs mt-1">{errors.cnic}</p>}
-//             </div>
-
-//             {/* Contact - FR-1.1.3 */}
-//             <div className="mb-4">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="contact">
-//                 Contact Number
-//               </label>
-//               <input
-//                 name="contact"
-//                 value={formData.contact}
-//                 onChange={handleChange}
-//                 type="tel"
-//                 id="contact"
-//                 placeholder="0300-1234567"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.contact ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.contact && <p className="text-red-700 text-xs mt-1">{errors.contact}</p>}
-//             </div>
-
-//             {/* Address - FR-1.1.5 */}
-//             <div className="mb-4">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="address">
-//                 Address
-//               </label>
-//               <input
-//                 name="address"
-//                 value={formData.address}
-//                 onChange={handleChange}
-//                 type="text"
-//                 id="address"
-//                 placeholder="1234 Main St, City, Country"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.address ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.address && <p className="text-red-700 text-xs mt-1">{errors.address}</p>}
-//             </div>
-
-//             {/* Email - FR-1.1.2 */}
-//             <div className="mb-4">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="email">
-//                 Email
-//               </label>
-//               <input
-//                 name="email"
-//                 value={formData.email}
-//                 onChange={handleChange}
-//                 type="email"
-//                 id="email"
-//                 placeholder="you@example.com"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.email ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.email && <p className="text-red-700 text-xs mt-1">{errors.email}</p>}
-//             </div>
-
-//             {/* Password - FR-1.1.4 */}
-//             <div className="mb-4">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="password">
-//                 Password
-//               </label>
-//               <input
-//                 name="password"
-//                 value={formData.password}
-//                 onChange={handleChange}
-//                 type="password"
-//                 id="password"
-//                 placeholder="Must contain letters, numbers, and special characters"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.password ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.password ? (
-//                 <p className="text-red-700 text-xs mt-1">{errors.password}</p>
-//               ) : formData.password && (
-//                 <p className="text-black text-xs mt-1">Password meets requirements</p>
-//               )}
-//             </div>
-
-//             {/* Confirm Password */}
-//             <div className="mb-6">
-//               <label className="text-sm block text-[#02073F] font-bold mb-2" htmlFor="confirmPassword">
-//                 Confirm Password
-//               </label>
-//               <input
-//                 name="confirmPassword"
-//                 value={formData.confirmPassword}
-//                 onChange={handleChange}
-//                 type="password"
-//                 id="confirmPassword"
-//                 placeholder="Re-enter your password"
-//                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-//                   errors.confirmPassword ? 'border-red-700' : ''
-//                 }`}
-//               />
-//               {errors.confirmPassword ? (
-//                 <p className="text-red-700 text-xs mt-1">{errors.confirmPassword}</p>
-//               ) : formData.confirmPassword && formData.password === formData.confirmPassword && (
-//                 <p className="text-black text-xs mt-1">Passwords match</p>
-//               )}
-//             </div>
-
-//             {/* Centered Sign Up Button */}
-//             <div className="flex items-center justify-center">
-//               <button
-//                 type="submit"
-//                 className="bg-[#C17D3C] text-white font-bold py-2 px-4 rounded focus:outline-none w-full focus:shadow-outline hover:bg-[#B06F35] transition-colors"
-//               >
-//                 Sign Up
-//               </button>
-//             </div>
-//           </form>
-//           <div>
-//             <p className="mt-4 text-center text-[#02073F] text-xs">
-//               Already have an account?{" "}
-//               <Link
-//                 to="/login"
-//                 className="text-[#02073F] hover:cursor-pointer hover:text-[#ffffff] font-bold"
-//               >
-//                 Log In
-//               </Link>
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-//       <Footer />
-//     </>
-//   );
-// }
-
-// export default SignUp;

@@ -14,11 +14,27 @@ const UserCard = ({ car, handleRefetch }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [ShowDialog, setShowDialog] = useState(false);
   const [ModelVisible, setModelVisible] = useState(false);
+  const [minTime, setMinTime] = useState("");
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-
   const minDate = tomorrow.toISOString().split("T")[0];
 
+
+  // show one hour deplay 
+  useEffect(() => {
+    const now = new Date();
+    now.setHours(now.getHours() + 1); // Add 1 hour
+
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const futureTime = `${hours}:${minutes}`;
+
+    setMinTime(futureTime);
+    setRentalStartTime(futureTime); // 👈 set default value bhi
+  }, []);
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
@@ -311,6 +327,7 @@ const UserCard = ({ car, handleRefetch }) => {
                     value={rentalStartTime}
                     onChange={(e) => setRentalStartTime(e.target.value)}
                     className="border p-2 rounded-md"
+                    min={minTime}
                     required
                   />
                 </div>

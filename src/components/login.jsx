@@ -4,6 +4,7 @@ import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { Eye, EyeOff } from 'lucide-react'; 
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -12,7 +13,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(""); // State for login error message
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoginError(""); // Clear previous error message
@@ -82,25 +83,31 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-2">
-              <label
-                className="block text-[#02073F] text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-              {/* Display error message if login fails */}
-              {loginError && <p className="text-red-900 mt-1">{loginError}</p>}
-            </div>
+            {/* password */}
+            <div className="mb-2 relative">
+    <label
+      className="block text-[#02073F] text-sm font-bold mb-2"
+      htmlFor="password"
+    >
+      Password
+    </label>
+    <input
+      type={showPassword ? 'text' : 'password'}
+      value={password}
+      id="password"
+      onChange={(e) => setPassword(e.target.value)}
+      placeholder="Password"
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+      required
+    />
+    <span
+      className="absolute top-9 right-3 cursor-pointer"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+    </span>
+    </div>
+
             <p className="text-xs py-2 font-bold hover:cursor-pointer hover:text-[#ffffff] text-[#02073F]">
               <Link to="/forgot-password">Forgot password?</Link>
             </p>
