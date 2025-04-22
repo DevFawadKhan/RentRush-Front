@@ -65,15 +65,24 @@ function App() {
             <Route path="/customer/Showrooms" element={<Showrooms />}></Route>
             <Route path="/customer/bookings" element={<Bookings />}></Route>
             <Route path="/admin/Adminpage" element={<Adminpage />}></Route>
-            <Route path="/customer/editbooking" element={<EditBookingModal></EditBookingModal>}></Route>
-            <Route path="/customer/CarDetailsScreen/:bookingId" element={<CarDetailsScreen></CarDetailsScreen>}></Route>
-            <Route path="/customer/invoice" element={<Invoice></Invoice>}></Route>
-            <Route path="/customer/services" element={<Services/>}></Route>
-            <Route path="/customer/reviews" element={<Reviews/>}></Route> 
-            <Route path="/customer/detailcars/:id" element={<Showroomcars/>}></Route> 
-            
-            
-            
+            <Route
+              path="/customer/editbooking"
+              element={<EditBookingModal></EditBookingModal>}
+            ></Route>
+            <Route
+              path="/customer/CarDetailsScreen/:bookingId"
+              element={<CarDetailsScreen></CarDetailsScreen>}
+            ></Route>
+            <Route
+              path="/customer/invoice"
+              element={<Invoice></Invoice>}
+            ></Route>
+            <Route path="/customer/services" element={<Services />}></Route>
+            <Route path="/customer/reviews" element={<Reviews />}></Route>
+            <Route
+              path="/customer/detailcars/:id"
+              element={<Showroomcars />}
+            ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

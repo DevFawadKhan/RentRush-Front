@@ -11,14 +11,16 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     color: "",
     transmission: "",
     bodyType: "",
-    seatCapacity: "", // New field
-    luggageCapacity: "", // New field
-    fuelType: "", // New field
-    carFeatures: "", // New field
-    images: [],
+    seatCapacity: "",
+    luggageCapacity: "",
+    fuelType: "",
+    carFeatures: "",
+    images: [], // Only for new File objects
   });
 
+  const [existingImages, setExistingImages] = useState([]); // For server-provided image URLs
   const dialogRef = useRef(null);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (isEditing && vehicle) {
@@ -33,12 +35,20 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         color: vehicle.color,
         transmission: vehicle.transmission,
         bodyType: vehicle.bodyType,
-        seatCapacity: vehicle.seatCapacity || "", // New field
-        luggageCapacity: vehicle.luggageCapacity || "", // New field
-        fuelType: vehicle.fuelType || "", // New field
-        carFeatures: vehicle.carFeatures || "", // New field
-        images: [vehicle.images],
+        seatCapacity: vehicle.seatCapacity || "",
+        luggageCapacity: vehicle.luggageCapacity || "",
+        fuelType: vehicle.fuelType || "",
+        carFeatures: vehicle.carFeatures || "",
+        images: [], // Initialize as empty; new uploads will be added here
       });
+      // Set existing images from vehicle (assuming vehicle.images is a string or array of URLs)
+      setExistingImages(
+        vehicle.images
+          ? Array.isArray(vehicle.images)
+            ? vehicle.images
+            : [vehicle.images]
+          : []
+      );
     } else {
       setFormData({
         make: "",
@@ -49,64 +59,179 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         color: "",
         transmission: "",
         bodyType: "",
-        seatCapacity: "", // New field
-        luggageCapacity: "", // New field
-        fuelType: "", // New field
-        carFeatures: "", // New field
+        seatCapacity: "",
+        luggageCapacity: "",
+        fuelType: "",
+        carFeatures: "",
         images: [],
       });
+      setExistingImages([]);
     }
   }, [isEditing, vehicle]);
 
-  
-  const [errors, setErrors] = useState({});
-  
+  const validateForm = () => {
+    const newErrors = {};
+    const currentYear = new Date().getFullYear();
+
+    if (!formData.make) newErrors.make = "Brand is required";
+    else if (!/^[a-zA-Z\s]+$/.test(formData.make))
+      newErrors.make = "Only letters and spaces allowed";
+
+    if (!formData.model) newErrors.model = "Model is required";
+    else if (!/^[a-zA-Z0-9\s]+$/.test(formData.model))
+      newErrors.model = "Only letters, numbers, and spaces allowed";
+
+    if (!formData.mileage) newErrors.mileage = "Mileage is required";
+    else if (!/^\d+$/.test(formData.mileage))
+      newErrors.mileage = "Only numbers allowed";
+
+    if (!formData.year) newErrors.year = "Year is required";
+    else if (
+      isNaN(formData.year) ||
+      formData.year < 2015 ||
+      formData.year > currentYear
+    )
+      newErrors.year = `Year must be between 2015 and ${currentYear}`;
+
+    if (!formData.engineDisplacement)
+      newErrors.engineDisplacement = "Engine displacement is required";
+    else if (!/^[a-zA-Z0-9\s]+$/.test(formData.engineDisplacement))
+      newErrors.engineDisplacement =
+        "Only letters, numbers, and spaces allowed";
+
+    if (!formData.rentalPrice)
+      newErrors.rentalPrice = "Rental price is required";
+    else if (!/^\d+$/.test(formData.rentalPrice))
+      newErrors.rentalPrice = "Only numbers allowed";
+
+    if (!formData.color) newErrors.color = "Color is required";
+    else if (!/^[a-zA-Z\s]+$/.test(formData.color))
+      newErrors.color = "Only letters and spaces allowed";
+
+    if (!formData.transmission)
+      newErrors.transmission = "Transmission is required";
+    if (!formData.bodyType) newErrors.bodyType = "Body type is required";
+
+    if (!formData.seatCapacity)
+      newErrors.seatCapacity = "Seat capacity is required";
+    else if (!/^\d+$/.test(formData.seatCapacity) || formData.seatCapacity < 1)
+      newErrors.seatCapacity = "Must be a positive number";
+
+    if (!formData.luggageCapacity)
+      newErrors.luggageCapacity = "Luggage capacity is required";
+    else if (
+      !/^\d+$/.test(formData.luggageCapacity) ||
+      formData.luggageCapacity < 1
+    )
+      newErrors.luggageCapacity = "Must be a positive number";
+
+    if (!formData.fuelType) newErrors.fuelType = "Fuel type is required";
+    if (!formData.carFeatures)
+      newErrors.carFeatures = "Car features are required";
+    else if (!/^[a-zA-Z0-9\s,.-]+$/.test(formData.carFeatures))
+      newErrors.carFeatures =
+        "Only letters, numbers, spaces, commas, periods, and hyphens allowed";
+
+    if (
+      !isEditing &&
+      formData.images.length === 0 &&
+      existingImages.length === 0
+    )
+      newErrors.images = "At least one image is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-  
-    // BRAND VALIDATION (only letters and spaces)
-    if (name === "make") {
-      if (/^[a-zA-Z\s]*$/.test(value)) {
+
+    if (name === "make" || name === "color") {
+      if (value === "" || /^[a-zA-Z\s]*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
-        setErrors({ ...errors, [name]: "" });
       }
-    }
-    // MILEAGE VALIDATION (only numbers)
-    else if (name === "mileage") {
-      if (value === "" || /^\d+$/.test(value)) {
+    } else if (name === "model" || name === "engineDisplacement") {
+      if (value === "" || /^[a-zA-Z0-9\s]*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
-        setErrors({ ...errors, [name]: "" });
       }
-    }
-    // YEAR VALIDATION (2015-current year)
-    else if (name === "year") {
-      const currentYear = new Date().getFullYear();
-      const numericValue = parseInt(value, 10);
-  
-      if (value === "" || (!isNaN(numericValue) && numericValue >= 2015 && numericValue <= currentYear)) {
+    } else if (name === "carFeatures") {
+      if (value === "" || /^[a-zA-Z0-9\s,.-]*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
-        setErrors({ ...errors, [name]: "" });
-      } else {
-        setErrors({ ...errors, [name]: `Year must be between 2015 and ${currentYear}` });
       }
-    }
-    // All other fields (no validation)
-    else {
+    } else if (
+      ["mileage", "rentalPrice", "seatCapacity", "luggageCapacity"].includes(
+        name
+      )
+    ) {
+      if (value === "" || /^\d*$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else if (name === "year") {
+      if (value === "" || /^\d*$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else {
       setFormData({ ...formData, [name]: value });
     }
   };
-  
-  // Optional: Keydown prevention for better UX
+
   const handleKeyDown = (e) => {
-    if (e.target.name === "mileage") {
-      const allowedKeys = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"];
+    if (
+      [
+        "mileage",
+        "rentalPrice",
+        "seatCapacity",
+        "luggageCapacity",
+        "year",
+      ].includes(e.target.name)
+    ) {
+      const allowedKeys = [
+        "Backspace",
+        "Delete",
+        "Tab",
+        "ArrowLeft",
+        "ArrowRight",
+      ];
       if (!allowedKeys.includes(e.key) && isNaN(Number(e.key))) {
         e.preventDefault();
       }
-    }
-    else if (e.target.name === "make") {
-      const allowedKeys = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", " "];
+    } else if (["make", "color"].includes(e.target.name)) {
+      const allowedKeys = [
+        "Backspace",
+        "Delete",
+        "Tab",
+        "ArrowLeft",
+        "ArrowRight",
+        " ",
+      ];
       if (!allowedKeys.includes(e.key) && !/^[a-zA-Z]$/.test(e.key)) {
+        e.preventDefault();
+      }
+    } else if (["model", "engineDisplacement"].includes(e.target.name)) {
+      const allowedKeys = [
+        "Backspace",
+        "Delete",
+        "Tab",
+        "ArrowLeft",
+        "ArrowRight",
+        " ",
+      ];
+      if (!allowedKeys.includes(e.key) && !/^[a-zA-Z0-9]$/.test(e.key)) {
+        e.preventDefault();
+      }
+    } else if (e.target.name === "carFeatures") {
+      const allowedKeys = [
+        "Backspace",
+        "Delete",
+        "Tab",
+        "ArrowLeft",
+        "ArrowRight",
+        " ",
+        ",",
+        ".",
+        "-",
+      ];
+      if (!allowedKeys.includes(e.key) && !/^[a-zA-Z0-9]$/.test(e.key)) {
         e.preventDefault();
       }
     }
@@ -115,26 +240,35 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     setFormData({ ...formData, images: files });
+    setErrors({ ...errors, images: "" });
   };
 
-  const handleSubmit = () => {
-    onSave(formData);
-    setFormData({
-      make: "",
-      model: "",
-      mileage: "",
-      engineDisplacement: "",
-      rentalPrice: "",
-      color: "",
-      transmission: "",
-      bodyType: "",
-      seatCapacity: "", // New field
-      luggageCapacity: "", // New field
-      fuelType: "", // New field
-      carFeatures: "", // New field
-      images: [],
-    });
-    onClose();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      // Pass both new images (File objects) and existing image URLs to onSave
+      onSave({
+        ...formData,
+        existingImages, // Include existing images for backend processing
+      });
+      setFormData({
+        make: "",
+        model: "",
+        mileage: "",
+        engineDisplacement: "",
+        rentalPrice: "",
+        color: "",
+        transmission: "",
+        bodyType: "",
+        seatCapacity: "",
+        luggageCapacity: "",
+        fuelType: "",
+        carFeatures: "",
+        images: [],
+      });
+      setExistingImages([]);
+      onClose();
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -149,7 +283,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -158,234 +291,257 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300">
           <div
             ref={dialogRef}
-            className="bg-white rounded-lg p-4 w-[50%] h-auto overflow-y-auto max-h-[80vh]"
+            className="bg-white rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all duration-300 scale-100"
           >
-            <h2 className="text-4xl text-center font-bold mb-4">
-              {isEditing ? "EDIT VEHICLE" : "ADD A NEW VEHICLE"}
+            <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-6">
+              {isEditing ? "Edit Vehicle" : "Add New Vehicle"}
             </h2>
 
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Existing fields */}
-              <div>
-  <label className="block text-xl font-bold mb-1">Brand</label>
-  <input
-    type="text"
-    name="make"
-    value={formData.make}
-    onChange={handleInputChange}
-    onKeyDown={handleKeyDown}
-    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-    placeholder="Honda"
-  />
-  {errors.make && <p className="text-red-500 text-sm mt-1">Only letters allowed</p>}
-</div>
-              <div>
-                <label className="block text-xl font-bold mb-1">Model</label>
-                <input
-                  type="text"
-                  name="model"
-                  value={formData.model}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="Civic"
-                />
-              </div>
-              {/* Mileage Input */}
-<div>
-  <label className="block text-xl font-bold mb-1">Mileage</label>
-  <input
-    type="number"
-    name="mileage"
-    value={formData.mileage}
-    onChange={handleInputChange}
-    onKeyDown={handleKeyDown}
-    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-    placeholder="200km"
-  />
-  {errors.mileage && <p className="text-red-500 text-sm mt-1">Only numbers allowed</p>}
-</div>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {[
+                {
+                  label: "Brand",
+                  name: "make",
+                  type: "text",
+                  placeholder: "e.g., Honda",
+                },
+                {
+                  label: "Model",
+                  name: "model",
+                  type: "text",
+                  placeholder: "e.g., Civic",
+                },
+                {
+                  label: "Mileage (km)",
+                  name: "mileage",
+                  type: "number",
+                  placeholder: "e.g., 200",
+                },
+                {
+                  label: "Registration Year",
+                  name: "year",
+                  type: "number",
+                  placeholder: "e.g., 2025",
+                  min: 2015,
+                  max: new Date().getFullYear(),
+                },
+                {
+                  label: "Engine Displacement (cc)",
+                  name: "engineDisplacement",
+                  type: "text",
+                  placeholder: "e.g., 1500",
+                },
+                {
+                  label: "Rental Price ($/day)",
+                  name: "rentalPrice",
+                  type: "number",
+                  placeholder: "e.g., 200",
+                },
+                {
+                  label: "Color",
+                  name: "color",
+                  type: "text",
+                  placeholder: "e.g., Red",
+                },
+                {
+                  label: "Seat Capacity",
+                  name: "seatCapacity",
+                  type: "number",
+                  placeholder: "e.g., 5",
+                  min: 1,
+                },
+                {
+                  label: "Luggage Capacity (bags)",
+                  name: "luggageCapacity",
+                  type: "number",
+                  placeholder: "e.g., 2",
+                  min: 1,
+                },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    {field.label} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    required
+                    min={field.min}
+                    max={field.max}
+                    className={`w-full p-3 border ${
+                      errors[field.name] ? "border-red-500" : "border-gray-300"
+                    } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700 placeholder-gray-400`}
+                    placeholder={field.placeholder}
+                  />
+                  {errors[field.name] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ))}
 
-{/* Year Input */}
-<div>
-  <label className="block text-xl font-bold mb-1">Registration Year</label>
-  <input
-    type="number"
-    name="year"
-    value={formData.year}
-    onChange={handleInputChange}
-    className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-    placeholder="2025"
-    min="2015"
-    max={new Date().getFullYear()}
-  />
-  {errors.year && <p className="text-red-500 text-sm mt-1">{errors.year}</p>}
-</div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Engine Displacement
-                </label>
-                <input
-                  type="text"
-                  name="engineDisplacement"
-                  value={formData.engineDisplacement}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="cc"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Rental Price
-                </label>
-                <input
-                  type="number"
-                  name="rentalPrice"
-                  value={formData.rentalPrice}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="200/day"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">Color</label>
-                <input
-                  type="text"
-                  name="color"
-                  value={formData.color}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="Red"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Transmission
-                </label>
-                <select
-                  name="transmission"
-                  value={formData.transmission}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Select Transmission</option>
-                  <option value="Automatic">Automatic</option>
-                  <option value="Manual">Manual</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Body Type
-                </label>
-                <select
-                  name="bodyType"
-                  value={formData.bodyType}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Select Body Type</option>
-                  <option value="Sedan">Sedan</option>
-                  <option value="SUV">SUV</option>
-                </select>
-              </div>
+              {[
+                {
+                  label: "Transmission",
+                  name: "transmission",
+                  options: [
+                    { value: "", label: "Select Transmission" },
+                    { value: "Automatic", label: "Automatic" },
+                    { value: "Manual", label: "Manual" },
+                  ],
+                },
+                {
+                  label: "Body Type",
+                  name: "bodyType",
+                  options: [
+                    { value: "", label: "Select Body Type" },
+                    { value: "Sedan", label: "Sedan" },
+                    { value: "SUV", label: "SUV" },
+                  ],
+                },
+                {
+                  label: "Fuel Type",
+                  name: "fuelType",
+                  options: [
+                    { value: "", label: "Select Fuel Type" },
+                    { value: "Petrol", label: "Petrol" },
+                    { value: "Diesel", label: "Diesel" },
+                    { value: "Electric", label: "Electric" },
+                    { value: "Hybrid", label: "Hybrid" },
+                  ],
+                },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    {field.label} <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    required
+                    className={`w-full p-3 border ${
+                      errors[field.name] ? "border-red-500" : "border-gray-300"
+                    } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700 bg-white`}
+                  >
+                    {field.options.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.value === ""}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors[field.name] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ))}
 
-              {/* New fields */}
               <div>
-                <label className="block text-xl font-bold mb-1">
-                  Seat Capacity
-                </label>
-                <input
-                  type="number"
-                  name="seatCapacity"
-                  value={formData.seatCapacity}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="5"
-                  min="1"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Luggage Capacity
-                </label>
-                <input
-                  type="number"
-                  name="luggageCapacity"
-                  value={formData.luggageCapacity}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded whitespace-nowrap overflow-hidden text-ellipsis"
-                  placeholder="2"
-                  min="1"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Fuel Type
-                </label>
-                <select
-                  name="fuelType"
-                  value={formData.fuelType}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Select Fuel Type</option>
-                  <option value="Petrol">Petrol</option>
-                  <option value="Diesel">Diesel</option>
-                  <option value="Electric">Electric</option>
-                  <option value="Hybrid">Hybrid</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xl font-bold mb-1">
-                  Car Features
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Car Features <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   name="carFeatures"
                   value={formData.carFeatures}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded"
-                  placeholder="Enter car features (e.g., GPS, Air Conditioning)"
+                  onKeyDown={handleKeyDown}
+                  required
+                  className={`w-full p-3 border ${
+                    errors.carFeatures ? "border-red-500" : "border-gray-300"
+                  } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700 placeholder-gray-400 resize-y`}
+                  placeholder="e.g., GPS, Air Conditioning, Bluetooth"
+                  rows={4}
                 />
+                {errors.carFeatures && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.carFeatures}
+                  </p>
+                )}
               </div>
 
-              {/* Image upload */}
               <div>
-                <label className="block text-xl font-bold mb-1">Images</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Images <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="file"
                   multiple
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="w-full p-2 border rounded"
+                  required={!isEditing && existingImages.length === 0}
+                  className={`w-full p-3 border ${
+                    errors.images ? "border-red-500" : "border-gray-300"
+                  } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700`}
                 />
-                {formData.images.length > 0 && (
-                  <div className="mt-2">
-                    {formData.images.map((file, index) => (
-                      <p key={index} className="text-sm">
-                        {file.name}
-                      </p>
-                    ))}
+                {(formData.images.length > 0 || existingImages.length > 0) && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-gray-600 mb-2">
+                      Images:
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {/* Existing Images (URLs from server) */}
+                      {existingImages.map((url, index) => (
+                        <div key={`existing-${index}`} className="relative">
+                          <img
+                            src={url}
+                            alt={`Existing Image ${index + 1}`}
+                            className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                          />
+                          <p className="text-xs text-gray-500 mt-1 truncate">
+                            Existing Image {index + 1}
+                          </p>
+                        </div>
+                      ))}
+                      {/* New Images (File objects) */}
+                      {formData.images.map((file, index) => (
+                        <div key={`new-${index}`} className="relative">
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={`Preview ${file.name}`}
+                            className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                          />
+                          <p className="text-xs text-gray-500 mt-1 truncate">
+                            {file.name}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
+                {errors.images && (
+                  <p className="text-red-500 text-xs mt-1">{errors.images}</p>
+                )}
+              </div>
+
+              <div className="mt-8 flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 font-semibold"
+                >
+                  {isEditing ? "Update" : "Save"}
+                </button>
               </div>
             </form>
-
-            <div className="mt-4 flex justify-end space-x-4">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 bg-[#C17D3C] text-white rounded hover:bg-[#A86428]"
-              >
-                {isEditing ? "Update" : "Save"}
-              </button>
-            </div>
           </div>
         </div>
       )}

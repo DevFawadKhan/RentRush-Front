@@ -287,7 +287,7 @@ const UserBookings = () => {
                   <img
                     src={`/uploads/${booking.carDetails.images[0]}`}
                     alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
-                    className="w-full h-52 object-cover"
+                    className="w-full h-52 object-contain"
                   />
 
                   <div className="p-5 flex flex-col flex-grow justify-between">
@@ -514,50 +514,59 @@ const UserBookings = () => {
                       </span>
                     </p>
 
+                    {/* 🔧 Tasks */}
                     <div className="mb-3">
                       <p className="font-semibold text-gray-600 mb-1">
                         🔧 Repair Tasks Performed On:
                       </p>
                       <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        {log.tasks.map((task, taskIndex) => (
-                          <li key={taskIndex}>
-                            <span className="font-medium">
-                              {Object.keys(task)[0]}
-                            </span>{" "}
-                          </li>
-                        ))}
+                        {Object.entries(log.tasks[0])
+                          .filter(([_, value]) => value === false)
+                          .map(([key], taskIndex) => (
+                            <li key={taskIndex} className="capitalize">
+                              {key}
+                            </li>
+                          ))}
                       </ul>
                     </div>
 
+                    {/* 📝 Descriptions */}
                     <div className="mb-3">
                       <p className="font-semibold text-gray-600 mb-1">
                         📝 Repair Descriptions:
                       </p>
                       <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        {log.repairDescriptions.map((desc, descIndex) => (
-                          <li key={descIndex}>
-                            <span className="font-medium">
-                              {Object.keys(desc)[0]}:
-                            </span>{" "}
-                            {desc[Object.keys(desc)[0]]}
-                          </li>
-                        ))}
+                        {log.repairDescriptions.length > 0 &&
+                          Object.entries(log.repairDescriptions[0]).map(
+                            ([part, description], descIndex) => (
+                              <li key={descIndex}>
+                                <span className="font-medium capitalize">
+                                  {part}:
+                                </span>{" "}
+                                {description}
+                              </li>
+                            )
+                          )}
                       </ul>
                     </div>
 
+                    {/* 💰 Costs */}
                     <div>
                       <p className="font-semibold text-gray-600 mb-1">
                         💰 Repair Costs:
                       </p>
                       <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        {log.repairCosts.map((cost, costIndex) => (
-                          <li key={costIndex}>
-                            <span className="font-medium">
-                              {Object.keys(cost)[0]}:
-                            </span>{" "}
-                            Rs. {cost[Object.keys(cost)[0]]}
-                          </li>
-                        ))}
+                        {log.repairCosts.length > 0 &&
+                          Object.entries(log.repairCosts[0]).map(
+                            ([part, cost], costIndex) => (
+                              <li key={costIndex}>
+                                <span className="font-medium capitalize">
+                                  {part}:
+                                </span>{" "}
+                                Rs. {cost}
+                              </li>
+                            )
+                          )}
                       </ul>
                     </div>
                   </div>
