@@ -245,9 +245,15 @@ const [showPassword, setShowPassword] = useState(false);
       type={showPassword ? 'text' : 'password'}
       value={password}
       id="password"
-      onChange={(e) => setpassword(e.target.value)}
+      onChange={(e) =>{
+        setpassword(e.target.value)
+        validatePassword(e.target.value)
+      }}
       placeholder="Password"
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+
+      className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+        passwordError ? 'border-red-700' : ''
+      }`}
       required
     />
     <span
@@ -256,33 +262,39 @@ const [showPassword, setShowPassword] = useState(false);
     >
       {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
     </span>
+    {passwordError && (
+    <p className="text-red-700 text-xs mt-1">{passwordError}</p>
+  )}
     </div>
 
         {/* Confirm Password */}
-    <div className="mb-2 relative">
-    <label
-      className="block text-[#02073F] text-sm font-bold mb-2"
-      htmlFor="password"
-    >
-      Password
-    </label>
+        <div className="mb-2 relative">
+  <label
+    className="block text-[#02073F] text-sm font-bold mb-2"
+    htmlFor="confirm-password"
+  >
+    Confirm Password
+  </label>
+  <div className="relative">
     <input
       type={showPassword ? 'text' : 'password'}
       value={confirmPassword}
-      id="password"
+      id="confirm-password"
       onChange={(e) => setConfirmPassword(e.target.value)}
-      placeholder="Password"
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+      placeholder="Re-enter your password"
+      className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+        passwordError ? 'border-red-700' : ''
+      }`}
       required
     />
     <span
-      className="absolute top-9 right-3 cursor-pointer"
+      className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
       onClick={() => setShowPassword(!showPassword)}
     >
       {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
     </span>
-    </div>
-
+  </div>
+</div>
             {/* Centered Sign Up Button */}
             <div className="flex items-center justify-center">
               <button
