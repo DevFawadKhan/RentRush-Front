@@ -12,11 +12,13 @@ function Login() {
   const navigator = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState(""); // State for login error message
+  const [loginError, setLoginError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoginError(""); // Clear previous error message
+    setLoginError("");
 
     try {
       const response = await axios.post(
@@ -44,9 +46,8 @@ function Login() {
         navigator("/login");
       }
     } catch (error) {
-      // Set error message for incorrect username or password
       setLoginError("The username or password you entered is incorrect.");
-      Toast(error.response?.data?.message, "error");
+      Toast(error.response?.data?.message || "Login failed", "error");
     }
   };
 
@@ -65,6 +66,7 @@ function Login() {
           <h2 className="pt-2 font-bold text-[35px] text-[#02073F] ml-5">
             Login
           </h2>
+        
           <form className="mt-8 rounded mb-4 ml-5" onSubmit={handleSubmit}>
             <div className="mb-3">
               <label
@@ -83,31 +85,38 @@ function Login() {
                 required
               />
             </div>
-            {/* password */}
             <div className="mb-2 relative">
-    <label
-      className="block text-[#02073F] text-sm font-bold mb-2"
-      htmlFor="password"
-    >
-      Password
-    </label>
-    <input
-      type={showPassword ? 'text' : 'password'}
-      value={password}
-      id="password"
-      onChange={(e) => setPassword(e.target.value)}
-      placeholder="Password"
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
-      required
-    />
-    <span
-      className="absolute top-9 right-3 cursor-pointer"
-      onClick={() => setShowPassword(!showPassword)}
-    >
-      {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-    </span>
-    </div>
-
+              <label
+                className="block text-[#02073F] text-sm font-bold mb-2"
+                htmlFor="password"
+              >
+                Password
+              </label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                id="password"
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
+                placeholder="Password"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+              {isPasswordFocused || password.length > 0 ? (
+                <span
+                  className="absolute top-9 right-3 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </span>
+              ) : null}
+            </div>
+            {loginError && (
+            <div className="text-red-900 text-16px mb-4">
+              {loginError}
+            </div>
+          )}
             <p className="text-xs py-2 font-bold hover:cursor-pointer hover:text-[#ffffff] text-[#02073F]">
               <Link to="/forgot-password">Forgot password?</Link>
             </p>
