@@ -9,18 +9,29 @@ const Base_Url = import.meta.env.VITE_API_URL;
 
 function ShowroomSignUp() {
   const navigate = useNavigate();
-  const [sname, setsname] = useState("");
-  const [owner, setowner] = useState("");
-  const [cnic, setcnic] = useState("");
-  const [contact, setcontact] = useState("");
-  const [address, setaddress] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [cpassword, setcpassword] = useState("");
+  const [formData, setFormData] = useState({
+    sname: "",
+    owner: "",
+    cnic: "",
+    contact: "",
+    address: "",
+    email: "",
+    password: "",
+    cpassword: "",
+  });
+  const [errors, setErrors] = useState({
+    sname: "",
+    owner: "",
+    cnic: "",
+    contact: "",
+    address: "",
+    email: "",
+    password: "",
+    cpassword: "",
+  });
   const [image, setimage] = useState(null);
   const [logo, setLogo] = useState(null);
-  const [passwordError, setPasswordError] = useState(""); // State for password mismatch error
-  const [ownerError, setOwnerError] = useState(""); // State for owner name validation error
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -30,56 +41,106 @@ function ShowroomSignUp() {
     }
   };
 
-  const validateOwnerName = (name) => {
-    const regex = /^[A-Za-z\s]+$/; // Only alphabets and spaces allowed
-    return regex.test(name);
+  const validateField = (name, value) => {
+    let error = "";
+    
+    switch(name) {
+      case 'sname':
+        if (!value) error = "Showroom name is required";
+        else if (!/^[a-zA-Z0-9\s&'-]+$/.test(value)) 
+          error = "Showroom name can only contain letters, numbers, spaces, &, ', or -";
+        break;
+      case 'owner':
+        if (!value) error = "Owner name is required";
+        else if (!/^[a-zA-Z\s]+$/.test(value)) 
+          error = "Owner name can only contain letters and spaces";
+        break;
+      case 'cnic':
+        if (!value) error = "CNIC is required";
+        else if (!/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/.test(value)) 
+          error = "CNIC must be in format XXXXX-XXXXXXX-X";
+        break;
+      case 'contact':
+        if (!value) error = "Contact number is required";
+        else if (!/^[0-9]{4}-[0-9]{7}$/.test(value)) 
+          error = "Contact must be in format XXXX-XXXXXXX";
+        break;
+      case 'address':
+        if (!value) error = "Address is required";
+        else if (value.length < 10) 
+          error = "Address must be at least 10 characters";
+        break;
+      case 'email':
+        if (!value) error = "Email is required";
+        else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) 
+          error = "Please enter a valid email address";
+        break;
+      case 'password':
+        if (!value) error = "Password is required";
+        else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/.test(value)) 
+          error = "Password must contain letters, numbers, and special characters";
+        break;
+      case 'cpassword':
+        if (!value) error = "Please confirm your password";
+        else if (value !== formData.password) 
+          error = "Passwords do not match";
+        break;
+      default:
+        break;
+    }
+    
+    setErrors(prev => ({ ...prev, [name]: error }));
+    return !error;
   };
 
-  const Handlesubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset errors
-    setPasswordError("");
-    setOwnerError("");
+    // Validate all fields
+    let isValid = true;
+    Object.keys(formData).forEach(field => {
+      if (!validateField(field, formData[field])) {
+        isValid = false;
+      }
+    });
 
-    // Validate Owner Name
-    if (!validateOwnerName(owner)) {
-      setOwnerError("Owner name should only contain alphabets and spaces.");
-      return;
-    }
-
-    // Validate Password Match
-    if (password !== cpassword) {
-      setPasswordError("Passwords do not match.");
+    if (!isValid) {
+      Toast("Please fix the errors in the form", "error");
       return;
     }
 
     if (!image) {
-      Toast("Image is required", "error");
+      Toast("Showroom logo/image is required", "error");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("images", image);
-    formData.append("ownerName", owner);
-    formData.append("showroomName", sname);
-    formData.append("cnic", cnic);
-    formData.append("contactNumber", contact);
-    formData.append("address", address);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("role", "showroom");
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("images", image);
+      formDataToSend.append("ownerName", formData.owner);
+      formDataToSend.append("showroomName", formData.sname);
+      formDataToSend.append("cnic", formData.cnic);
+      formDataToSend.append("contactNumber", formData.contact);
+      formDataToSend.append("address", formData.address);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("password", formData.password);
+      formDataToSend.append("role", "showroom");
 
-    axios
-      .post(`${Base_Url}/api/signup`, formData)
-      .then((response) => {
-        if (response.status === 201) {
-          Toast(response.data, "success", () => navigate("/login"));
-        }
-      })
-      .catch((error) => {
-        Toast(error.response?.data || "Error occurred", "error");
-      });
+      const response = await axios.post(`${Base_Url}/api/signup`, formDataToSend);
+      
+      if (response.status === 201) {
+        Toast("Showroom registered successfully!", "success", () => navigate("/login"));
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      Toast(error.response?.data?.message || "Error occurred during registration", "error");
+    }
   };
 
   return (
@@ -98,7 +159,7 @@ function ShowroomSignUp() {
             Register Showroom
           </h2>
 
-          <form onSubmit={Handlesubmit} className="rounded mb-4">
+          <form onSubmit={handleSubmit} className="rounded mb-4">
             {/* Image Upload */}
             <div className="mb-4 text-center">
               <label className="block text-sm font-bold mb-2 text-[#02073F]">
@@ -124,6 +185,7 @@ function ShowroomSignUp() {
                 accept="image/*"
                 onChange={handleLogoChange}
                 className="text-sm text-gray-600"
+                required
               />
             </div>
 
@@ -134,31 +196,35 @@ function ShowroomSignUp() {
                   <td className="py-4 font-bold w-1/3">Showroom Name</td>
                   <td className="py-4">
                     <input
-                      value={sname}
-                      onChange={(e) => setsname(e.target.value)}
+                      name="sname"
+                      value={formData.sname}
+                      onChange={handleChange}
                       type="text"
                       placeholder="Cars Club"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.sname ? "border-red-900" : ""
+                      }`}
                     />
+                    {errors.sname && (
+                      <p className="text-red-900 text-xs mt-1">{errors.sname}</p>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 font-bold w-1/3">Owner Name</td>
                   <td className="py-4">
                     <input
+                      name="owner"
                       type="text"
-                      value={owner}
-                      onChange={(e) => {
-                        setowner(e.target.value);
-                        setOwnerError(""); // Clear error when typing
-                      }}
+                      value={formData.owner}
+                      onChange={handleChange}
                       placeholder="John Doe"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.owner ? "border-red-900" : ""
+                      }`}
                     />
-                    {ownerError && (
-                      <p className="text-red-900 text-xs mt-1">{ownerError}</p>
+                    {errors.owner && (
+                      <p className="text-red-900 text-xs mt-1">{errors.owner}</p>
                     )}
                   </td>
                 </tr>
@@ -166,87 +232,123 @@ function ShowroomSignUp() {
                   <td className="py-4 font-bold w-1/3">Owner's CNIC</td>
                   <td className="py-4">
                     <input
+                      name="cnic"
                       type="text"
-                      value={cnic}
-                      onChange={(e) => setcnic(e.target.value)}
+                      value={formData.cnic}
+                      onChange={handleChange}
                       placeholder="12345-6789012-3"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      pattern="[0-9]{5}-[0-9]{7}-[0-9]{1}"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.cnic ? "border-red-900" : ""
+                      }`}
                     />
+                    {errors.cnic && (
+                      <p className="text-red-900 text-xs mt-1">{errors.cnic}</p>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 font-bold w-1/3">Contact Number</td>
                   <td className="py-4">
                     <input
+                      name="contact"
                       type="tel"
-                      value={contact}
-                      onChange={(e) => setcontact(e.target.value)}
+                      value={formData.contact}
+                      onChange={handleChange}
                       placeholder="0300-1234567"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      pattern="[0-9]{4}-[0-9]{7}"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.contact ? "border-red-900" : ""
+                      }`}
                     />
+                    {errors.contact && (
+                      <p className="text-red-900 text-xs mt-1">{errors.contact}</p>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 font-bold w-1/3">Address</td>
                   <td className="py-4">
                     <input
+                      name="address"
                       type="text"
-                      value={address}
-                      onChange={(e) => setaddress(e.target.value)}
+                      value={formData.address}
+                      onChange={handleChange}
                       placeholder="1234 Main St, City"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.address ? "border-red-900" : ""
+                      }`}
                     />
+                    {errors.address && (
+                      <p className="text-red-900 text-xs mt-1">{errors.address}</p>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 font-bold w-1/3">Email</td>
                   <td className="py-4">
                     <input
-                      value={email}
-                      onChange={(e) => setemail(e.target.value)}
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       type="email"
                       placeholder="name@example.com"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.email ? "border-red-900" : ""
+                      }`}
                     />
+                    {errors.email && (
+                      <p className="text-red-900 text-xs mt-1">{errors.email}</p>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 font-bold w-1/3">Password</td>
                   <td className="py-4">
-                    <input
-                      value={password}
-                      onChange={(e) => setpassword(e.target.value)}
-                      type="password"
-                      placeholder="********"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      required
-                    />
+                    <div className="relative">
+                      <input
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="********"
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.password ? "border-red-900" : ""
+                        }`}
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-2 text-gray-500"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
+                    {errors.password && (
+                      <p className="text-red-900 text-xs mt-1">{errors.password}</p>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 font-bold w-1/3">Confirm Password</td>
                   <td className="py-4">
                     <input
-                      value={cpassword}
-                      onChange={(e) => {
-                        setcpassword(e.target.value);
-                        setPasswordError(""); // Clear error when typing
-                      }}
+                      name="cpassword"
+                      value={formData.cpassword}
+                      onChange={handleChange}
                       type="password"
                       placeholder="********"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C]"
-                      required
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                        errors.cpassword ? "border-red-900" : ""
+                      }`}
                     />
-                    {passwordError && (
-                      <p className="text-red-900 text-xs mt-1">
-                        {passwordError}
-                      </p>
+                    <button
+                        type="button"
+                        className="absolute right-3 top-2 text-gray-500"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    {errors.cpassword && (
+                      <p className="text-red-900 text-xs mt-1">{errors.cpassword}</p>
                     )}
                   </td>
                 </tr>
@@ -257,7 +359,7 @@ function ShowroomSignUp() {
             <div className="flex items-center justify-center mt-4">
               <button
                 type="submit"
-                className="bg-[#C17D3C] text-white font-bold py-2 px-4 rounded focus:outline-none w-full"
+                className="bg-[#C17D3C] hover:bg-[#B06F35] text-white font-bold py-2 px-4 rounded focus:outline-none w-full transition-colors"
               >
                 Sign Up
               </button>
