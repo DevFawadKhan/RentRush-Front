@@ -64,7 +64,7 @@ function App() {
             <Route path="/customer/cars" element={<Cars />}></Route>
             <Route path="/customer/Showrooms" element={<Showrooms />}></Route>
             <Route path="/customer/bookings" element={<Bookings />}></Route>
-            <Route path="/admin/Adminpage" element={<Adminpage />}></Route>
+            <Route path="/admin" element={<Adminpage />}></Route>
             <Route
               path="/customer/editbooking"
               element={<EditBookingModal></EditBookingModal>}

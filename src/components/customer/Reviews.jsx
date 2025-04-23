@@ -1,5 +1,5 @@
-import React from 'react'
-import { Star, StarHalf, User, ThumbsUp } from 'lucide-react'
+import React from "react";
+import { Star, StarHalf, User, ThumbsUp } from "lucide-react";
 import Navbar from "./Navbar";
 import Footer from "../Footer";
 
@@ -44,10 +44,12 @@ function Reviews() {
 
   return (
     <>
-     <Navbar />
-      <div className='p-3'>
-        <div className='border-t border-neutral-400 border-b'>
-          <h1 className='p-4 font-bold text-3xl lg:text-5xl'>Review & Comments </h1>
+      <Navbar />
+      <div className="p-3">
+        <div className="border-t border-neutral-400 border-b">
+          <h1 className="p-4 font-bold text-3xl lg:text-5xl">
+            Review & Comments{" "}
+          </h1>
         </div>
         <div className="flex flex-col lg:flex-row flex-wrap justify-between w-full">
           <div className="mt-20 flex flex-col justify-center items-center w-full lg:w-1/2">

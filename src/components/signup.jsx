@@ -4,22 +4,22 @@ import axios from "axios";
 import Toast from "./Toast";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from "lucide-react";
 const Base_Url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
   const navigate = useNavigate();
-  const [name, setname] = useState('');
-  const [email, setemail] = useState('');
-  const [contact, setcontact] = useState('');
-  const [cnic, setcnic] = useState('');
-  const [address, setaddress] = useState('');
-  const [password, setpassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-const [showPassword, setShowPassword] = useState(false);
+  const [name, setname] = useState("");
+  const [email, setemail] = useState("");
+  const [contact, setcontact] = useState("");
+  const [cnic, setcnic] = useState("");
+  const [address, setaddress] = useState("");
+  const [password, setpassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateName = (name) => {
     const regex = /^[a-zA-Z\s]+$/;
@@ -44,9 +44,12 @@ const [showPassword, setShowPassword] = useState(false);
 
   const validatePassword = (password) => {
     // Password should contain at least one letter, one number and one special character
-    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^..&*()_+])[A-Za-z\d!@#..$%^&*()_+]{8,}$/;
+    const regex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^..&*()_+])[A-Za-z\d!@#..$%^&*()_+]{8,}$/;
     if (!regex.test(password)) {
-      setPasswordError("Password must contain letters, numbers, and special characters");
+      setPasswordError(
+        "Password must contain letters, numbers, and special characters",
+      );
       return false;
     }
     setPasswordError("");
@@ -57,9 +60,9 @@ const [showPassword, setShowPassword] = useState(false);
     e.preventDefault();
 
     // Reset errors
-    setPasswordError('');
-    setNameError('');
-    setEmailError('');
+    setPasswordError("");
+    setNameError("");
+    setEmailError("");
 
     // Validate fields
     if (!validateName(name)) {
@@ -73,7 +76,10 @@ const [showPassword, setShowPassword] = useState(false);
     }
 
     if (!validatePassword(password)) {
-      Toast("Password must contain letters, numbers, and special characters", "error");
+      Toast(
+        "Password must contain letters, numbers, and special characters",
+        "error",
+      );
       return;
     }
 
@@ -85,17 +91,18 @@ const [showPassword, setShowPassword] = useState(false);
     }
 
     // Proceed with signup if all validations pass
-    axios.post(`${Base_Url}/api/signup`, {
-      ownerName: name,
-      cnic: cnic,
-      contactNumber: contact,
-      address: address,
-      email: email,
-      password: password,
-      role: 'client',
-    })
-      .then(response => {
-        Toast(response.data, "success", () => navigate('/login'));
+    axios
+      .post(`${Base_Url}/api/signup`, {
+        ownerName: name,
+        cnic: cnic,
+        contactNumber: contact,
+        address: address,
+        email: email,
+        password: password,
+        role: "client",
+      })
+      .then((response) => {
+        Toast(response.data, "success", () => navigate("/login"));
         console.log(response);
       })
       .catch((error) => {
@@ -136,7 +143,7 @@ const [showPassword, setShowPassword] = useState(false);
                 id="name"
                 placeholder="John Doe"
                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  nameError ? 'border-red-700' : ''
+                  nameError ? "border-red-700" : ""
                 }`}
                 required
               />
@@ -224,7 +231,7 @@ const [showPassword, setShowPassword] = useState(false);
                 id="email"
                 placeholder="you@example.com"
                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                  emailError ? 'border-red-700' : ''
+                  emailError ? "border-red-700" : ""
                 }`}
                 required
               />
@@ -234,67 +241,66 @@ const [showPassword, setShowPassword] = useState(false);
             </div>
 
             {/* Password */}
-      <div className="mb-2 relative">
-    <label
-      className="block text-[#02073F] text-sm font-bold mb-2"
-      htmlFor="password"
-    >
-      Password
-    </label>
-    <input
-      type={showPassword ? 'text' : 'password'}
-      value={password}
-      id="password"
-      onChange={(e) =>{
-        setpassword(e.target.value)
-        validatePassword(e.target.value)
-      }}
-      placeholder="Password"
+            <div className="mb-2 relative">
+              <label
+                className="block text-[#02073F] text-sm font-bold mb-2"
+                htmlFor="password"
+              >
+                Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                id="password"
+                onChange={(e) => {
+                  setpassword(e.target.value);
+                  validatePassword(e.target.value);
+                }}
+                placeholder="Password"
+                className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+                  passwordError ? "border-red-700" : ""
+                }`}
+                required
+              />
+              <span
+                className="absolute top-9 right-3 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+              </span>
+              {passwordError && (
+                <p className="text-red-700 text-xs mt-1">{passwordError}</p>
+              )}
+            </div>
 
-      className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-        passwordError ? 'border-red-700' : ''
-      }`}
-      required
-    />
-    <span
-      className="absolute top-9 right-3 cursor-pointer"
-      onClick={() => setShowPassword(!showPassword)}
-    >
-      {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-    </span>
-    {passwordError && (
-    <p className="text-red-700 text-xs mt-1">{passwordError}</p>
-  )}
-    </div>
-
-        {/* Confirm Password */}
-        <div className="mb-2 relative">
-  <label
-    className="block text-[#02073F] text-sm font-bold mb-2"
-    htmlFor="confirm-password"
-  >
-    Confirm Password
-  </label>
-  <div className="relative">
-    <input
-      type={showPassword ? 'text' : 'password'}
-      value={confirmPassword}
-      id="confirm-password"
-      onChange={(e) => setConfirmPassword(e.target.value)}
-      placeholder="Re-enter your password"
-      className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-        passwordError ? 'border-red-700' : ''
-      }`}
-      required
-    />
-    <span
-      className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-      onClick={() => setShowPassword(!showPassword)}
-    >
-      {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-    </span>
-  </div>
-</div>
+            {/* Confirm Password */}
+            <div className="mb-2 relative">
+              <label
+                className="block text-[#02073F] text-sm font-bold mb-2"
+                htmlFor="confirm-password"
+              >
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  id="confirm-password"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter your password"
+                  className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+                    passwordError ? "border-red-700" : ""
+                  }`}
+                  required
+                />
+                <span
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+                </span>
+              </div>
+            </div>
             {/* Centered Sign Up Button */}
             <div className="flex items-center justify-center">
               <button

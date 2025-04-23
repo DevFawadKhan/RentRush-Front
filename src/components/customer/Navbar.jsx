@@ -1,7 +1,7 @@
 import { User, Calendar, LogOut, House, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 const Base_Url = import.meta.env.VITE_API_URL;
 const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -15,14 +15,14 @@ const Navbar = () => {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       console.log(response.data.message);
     } catch (error) {
       console.log(error.response?.data || error.message);
     }
   };
-  
+
   useEffect(() => {
     const Fetchemail = () => {
       try {
@@ -137,7 +137,9 @@ const Navbar = () => {
                 className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
               >
                 <LogOut className="mr-3 text-gray-600" size={18} />
-                <span onClick={Call_LogoutApi} className="text-gray-700">Logout</span>
+                <span onClick={Call_LogoutApi} className="text-gray-700">
+                  Logout
+                </span>
               </Link>
             </div>
           )}

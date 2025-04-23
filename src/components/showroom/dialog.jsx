@@ -47,7 +47,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
           ? Array.isArray(vehicle.images)
             ? vehicle.images
             : [vehicle.images]
-          : []
+          : [],
       );
     } else {
       setFormData({
@@ -160,7 +160,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
       }
     } else if (
       ["mileage", "rentalPrice", "seatCapacity", "luggageCapacity"].includes(
-        name
+        name,
       )
     ) {
       if (value === "" || /^\d*$/.test(value)) {

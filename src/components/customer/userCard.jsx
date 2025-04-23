@@ -19,8 +19,7 @@ const UserCard = ({ car, handleRefetch }) => {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const minDate = tomorrow.toISOString().split("T")[0];
 
-
-  // show one hour deplay 
+  // show one hour deplay
   useEffect(() => {
     const now = new Date();
     now.setHours(now.getHours() + 1); // Add 1 hour
@@ -33,8 +32,6 @@ const UserCard = ({ car, handleRefetch }) => {
     setRentalStartTime(futureTime); // 👈 set default value bhi
   }, []);
 
-
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting booking request...");
@@ -49,7 +46,7 @@ const UserCard = ({ car, handleRefetch }) => {
           rentalEndDate,
           rentalEndTime,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       console.log("Response received:", response.data);
       Toast(response.data.message);
@@ -67,7 +64,7 @@ const UserCard = ({ car, handleRefetch }) => {
             >
               Click here to download the Invoice
             </a>
-          </>
+          </>,
         );
       }
 

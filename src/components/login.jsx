@@ -1,10 +1,10 @@
+import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Toast from "./Toast";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Eye, EyeOff } from 'lucide-react'; 
+import Navbar from "./Navbar";
+import Toast from "./Toast";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -24,9 +24,16 @@ function Login() {
       const response = await axios.post(
         `${Base_Url}/api/login`,
         { email: email, password: password },
-        { withCredentials: true },
+        { withCredentials: true }
       );
       const userRole = response.data.role;
+      if (userRole === "showroom" || userRole === "client") {
+        const showroomStatus = response.data.status;
+        if (showroomStatus === "banned") {
+          Toast("Your are banned. Please contact support.", "error");
+          return;
+        }
+      }
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("showroomName", response.data?.showroomName);
       localStorage.setItem("logo", response.data?.logo);
@@ -38,6 +45,9 @@ function Login() {
         Toast("Login Successful!", "success");
         localStorage.setItem("name", response.data.name);
         navigator("/customer/Dashboard");
+      } else if (userRole === "showroom") {
+        Toast("Welcome to Showroom!", "success");
+        navigator("/showroom/dashboard");
       } else if (userRole === "showroom") {
         Toast("Welcome to Showroom!", "success");
         navigator("/showroom/dashboard");
@@ -66,7 +76,7 @@ function Login() {
           <h2 className="pt-2 font-bold text-[35px] text-[#02073F] ml-5">
             Login
           </h2>
-        
+
           <form className="mt-8 rounded mb-4 ml-5" onSubmit={handleSubmit}>
             <div className="mb-3">
               <label
@@ -93,7 +103,7 @@ function Login() {
                 Password
               </label>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 value={password}
                 id="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,10 +123,8 @@ function Login() {
               ) : null}
             </div>
             {loginError && (
-            <div className="text-red-900 text-16px mb-4">
-              {loginError}
-            </div>
-          )}
+              <div className="text-red-900 text-16px mb-4">{loginError}</div>
+            )}
             <p className="text-xs py-2 font-bold hover:cursor-pointer hover:text-[#ffffff] text-[#02073F]">
               <Link to="/forgot-password">Forgot password?</Link>
             </p>

@@ -1,196 +1,177 @@
-import { faBan, faCheck, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import ConfirmationDialog from "./ConfirmationDialog";
-const Base_Url = import.meta.env.VITE_API_URL;
 import axios from "axios";
 
+const Base_Url = import.meta.env.VITE_API_URL;
+
 const Showroom = ({ value }) => {
-  const [showBan, setShowBan] = useState([]);
-  const [isRatingsOpen, setIsRatingsOpen] = useState(false);
-  const [statuses, setStatuses] = useState({}); // Track status for each showroom individually
+  const [statuses, setStatuses] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedShowroom, setSelectedShowroom] = useState(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [selectedShowroomId, setSelectedShowroomId] = useState(null); // Track which showroom is being modified
   const [nextStatus, setNextStatus] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch banned users on component mount
-  useEffect(() => {
-    const fetchBannedUsers = async () => {
-      const response2 = await axios.get(`${Base_Url}/api/admin/viewBanUser`);
-      setShowBan(response2.data);
-      console.log(response2.data);
-    };
-    fetchBannedUsers();
-  }, []);
-
-  // Initialize statuses for each showroom
   useEffect(() => {
     const initialStatuses = {};
     value.forEach((showroom) => {
-      initialStatuses[showroom._id] = showroom.status || "active"; // Use showroom.status from API or default to 'active'
+      initialStatuses[showroom._id] = showroom.status || "active";
     });
     setStatuses(initialStatuses);
   }, [value]);
 
-  // Function to ban or activate a showroom
   const banShowroom = async (id) => {
     try {
       const url = `${Base_Url}/api/admin/banshowroom/${id}`;
       const response = await axios.post(url);
-      console.log(response.data.msg);
       alert(response.data.msg);
 
-      // Update the status for the specific showroom
       setStatuses((prevStatuses) => ({
         ...prevStatuses,
         [id]: nextStatus,
       }));
+      setIsModalOpen(false);
     } catch (error) {
-      console.log(error.response.data.msg);
-      alert(error.response.data.msg);
+      alert(error.response?.data?.msg || "An error occurred");
     }
   };
 
-  // Open confirmation dialog and set the next status
-  const openConfirmDialog = (id, newStatus) => {
-    setSelectedShowroomId(id);
-    setNextStatus(newStatus);
+  const openConfirmDialog = (id, status) => {
+    setSelectedShowroom((prev) => ({ ...prev, _id: id }));
+    setNextStatus(status);
     setIsConfirmDialogOpen(true);
   };
 
-  // Handle status change after confirmation
   const handleStatusChange = () => {
-    if (selectedShowroomId) {
-      banShowroom(selectedShowroomId);
+    if (selectedShowroom?._id) {
+      banShowroom(selectedShowroom._id);
     }
     setIsConfirmDialogOpen(false);
   };
 
-  // Sample ratings data
-  const ratings = [
-    {
-      user: "John Doe",
-      rating: 4,
-      feedback: "Great service and friendly staff!",
-    },
-    {
-      user: "Jane Smith",
-      rating: 5,
-      feedback: "Amazing experience, highly recommend!",
-    },
-    {
-      user: "Bob Johnson",
-      rating: 3,
-      feedback: "Good, but the waiting time was long.",
-    },
-    {
-      user: "Alice Brown",
-      rating: 5,
-      feedback: "Excellent cars and showroom experience!",
-    },
-    { user: "Mike Lee", rating: 4, feedback: "Friendly and quick service." },
-    {
-      user: "Anna Wilson",
-      rating: 5,
-      feedback: "Highly satisfied, will visit again!",
-    },
-    {
-      user: "Tom Green",
-      rating: 4,
-      feedback: "Affordable prices and good customer service.",
-    },
-  ];
+  const filteredShowrooms = value.filter((showroom) =>
+    showroom.showroomName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <section className="mb-8 ml-10 mr-10 w-full">
-      <h2 className="text-3xl font-bold text-[#394A9A] mb-6">
+    <section className="mb-8 mx-10 w-full">
+      <h2 className="text-4xl font-bold text-[#394A9A] mb-6 text-center">
         Showroom Accounts
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {value.map((data) => (
-          <div
-            key={data._id}
-            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-          >
-            <div className="space-y-4">
-              <p className="text-xl font-bold text-gray-800">
-                Showroom: {data.showroomName}
+
+      {/* Search Input */}
+      <div className="max-w-lg mx-auto mb-10">
+        <div className="relative">
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+          />
+          <input
+            type="text"
+            placeholder="Search showrooms by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full py-3 pl-12 pr-4 rounded-full border-2 border-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-[#394A9A] focus:border-[#394A9A] transition-all text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Showroom Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredShowrooms.length > 0 ? (
+          filteredShowrooms.map((data) => (
+            <div
+              key={data._id}
+              onClick={() => {
+                setSelectedShowroom(data);
+                setIsModalOpen(true);
+              }}
+              className="cursor-pointer bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-center"
+            >
+              <h3 className="text-xl font-bold text-[#2A3F85] hover:text-[#1D2951]">
+                {data.showroomName}
+              </h3>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 col-span-full text-center">
+            No showrooms found.
+          </p>
+        )}
+      </div>
+
+      {/* Showroom Details Modal */}
+      {isModalOpen && selectedShowroom && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-xl">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              {selectedShowroom.showroomName}
+            </h3>
+            <div className="space-y-2 text-gray-700">
+              <p>
+                <span className="font-semibold">Owner:</span>{" "}
+                {selectedShowroom.ownerName}
               </p>
-              <p className="text-gray-600">Owner: {data.ownerName}</p>
-              <p className="text-gray-600">CNIC: {data.cnic}</p>
-              <p className="text-gray-600">Address: {data.address}</p>
-              <button
-                className="flex items-center text-blue-500 hover:text-blue-700 transition-colors duration-200"
-                onClick={() => setIsRatingsOpen(true)}
-              >
-                <FontAwesomeIcon icon={faStar} className="mr-2" />
-                View Ratings
-              </button>
-              <p className="text-lg font-semibold">
-                Status:{" "}
+              <p>
+                <span className="font-semibold">CNIC:</span>{" "}
+                {selectedShowroom.cnic}
+              </p>
+              <p>
+                <span className="font-semibold">Address:</span>{" "}
+                {selectedShowroom.address}
+              </p>
+              <p>
+                <span className="font-semibold">Status:</span>{" "}
                 <span
                   className={
-                    statuses[data._id] === "active"
+                    statuses[selectedShowroom._id] === "active"
                       ? "text-green-600"
                       : "text-red-600"
                   }
                 >
-                  {statuses[data._id] === "active" ? "Active" : "Banned"}
+                  {statuses[selectedShowroom._id] === "active"
+                    ? "Active"
+                    : "Banned"}
                 </span>
               </p>
+            </div>
+            <div className="mt-6 flex flex-col gap-3">
               <button
                 className={`w-full py-2 rounded-lg text-white font-semibold transition-colors duration-200 ${
-                  statuses[data._id] === "active"
+                  statuses[selectedShowroom._id] === "active"
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-green-500 hover:bg-green-600"
                 }`}
                 onClick={() =>
                   openConfirmDialog(
-                    data._id,
-                    statuses[data._id] === "active" ? "banned" : "active",
+                    selectedShowroom._id,
+                    statuses[selectedShowroom._id] === "active"
+                      ? "banned"
+                      : "active"
                   )
                 }
               >
                 <FontAwesomeIcon
-                  icon={statuses[data._id] === "active" ? faBan : faCheck}
+                  icon={
+                    statuses[selectedShowroom._id] === "active"
+                      ? faBan
+                      : faCheck
+                  }
                   className="mr-2"
                 />
-                {statuses[data._id] === "active"
+                {statuses[selectedShowroom._id] === "active"
                   ? "Ban Showroom"
                   : "Activate Showroom"}
               </button>
+              <button
+                className="w-full py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Close
+              </button>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Ratings Modal */}
-      {isRatingsOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-2xl">
-            <h3 className="text-2xl font-bold mb-6 text-gray-800">
-              Showroom Ratings & Feedback
-            </h3>
-            <div className="max-h-96 overflow-y-auto pr-4">
-              <ul className="space-y-4">
-                {ratings.map((rating, index) => (
-                  <li key={index} className="border-b pb-4">
-                    <p className="font-semibold text-gray-800">{rating.user}</p>
-                    <p className="text-yellow-500">
-                      Rating: {"★".repeat(rating.rating)}
-                      {"☆".repeat(5 - rating.rating)}
-                    </p>
-                    <p className="text-gray-600 italic">"{rating.feedback}"</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <button
-              className="mt-6 w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark transition-colors duration-200"
-              onClick={() => setIsRatingsOpen(false)}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
