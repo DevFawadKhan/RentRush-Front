@@ -335,7 +335,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   placeholder: "e.g., 1500",
                 },
                 {
-                  label: "Rental Price ($/day)",
+                  label: "Rental Price (Rs/day)",
                   name: "rentalPrice",
                   type: "number",
                   placeholder: "e.g., 200",
