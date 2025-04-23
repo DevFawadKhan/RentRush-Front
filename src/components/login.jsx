@@ -41,7 +41,7 @@ function Login() {
 
       if (userRole === "admin") {
         Toast("Login Successful!", "success");
-        navigator("/admin");
+        navigator("/admin/dashboard");
       } else if (userRole === "client") {
         Toast("Login Successful!", "success");
         sessionStorage.setItem("name", response.data.name);

@@ -90,7 +90,7 @@ const Adminpage = () => {
               sessionStorage.removeItem("showroomName");
               sessionStorage.removeItem("logo");
               sessionStorage.removeItem("name");
-              navigate("/admin");
+              navigate("/login");
             }}
             className="flex items-center space-x-3 text-lg hover:bg-[#394A9A] p-3 rounded-lg w-full transition-colors duration-200"
           >
