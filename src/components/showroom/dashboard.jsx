@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ShowroomNavbar from "./showroomNavbar";
 import Drawer from "./drawer";
 import CarCard from "./carCard";
