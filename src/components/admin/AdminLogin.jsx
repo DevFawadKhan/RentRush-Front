@@ -1,14 +1,14 @@
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
-import Toast from "./Toast";
+import { useNavigate } from "react-router-dom";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
+import Toast from "../Toast";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
-function Login() {
+function AdminLogin() {
   const navigator = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,41 +23,26 @@ function Login() {
     try {
       const response = await axios.post(
         `${Base_Url}/api/login`,
-        { email: email, password: password },
+        { email, password },
         { withCredentials: true }
       );
+
       const userRole = response.data.role;
-      if (userRole === "showroom" || userRole === "client") {
-        const showroomStatus = response.data.status;
-        if (showroomStatus === "banned") {
-          Toast("Your are banned. Please contact support.", "error");
-          return;
-        }
+
+      if (userRole !== "admin") {
+        Toast("Access denied. Admins only.", "error");
+        return;
       }
+
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("role", response.data.role);
-      sessionStorage.setItem("showroomName", response.data?.showroomName);
-      sessionStorage.setItem("logo", response.data?.logo);
-
-      if (userRole === "admin") {
+      setTimeout(() => {
         Toast("Login Successful!", "success");
-        navigator("/admin");
-      } else if (userRole === "client") {
-        Toast("Login Successful!", "success");
-        sessionStorage.setItem("name", response.data.name);
-        navigator("/customer/Dashboard");
-      } else if (userRole === "showroom") {
-        Toast("Welcome to Showroom!", "success");
-        navigator("/showroom/dashboard");
-      } else if (userRole === "showroom") {
-        Toast("Welcome to Showroom!", "success");
-        navigator("/showroom/dashboard");
-      } else {
-        Toast("Role not recognized.", "error");
-        navigator("/login");
-      }
+      }, 1000);
+      Toast("Welcome Admin!", "success");
+      navigator("/admin/dashboard");
     } catch (error) {
-      setLoginError("The username or password you entered is incorrect.");
+      setLoginError("Invalid admin credentials.");
       Toast(error.response?.data?.message || "Login failed", "error");
     }
   };
@@ -75,7 +60,7 @@ function Login() {
             />
           </div>
           <h2 className="pt-2 font-bold text-[35px] text-[#02073F] ml-5">
-            Login
+            Admin Login
           </h2>
 
           <form className="mt-8 rounded mb-4 ml-5" onSubmit={handleSubmit}>
@@ -91,7 +76,7 @@ function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 id="email"
-                placeholder="you@example.com"
+                placeholder="admin@example.com"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
@@ -124,29 +109,17 @@ function Login() {
               ) : null}
             </div>
             {loginError && (
-              <div className="text-red-900 text-16px mb-4">{loginError}</div>
+              <div className="text-red-900 text-sm mb-4">{loginError}</div>
             )}
-            <p className="text-xs py-2 font-bold hover:cursor-pointer hover:text-[#ffffff] text-[#02073F]">
-              <Link to="/forgot-password">Forgot password?</Link>
-            </p>
             <div className="flex items-center justify-between">
               <button
                 type="submit"
                 className="bg-[#C17D3C] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
               >
-                Login
+                Login as Admin
               </button>
             </div>
           </form>
-          <p className="mt-4 text-center text-[#02073F] text-xs">
-            Don't have an account?&nbsp;
-            <Link
-              to="/signup"
-              className="text-[#02073F] hover:text-[#ffffff] font-bold"
-            >
-              Register for free
-            </Link>
-          </p>
         </div>
       </div>
       <Footer />
@@ -154,4 +127,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;

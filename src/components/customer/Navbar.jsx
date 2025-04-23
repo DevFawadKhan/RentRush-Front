@@ -26,7 +26,7 @@ const Navbar = () => {
   useEffect(() => {
     const Fetchemail = () => {
       try {
-        const userdata = localStorage.getItem("name");
+        const userdata = sessionStorage.getItem("name");
         if (userdata) {
           setname(userdata);
           setFirst_letter(userdata.charAt(0));

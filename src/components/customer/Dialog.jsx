@@ -290,7 +290,7 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
               <tr className="hover:bg-gray-50 border-t">
                 <td className="p-3 font-bold">Booked By</td>
                 <td className="p-3" colSpan={3}>
-                  {localStorage.getItem("name")}
+                  {sessionStorage.getItem("name")}
                 </td>
               </tr>
 

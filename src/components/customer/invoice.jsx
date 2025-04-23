@@ -202,7 +202,7 @@ const InvoiceDashboard = () => {
                       {invoice.bookingId}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {localStorage.getItem("name")}
+                      {sessionStorage.getItem("name")}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">honda</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

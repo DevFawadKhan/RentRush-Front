@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 function ShowroomNavbar() {
   const logoUrl = `${
     import.meta.env.VITE_API_URL
-  }/uploads/${localStorage.getItem("logo")}`;
-  const showroomName = localStorage.getItem("showroomName");
+  }/uploads/${sessionStorage.getItem("logo")}`;
+  const showroomName = sessionStorage.getItem("showroomName");
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50 px-4 py-3">
