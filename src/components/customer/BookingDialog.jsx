@@ -29,7 +29,7 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
           {car.images?.map((img, index) => (
             <img
               key={index}
-              src={`/uploads/${img}`}
+              src={`http://localhost:3000/uploads/${img}`}
               alt={`Car ${index}`}
               className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
             />

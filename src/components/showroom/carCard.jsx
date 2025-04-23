@@ -16,7 +16,7 @@ const CarCard = ({ car }) => {
     <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-65 relative">
       <div className="relative">
         <img
-          src={`/uploads/${car.images}`}
+          src={`http://localhost:3000/uploads/${car.images[0]}`}
           alt={car.carBrand + " " + car.carModel}
           className="w-full h-40 object-cover"
         />
@@ -98,7 +98,7 @@ const CarCard = ({ car }) => {
               {car.carBrand + " " + car.carModel}
             </h2>
             <img
-              src={`/uploads/${car.images}`}
+              src={`http://localhost:3000/uploads/${car.images[0]}`}
               alt={car.carBrand + " " + car.carModel}
               className="w-full h-40 object-cover mb-4 rounded"
             />

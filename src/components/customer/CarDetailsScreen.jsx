@@ -201,7 +201,7 @@ const CarDetailsScreen = () => {
         {/* Car Image */}
         <div className="mb-6">
           <img
-            src={`/uploads/${image[0]}`}
+            src={`http://localhost:3000/uploads/${image[0]}`}
             alt={image}
             className="w-full h-48 object-cover rounded-lg"
           />

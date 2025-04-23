@@ -285,7 +285,7 @@ const UserBookings = () => {
                   className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:shadow-2xl"
                 >
                   <img
-                    src={`/uploads/${booking.carDetails.images[0]}`}
+                    src={`http://localhost:3000/uploads/${booking.carDetails.images[0]}`}
                     alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
                     className="w-full h-52 object-contain"
                   />
@@ -432,7 +432,7 @@ const UserBookings = () => {
               {car.images?.map((img, index) => (
                 <img
                   key={index}
-                  src={`/uploads/${img}`}
+                  src={`http://localhost:3000/uploads/${img}`}
                   alt={`Car ${index}`}
                   className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
                 />

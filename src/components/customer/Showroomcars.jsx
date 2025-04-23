@@ -46,7 +46,7 @@ const [Filter, setFilter] = useState("Available")
     <div className="flex flex-col lg:flex-row gap-8 mb-10">
       <div className="w-full lg:w-2/5">
         <img
-          src={`/uploads/${showroom.images}`}
+          src={`http://localhost:3000/uploads/${showroom.images[0]}`}
           alt={`Showroom: ${showroom.showroomName}`}
           className="w-full h-72 object-cover rounded-xl shadow-lg"
           onError={(e) => {

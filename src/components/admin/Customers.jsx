@@ -25,7 +25,7 @@ const Customers = ({ data }) => {
             <div className="flex justify-center mb-4">
               {value.images && value.images.length > 0 ? (
                 <img
-                  src={`/uploads/${value.images[0]}`}
+                  src={`http://localhost:3000/uploads/${value.images[0]}`}
                   alt="Customer"
                   className="w-24 h-24 rounded-full object-cover border-4 border-[#394A9A]"
                 />

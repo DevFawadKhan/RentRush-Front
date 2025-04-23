@@ -114,7 +114,7 @@ const UserCard = ({ car, handleRefetch }) => {
         <div className="relative">
           {/* <h1 className="list-none cursor-pointer font-bold text-[20px] text-[#00004b]">RentRush Cars</h1> */}
           <img
-            src={`/uploads/${car.images}`}
+            src={`http://localhost:3000/uploads/${car.images[0]}`}
             alt={car.name}
             className="w-full h-40 object-cover"
           />
@@ -195,7 +195,7 @@ const UserCard = ({ car, handleRefetch }) => {
                     ? car.images.map((img, index) => (
                         <img
                           key={index}
-                          src={`/uploads/${img}`}
+                          src={`http://localhost:3000/uploads/${img}`}
                           alt={`Car ${index}`}
                           className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
                         />
@@ -391,7 +391,7 @@ const UserCard = ({ car, handleRefetch }) => {
                 {car.images?.map((img, index) => (
                   <img
                     key={index}
-                    src={`/uploads/${img}`}
+                    src={`http://localhost:3000/uploads/${img}`}
                     alt={`Car ${index}`}
                     className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
                   />

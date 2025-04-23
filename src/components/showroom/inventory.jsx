@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import ShowroomNavbar from "./showroomNavbar";
-import Drawer from "./drawer";
-import Dialog from "./dialog";
-import { Plus, Edit, Trash, Images } from "lucide-react";
 import axios from "axios";
+import { Edit, Plus, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
 import Toast from "../Toast";
+import Dialog from "./dialog";
+import Drawer from "./drawer";
+import ShowroomNavbar from "./showroomNavbar";
 const Base_Url = import.meta.env.VITE_API_URL;
 function ShowroomInventory() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -82,7 +82,7 @@ function ShowroomInventory() {
         const response = await axios.put(
           `${Base_Url}/api/car/update/${vehicles[vehicleToEdit]?._id}`,
           formData,
-          { withCredentials: true },
+          { withCredentials: true }
         );
         fetchVehicles();
         Toast(response.data.message, "success");
@@ -120,7 +120,7 @@ function ShowroomInventory() {
     try {
       const response = await axios.delete(
         `${Base_Url}/api/car/delete/${vehicleToDelete}`,
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
       Toast(response?.data?.message || "Car deleted successfully", "success");
@@ -201,7 +201,7 @@ function ShowroomInventory() {
                     </td>
                     <td className="px-4 py-2 border-b border-gray-700">
                       <img
-                        src={`/uploads/${vehicle.images[0]}`}
+                        src={`http://localhost:3000/uploads/${vehicle.images[0]}`}
                         alt={vehicle.carBrand + " " + vehicle.carModel}
                         className="w-16 h-16 object-cover"
                       />

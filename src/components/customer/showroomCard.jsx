@@ -40,7 +40,7 @@ const ShowroomCard = ({ value }) => {
       >
         <div className="relative">
           <img
-            src={`/uploads/${value.images}`}
+            src={`http://localhost:3000/uploads/${value.images[0]}`}
             alt={`Showroom: ${value.showroomName}`}
             className="w-full h-40 object-cover"
             onError={(e) => {
@@ -82,7 +82,7 @@ const ShowroomCard = ({ value }) => {
               <div className="flex flex-col lg:flex-row gap-8 mb-10">
                 <div className="w-full lg:w-2/5 relative">
                   <img
-                    src={`/uploads/${value.images}`}
+                    src={`http://localhost:3000/uploads/${value.images[0]}`}
                     alt={`Showroom: ${value.showroomName}`}
                     className="w-full h-72 object-cover rounded-xl shadow-lg"
                     onError={(e) => {
