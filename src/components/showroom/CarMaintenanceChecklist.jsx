@@ -64,7 +64,7 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
         },
         {
           withCredentials: true,
-        }
+        },
       );
       Toast("Maintenance log submitted", "success");
       const invoiceUrl = response.data.invoiceUrl;
@@ -80,7 +80,7 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
             >
               Click here to download the Invoice
             </a>
-          </>
+          </>,
         );
       }
       Toast("Maintenance log submitted", "success");
@@ -88,11 +88,11 @@ const CarMaintenanceChecklist = ({ car, onClose }) => {
       console.log(err);
       Toast(
         err?.response?.data || err.message || "Something went wrong",
-        "error"
+        "error",
       );
       Toast(
         err?.response?.data || err.message || "Something went wrong",
-        "error"
+        "error",
       );
     }
   };

@@ -43,59 +43,66 @@ function ShowroomSignUp() {
 
   const validateField = (name, value) => {
     let error = "";
-    
-    switch(name) {
-      case 'sname':
+
+    switch (name) {
+      case "sname":
         if (!value) error = "Showroom name is required";
-        else if (!/^[a-zA-Z0-9\s&'-]+$/.test(value)) 
-          error = "Showroom name can only contain letters, numbers, spaces, &, ', or -";
+        else if (!/^[a-zA-Z0-9\s&'-]+$/.test(value))
+          error =
+            "Showroom name can only contain letters, numbers, spaces, &, ', or -";
         break;
-      case 'owner':
+      case "owner":
         if (!value) error = "Owner name is required";
-        else if (!/^[a-zA-Z\s]+$/.test(value)) 
+        else if (!/^[a-zA-Z\s]+$/.test(value))
           error = "Owner name can only contain letters and spaces";
         break;
-      case 'cnic':
+      case "cnic":
         if (!value) error = "CNIC is required";
-        else if (!/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/.test(value)) 
+        else if (!/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/.test(value))
           error = "CNIC must be in format XXXXX-XXXXXXX-X";
         break;
-      case 'contact':
+      case "contact":
         if (!value) error = "Contact number is required";
-        else if (!/^[0-9]{4}-[0-9]{7}$/.test(value)) 
+        else if (!/^[0-9]{4}-[0-9]{7}$/.test(value))
           error = "Contact must be in format XXXX-XXXXXXX";
         break;
-      case 'address':
+      case "address":
         if (!value) error = "Address is required";
-        else if (value.length < 10) 
+        else if (value.length < 10)
           error = "Address must be at least 10 characters";
         break;
-      case 'email':
+      case "email":
         if (!value) error = "Email is required";
-        else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) 
+        else if (
+          !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+        )
           error = "Please enter a valid email address";
         break;
-      case 'password':
+      case "password":
         if (!value) error = "Password is required";
-        else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/.test(value)) 
-          error = "Password must contain letters, numbers, and special characters";
+        else if (
+          !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/.test(
+            value,
+          )
+        )
+          error =
+            "Password must contain letters, numbers, and special characters";
         break;
-      case 'cpassword':
+      case "cpassword":
         if (!value) error = "Please confirm your password";
-        else if (value !== formData.password) 
-          error = "Passwords do not match";
+        else if (value !== formData.password) error = "Passwords do not match";
         break;
       default:
         break;
     }
-    
-    setErrors(prev => ({ ...prev, [name]: error }));
+
+    setErrors((prev) => ({ ...prev, [name]: error }));
     return !error;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     validateField(name, value);
   };
 
@@ -104,7 +111,7 @@ function ShowroomSignUp() {
 
     // Validate all fields
     let isValid = true;
-    Object.keys(formData).forEach(field => {
+    Object.keys(formData).forEach((field) => {
       if (!validateField(field, formData[field])) {
         isValid = false;
       }
@@ -132,14 +139,22 @@ function ShowroomSignUp() {
       formDataToSend.append("password", formData.password);
       formDataToSend.append("role", "showroom");
 
-      const response = await axios.post(`${Base_Url}/api/signup`, formDataToSend);
-      
+      const response = await axios.post(
+        `${Base_Url}/api/signup`,
+        formDataToSend,
+      );
+
       if (response.status === 201) {
-        Toast("Showroom registered successfully!", "success", () => navigate("/login"));
+        Toast("Showroom registered successfully!", "success", () =>
+          navigate("/login"),
+        );
       }
     } catch (error) {
       console.error("Registration error:", error);
-      Toast(error.response?.data?.message || "Error occurred during registration", "error");
+      Toast(
+        error.response?.data?.message || "Error occurred during registration",
+        "error",
+      );
     }
   };
 
@@ -206,7 +221,9 @@ function ShowroomSignUp() {
                       }`}
                     />
                     {errors.sname && (
-                      <p className="text-red-900 text-xs mt-1">{errors.sname}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.sname}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -224,7 +241,9 @@ function ShowroomSignUp() {
                       }`}
                     />
                     {errors.owner && (
-                      <p className="text-red-900 text-xs mt-1">{errors.owner}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.owner}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -260,7 +279,9 @@ function ShowroomSignUp() {
                       }`}
                     />
                     {errors.contact && (
-                      <p className="text-red-900 text-xs mt-1">{errors.contact}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.contact}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -278,7 +299,9 @@ function ShowroomSignUp() {
                       }`}
                     />
                     {errors.address && (
-                      <p className="text-red-900 text-xs mt-1">{errors.address}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.address}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -296,7 +319,9 @@ function ShowroomSignUp() {
                       }`}
                     />
                     {errors.email && (
-                      <p className="text-red-900 text-xs mt-1">{errors.email}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.email}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -323,7 +348,9 @@ function ShowroomSignUp() {
                       </button>
                     </div>
                     {errors.password && (
-                      <p className="text-red-900 text-xs mt-1">{errors.password}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.password}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -341,14 +368,16 @@ function ShowroomSignUp() {
                       }`}
                     />
                     <button
-                        type="button"
-                        className="absolute right-3 top-2 text-gray-500"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? "Hide" : "Show"}
-                      </button>
+                      type="button"
+                      className="absolute right-3 top-2 text-gray-500"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
                     {errors.cpassword && (
-                      <p className="text-red-900 text-xs mt-1">{errors.cpassword}</p>
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.cpassword}
+                      </p>
                     )}
                   </td>
                 </tr>

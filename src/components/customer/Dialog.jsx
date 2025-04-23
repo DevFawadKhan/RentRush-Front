@@ -51,7 +51,7 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
 
     const days = Math.floor(absTimeDiff / (1000 * 60 * 60 * 24));
     const hours = Math.floor(
-      (absTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      (absTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     );
     const minutes = Math.floor((absTimeDiff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((absTimeDiff % (1000 * 60)) / 1000);
@@ -101,17 +101,17 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
     console.log(
       "Current Time:",
       new Date(currentTime).toISOString(),
-      currentTime
+      currentTime,
     );
     console.log(
       "Start Time:",
       startTimestamp ? new Date(startTimestamp).toISOString() : "Invalid",
-      startTimestamp
+      startTimestamp,
     );
     console.log(
       "End Time:",
       endTimestamp ? new Date(endTimestamp).toISOString() : "Invalid",
-      endTimestamp
+      endTimestamp,
     );
 
     if (error) {
