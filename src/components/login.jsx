@@ -1,10 +1,10 @@
+import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Toast from "./Toast";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Eye, EyeOff } from "lucide-react";
+import Navbar from "./Navbar";
+import Toast from "./Toast";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -24,9 +24,16 @@ function Login() {
       const response = await axios.post(
         `${Base_Url}/api/login`,
         { email: email, password: password },
-        { withCredentials: true },
+        { withCredentials: true }
       );
       const userRole = response.data.role;
+      if (userRole === "showroom" || userRole === "client") {
+        const showroomStatus = response.data.status;
+        if (showroomStatus === "banned") {
+          Toast("Your are banned. Please contact support.", "error");
+          return;
+        }
+      }
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("showroomName", response.data?.showroomName);
       localStorage.setItem("logo", response.data?.logo);
@@ -38,6 +45,9 @@ function Login() {
         Toast("Login Successful!", "success");
         localStorage.setItem("name", response.data.name);
         navigator("/customer/Dashboard");
+      } else if (userRole === "showroom") {
+        Toast("Welcome to Showroom!", "success");
+        navigator("/showroom/dashboard");
       } else if (userRole === "showroom") {
         Toast("Welcome to Showroom!", "success");
         navigator("/showroom/dashboard");

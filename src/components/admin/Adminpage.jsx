@@ -48,7 +48,7 @@ const Adminpage = () => {
         <h2 className="text-2xl font-bold mb-8">Admin Panel</h2>
         <nav className="space-y-4">
           <Link
-            to="/"
+            to="/admin"
             className="flex items-center space-x-3 text-lg hover:bg-[#394A9A] p-3 rounded-lg transition-colors duration-200"
           >
             <FontAwesomeIcon icon={faHome} />
