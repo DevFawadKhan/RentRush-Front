@@ -185,7 +185,7 @@ const EditBookingModal = ({ booking, isOpen, onClose }) => {
                       <td className="border p-2 font-bold">Booked By</td>
 
                       <td className="border p-2">
-                        {localStorage.getItem("name")}
+                        {sessionStorage.getItem("name")}
                       </td>
                       <td className="border p-2 font-bold">Renting Period</td>
                       <td className="border p-2">
