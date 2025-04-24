@@ -48,14 +48,14 @@ const UserBookings = () => {
             !["AM", "PM"].includes(modifier.toUpperCase())
           ) {
             throw new Error(
-              "Invalid time format. Expected format like '03:45 PM'.",
+              "Invalid time format. Expected format like '03:45 PM'."
             );
           }
 
           const [hoursStr, minutesStr] = timePart.split(":");
           if (!hoursStr || !minutesStr) {
             throw new Error(
-              "Invalid time component. Hours and minutes are required.",
+              "Invalid time component. Hours and minutes are required."
             );
           }
 
@@ -78,8 +78,8 @@ const UserBookings = () => {
 
           setMaintenanceDetails(
             selectedBookingDetails?.carDetails?.maintenanceLogs.filter(
-              (log) => log.bookingId === selectedBookingDetails._id,
-            ),
+              (log) => log.bookingId === selectedBookingDetails._id
+            )
           );
 
           return { hours, minutes };
@@ -164,7 +164,7 @@ const UserBookings = () => {
         console.log("booking from array", response.data);
         console.log(
           "bookings from showrrrom",
-          selectedBookingDetails?.showroomDetails?.showroomName,
+          selectedBookingDetails?.showroomDetails?.showroomName
         );
         setError("");
       } else if (response.status === 204) {
@@ -202,7 +202,7 @@ const UserBookings = () => {
         {},
         {
           withCredentials: true,
-        },
+        }
       );
       if (response.status === 200) {
         toast(response.data.message, "success");
@@ -222,10 +222,10 @@ const UserBookings = () => {
         `${Base_Url}/api/bookcar/cancel/${bookingId}`,
         {
           withCredentials: true,
-        },
+        }
       );
       setBookings((prevBookings) =>
-        prevBookings.filter((booking) => booking._id !== bookingId),
+        prevBookings.filter((booking) => booking._id !== bookingId)
       );
       Toast("BOOKING DELETED SUCCESSFULLY", "success");
     } catch (error) {
@@ -500,6 +500,55 @@ const UserBookings = () => {
               🚗 Maintenance Details
             </h2>
 
+            <div className="mt-2 mb-6">
+              <p className="text-lg font-bold text-gray-600 text-left mb-2">
+                Booking Details:
+              </p>
+              <div className="bg-gray-50 p-5 mb-5 rounded-lg shadow-sm border border-gray-200 transition hover:shadow-md">
+                <p className="text-lg text-gray-600 mb-1 text-left">
+                  Booking ID:{" "}
+                  <span className="font-semibold">
+                    {selectedBookingDetails._id}
+                  </span>
+                </p>
+
+                <p className="text-lg text-gray-600 mb-1 text-left">
+                  Showroom Name:{" "}
+                  <span className="font-semibold">
+                    {selectedBookingDetails.showroomDetails.showroomName}
+                  </span>
+                </p>
+
+                <p className="text-lg text-gray-600 mb-1 text-left">
+                  Car Model:{" "}
+                  <span className="font-semibold">
+                    {selectedBookingDetails.carDetails.carBrand}{" "}
+                    {selectedBookingDetails.carDetails.carModel}
+                  </span>
+                </p>
+
+                <p className="text-lg text-gray-600 mb-1 text-left">
+                  Start Date:{" "}
+                  <span className="font-semibold">
+                    {new Date(
+                      selectedBookingDetails.rentalStartDate
+                    ).toLocaleDateString()}
+                  </span>
+                </p>
+                <p className="text-lg text-gray-600 mb-1 text-left">
+                  End Date:{" "}
+                  <span className="font-semibold">
+                    {new Date(
+                      selectedBookingDetails.rentalEndDate
+                    ).toLocaleDateString()}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <p className="text-lg font-semibold text-gray-600 mb-4 text-left">
+              Here are the maintenance details for your booking:
+            </p>
+
             <div className="space-y-6">
               {maintenanceDetails.length > 0 ? (
                 maintenanceDetails.map((log, index) => (
@@ -545,7 +594,7 @@ const UserBookings = () => {
                                 </span>{" "}
                                 {description}
                               </li>
-                            ),
+                            )
                           )}
                       </ul>
                     </div>
@@ -565,7 +614,7 @@ const UserBookings = () => {
                                 </span>{" "}
                                 Rs. {cost}
                               </li>
-                            ),
+                            )
                           )}
                       </ul>
                     </div>
@@ -589,7 +638,7 @@ const UserBookings = () => {
               <button
                 onClick={() =>
                   handleDownloadInvoice(
-                    selectedBookingDetails.currentInvoiceUrl,
+                    selectedBookingDetails.currentInvoiceUrl
                   )
                 }
                 className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-md transition duration-300"
