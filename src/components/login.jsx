@@ -45,10 +45,7 @@ function Login() {
       } else if (userRole === "client") {
         Toast("Login Successful!", "success");
         sessionStorage.setItem("name", response.data.name);
-        navigator("/customer/Dashboard");
-      } else if (userRole === "showroom") {
-        Toast("Welcome to Showroom!", "success");
-        navigator("/showroom/dashboard");
+        navigator("/customer/dashboard");
       } else if (userRole === "showroom") {
         Toast("Welcome to Showroom!", "success");
         navigator("/showroom/dashboard");
