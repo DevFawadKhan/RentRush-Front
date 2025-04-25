@@ -323,9 +323,13 @@ const UserBookings = () => {
                       {new Date().toDateString() >=
                         new Date(booking.rentalStartDate).toDateString() && (
                         <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-                          <button className="text-sm text-blue-600 hover:underline">
-                            Extend Booking
-                          </button>
+                          {
+                            CurrentDate>=BookingEndDate ?"":(
+                              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                              ✏️ Extend Booking
+                              </button>
+                            )
+                          }
                         </Link>
                       )}
                     </div>

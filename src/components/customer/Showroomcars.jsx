@@ -11,30 +11,24 @@ function Showroomcars() {
   const [allcar, setallcar] = useState([]);
   const location = useLocation();
   const showroom = location.state?.showroom;
-  const [Filter, setFilter] = useState("Available");
-  useEffect(() => {
-    const fetchcar = async () => {
-      try {
-        const response = await axios.get(
-          `${Base_Url}/api/getshowroomcar/${showroomid}`,
-          {
-            withCredentials: true,
-          },
-        );
-
-        setallcar(response.data.totalcar);
-      } catch (error) {
-        console.log("error in get all cars", error.response);
-      }
-    };
-    fetchcar();
-  }, [showroomid]);
-  // filtercars
-  const filtercars = allcar.filter((car) =>
-    Filter === "available"
-      ? car.availability === "Available"
-      : car.availability === "Rented Out",
-  );
+  console.log("showrrom",showroom)
+const [Filter, setFilter] = useState("Available")
+    useEffect(()=>{
+        const fetchcar=async ()=>{
+         try {
+           const response= await axios.get(`${Base_Url}/api/getshowroomcar/${showroomid}`,{
+             withCredentials:true,
+           })
+       
+           setallcar(response.data.totalcar);
+         } catch (error) {
+           console.log("error in get all cars",error.response);
+         }
+        }
+        fetchcar()
+       },[showroomid])
+       // filtercars
+       const filtercars=allcar.filter((car)=> Filter==="available"?car.availability==="Available":car.availability==="Rented Out")       
   return (
     <>
       <div className="w-full min-h-screen bg-gray-100">
@@ -115,47 +109,35 @@ function Showroomcars() {
             </div>
           </div>
 
-          {/* Cars Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {filtercars.length > 0 ? (
-              filtercars.map((car, index) => (
-                <div
-                  key={index}
-                  className="transform transition duration-300 hover:scale-105"
-                >
-                  <UserCard car={car} className="w-full h-full" />
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-16">
-                <svg
-                  className="mx-auto h-16 w-16 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  ></path>
-                </svg>
-                <h3 className="mt-4 text-xl font-medium text-gray-900">
-                  {Filter === "available"
-                    ? "No available cars at this showroom"
-                    : "No cars currently rented out"}
-                </h3>
-                <p className="mt-2 text-lg text-gray-500">
-                  {Filter === "available"
-                    ? "Check back later for new arrivals"
-                    : "All cars are currently available"}
-                </p>
-              </div>
-            )}
+    {/* Cars Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+      {filtercars.length > 0 ? (
+        filtercars.map((car, index) => (
+          <div key={index} className="transform transition duration-300 hover:scale-105">
+            <UserCard car={car} className="w-full h-full" />
           </div>
+        ))
+      ) : (
+        <div className="col-span-full text-center py-16">
+          <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+          </svg>
+          <h3 className="mt-4 text-xl font-medium text-gray-900">
+            {Filter === "available" 
+              ? "No available cars at this showroom" 
+              : "No cars currently rented out"}
+          </h3>
+          <p className="mt-2 text-lg text-gray-500">
+            {Filter === "available" 
+              ? "Check back later for new arrivals" 
+              : "All cars are currently available"}
+          </p>
         </div>
-      </div>
+      )}
+    </div>
+  </div>
+</div>
+
     </>
   );
 }
