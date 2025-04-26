@@ -40,8 +40,8 @@ const CarCard = ({ car }) => {
         </div>
 
         {/* Price */}
-        <div className="flex items-center justify-center text-base font-bold mb-2">
-          Rs {car.rentRate}/Day
+        <div className="flex items-center mb-4">
+          <span className="text-xl font-bold"> {car.rentRate}Rs/Day</span>
         </div>
 
         {/* Seating capacity */}

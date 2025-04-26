@@ -9,17 +9,18 @@ const Base_Url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
   const navigate = useNavigate();
-  const [name, setname] = useState("");
-  const [email, setemail] = useState("");
-  const [contact, setcontact] = useState("");
-  const [cnic, setcnic] = useState("");
-  const [address, setaddress] = useState("");
-  const [password, setpassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [name, setname] = useState('');
+  const [email, setemail] = useState('');
+  const [contact, setcontact] = useState('');
+  const [cnic, setcnic] = useState('');
+  const [address, setaddress] = useState('');
+  const [password, setpassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+const [showPassword, setShowPassword] = useState(false);
+const [confirmshowpassword, setconfirmshowpassword] = useState(false)
 
   const validateName = (name) => {
     const regex = /^[a-zA-Z\s]+$/;
@@ -273,34 +274,34 @@ function SignUp() {
               )}
             </div>
 
-            {/* Confirm Password */}
-            <div className="mb-2 relative">
-              <label
-                className="block text-[#02073F] text-sm font-bold mb-2"
-                htmlFor="confirm-password"
-              >
-                Confirm Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  id="confirm-password"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Re-enter your password"
-                  className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
-                    passwordError ? "border-red-700" : ""
-                  }`}
-                  required
-                />
-                <span
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-                </span>
-              </div>
-            </div>
+        {/* Confirm Password */}
+        <div className="mb-2 relative">
+  <label
+    className="block text-[#02073F] text-sm font-bold mb-2"
+    htmlFor="confirm-password"
+  >
+    Confirm Password
+  </label>
+  <div className="relative">
+    <input
+      type={confirmshowpassword ? 'text' : 'password'}
+      value={confirmPassword}
+      id="confirm-password"
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      placeholder="Re-enter your password"
+      className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
+        passwordError ? 'border-red-700' : ''
+      }`}
+      required
+    />
+    <span
+      className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+      onClick={() => setconfirmshowpassword(!confirmshowpassword)}
+    >
+      {confirmshowpassword ? <EyeOff size={24} /> : <Eye size={24} />}
+    </span>
+  </div>
+</div>
             {/* Centered Sign Up Button */}
             <div className="flex items-center justify-center">
               <button

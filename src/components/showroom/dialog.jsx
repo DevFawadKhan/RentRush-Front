@@ -417,7 +417,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   max: 5000,
                 },
                 {
-                  label: "Rental Price ($/day)",
+                  label: "Rental Price (Rs/day)",
                   name: "rentalPrice",
                   type: "number",
                   placeholder: "2000",

@@ -367,13 +367,13 @@ function ShowroomSignUp() {
                         errors.cpassword ? "border-red-900" : ""
                       }`}
                     />
-                    <button
+                    {/* <button
                       type="button"
                       className="absolute right-3 top-2 text-gray-500"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? "Hide" : "Show"}
-                    </button>
+                    </button> */}
                     {errors.cpassword && (
                       <p className="text-red-900 text-xs mt-1">
                         {errors.cpassword}
