@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
+import { carBrandsWithModels } from "../../utils";
 
 function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = React.useState({
     make: "",
     model: "",
     mileage: "",
     year: "",
+    yearOfManufacture: "",
     engineDisplacement: "",
     rentalPrice: "",
     color: "",
@@ -15,14 +17,14 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     luggageCapacity: "",
     fuelType: "",
     carFeatures: "",
-    images: [], // Only for new File objects
+    images: [],
   });
 
-  const [existingImages, setExistingImages] = useState([]); // For server-provided image URLs
-  const dialogRef = useRef(null);
-  const [errors, setErrors] = useState({});
+  const [existingImages, setExistingImages] = React.useState([]);
+  const dialogRef = React.useRef(null);
+  const [errors, setErrors] = React.useState({});
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isEditing && vehicle) {
       setFormData({
         id: vehicle._id,
@@ -31,6 +33,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         mileage: vehicle.mileage,
         engineDisplacement: vehicle.engineType,
         year: vehicle.year,
+        yearOfManufacture: vehicle.yearOfManufacture,
         rentalPrice: vehicle.rentRate,
         color: vehicle.color,
         transmission: vehicle.transmission,
@@ -39,21 +42,22 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         luggageCapacity: vehicle.luggageCapacity || "",
         fuelType: vehicle.fuelType || "",
         carFeatures: vehicle.carFeatures || "",
-        images: [], // Initialize as empty; new uploads will be added here
+        images: [],
       });
-      // Set existing images from vehicle (assuming vehicle.images is a string or array of URLs)
       setExistingImages(
         vehicle.images
           ? Array.isArray(vehicle.images)
             ? vehicle.images
             : [vehicle.images]
-          : [],
+          : []
       );
     } else {
       setFormData({
         make: "",
         model: "",
         mileage: "",
+        year: "",
+        yearOfManufacture: "",
         engineDisplacement: "",
         rentalPrice: "",
         color: "",
@@ -74,16 +78,12 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     const currentYear = new Date().getFullYear();
 
     if (!formData.make) newErrors.make = "Brand is required";
-    else if (!/^[a-zA-Z\s]+$/.test(formData.make))
-      newErrors.make = "Only letters and spaces allowed";
-
     if (!formData.model) newErrors.model = "Model is required";
-    else if (!/^[a-zA-Z0-9\s]+$/.test(formData.model))
-      newErrors.model = "Only letters, numbers, and spaces allowed";
-
     if (!formData.mileage) newErrors.mileage = "Mileage is required";
     else if (!/^\d+$/.test(formData.mileage))
       newErrors.mileage = "Only numbers allowed";
+    else if (formData.mileage < 0 || formData.mileage > 500000)
+      newErrors.mileage = "Mileage must be between 0 and 500000 km";
 
     if (!formData.year) newErrors.year = "Year is required";
     else if (
@@ -92,6 +92,23 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
       formData.year > currentYear
     )
       newErrors.year = `Year must be between 2015 and ${currentYear}`;
+
+    if (!formData.yearOfManufacture)
+      newErrors.yearOfManufacture = "Year of Manufacture is required";
+    else if (
+      isNaN(formData.yearOfManufacture) ||
+      formData.yearOfManufacture < 2015 ||
+      formData.yearOfManufacture > currentYear
+    )
+      newErrors.yearOfManufacture = `Year must be between 2015 and ${currentYear}`;
+    else if (formData.yearOfManufacture > formData.year)
+      newErrors.yearOfManufacture =
+        "Year of Manufacture cannot be greater than Year of Registration";
+    else if (formData.yearOfManufacture < 2010)
+      newErrors.yearOfManufacture =
+        "Year of Manufacture cannot be less than 2010";
+    else if (formData.yearOfManufacture > currentYear)
+      newErrors.yearOfManufacture = `Year of Manufacture cannot be greater than ${currentYear}`;
 
     if (!formData.engineDisplacement)
       newErrors.engineDisplacement = "Engine displacement is required";
@@ -146,11 +163,14 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "make" || name === "color") {
+    if (name === "make") {
+      // Reset model when brand changes
+      setFormData({ ...formData, make: value, model: "" });
+    } else if (name === "color") {
       if (value === "" || /^[a-zA-Z\s]*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
       }
-    } else if (name === "model" || name === "engineDisplacement") {
+    } else if (name === "engineDisplacement") {
       if (value === "" || /^[a-zA-Z0-9\s]*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
       }
@@ -159,14 +179,15 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         setFormData({ ...formData, [name]: value });
       }
     } else if (
-      ["mileage", "rentalPrice", "seatCapacity", "luggageCapacity"].includes(
-        name,
-      )
+      [
+        "mileage",
+        "rentalPrice",
+        "seatCapacity",
+        "luggageCapacity",
+        "year",
+        "yearOfManufacture",
+      ].includes(name)
     ) {
-      if (value === "" || /^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: value });
-      }
-    } else if (name === "year") {
       if (value === "" || /^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
       }
@@ -183,6 +204,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         "seatCapacity",
         "luggageCapacity",
         "year",
+        "yearOfManufacture",
       ].includes(e.target.name)
     ) {
       const allowedKeys = [
@@ -195,7 +217,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
       if (!allowedKeys.includes(e.key) && isNaN(Number(e.key))) {
         e.preventDefault();
       }
-    } else if (["make", "color"].includes(e.target.name)) {
+    } else if (e.target.name === "color") {
       const allowedKeys = [
         "Backspace",
         "Delete",
@@ -207,7 +229,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
       if (!allowedKeys.includes(e.key) && !/^[a-zA-Z]$/.test(e.key)) {
         e.preventDefault();
       }
-    } else if (["model", "engineDisplacement"].includes(e.target.name)) {
+    } else if (e.target.name === "engineDisplacement") {
       const allowedKeys = [
         "Backspace",
         "Delete",
@@ -246,15 +268,16 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Pass both new images (File objects) and existing image URLs to onSave
       onSave({
         ...formData,
-        existingImages, // Include existing images for backend processing
+        existingImages,
       });
       setFormData({
         make: "",
         model: "",
         mileage: "",
+        year: "",
+        yearOfManufacture: "",
         engineDisplacement: "",
         rentalPrice: "",
         color: "",
@@ -277,7 +300,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
@@ -301,64 +324,127 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
             </h2>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Brand <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="make"
+                  value={formData.make}
+                  onChange={handleInputChange}
+                  required
+                  className={`w-full p-3 border ${
+                    errors.make ? "border-red-500" : "border-gray-300"
+                  } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700 bg-white`}
+                >
+                  <option value="" disabled>
+                    Select Brand
+                  </option>
+                  {Object.keys(carBrandsWithModels)
+                    .filter((brand) => carBrandsWithModels[brand].length > 0)
+                    .sort()
+                    .map((brand) => (
+                      <option key={brand} value={brand}>
+                        {brand}
+                      </option>
+                    ))}
+                </select>
+                {errors.make && (
+                  <p className="text-red-500 text-xs mt-1">{errors.make}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Model <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="model"
+                  value={formData.model}
+                  onChange={handleInputChange}
+                  required
+                  disabled={!formData.make}
+                  className={`w-full p-3 border ${
+                    errors.model ? "border-red-500" : "border-gray-300"
+                  } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700 bg-white`}
+                >
+                  <option value="" disabled>
+                    {formData.make ? "Select Model" : "Select Brand First"}
+                  </option>
+                  {formData.make &&
+                    carBrandsWithModels[formData.make].sort().map((model) => (
+                      <option key={model} value={model}>
+                        {model}
+                      </option>
+                    ))}
+                </select>
+                {errors.model && (
+                  <p className="text-red-500 text-xs mt-1">{errors.model}</p>
+                )}
+              </div>
+
               {[
                 {
-                  label: "Brand",
-                  name: "make",
-                  type: "text",
-                  placeholder: "e.g., Honda",
-                },
-                {
-                  label: "Model",
-                  name: "model",
-                  type: "text",
-                  placeholder: "e.g., Civic",
+                  label: "Year of Manufacture",
+                  name: "yearOfManufacture",
+                  type: "number",
+                  placeholder: "2025",
+                  min: 2010,
+                  max: new Date().getFullYear(),
                 },
                 {
                   label: "Mileage (km)",
                   name: "mileage",
                   type: "number",
-                  placeholder: "e.g., 200",
+                  placeholder: "200",
+                  min: 0,
+                  max: 500000,
                 },
                 {
-                  label: "Registration Year",
+                  label: "Year of Registration",
                   name: "year",
                   type: "number",
-                  placeholder: "e.g., 2025",
+                  placeholder: "2025",
                   min: 2015,
                   max: new Date().getFullYear(),
                 },
                 {
                   label: "Engine Displacement (cc)",
                   name: "engineDisplacement",
-                  type: "text",
-                  placeholder: "e.g., 1500",
+                  type: "number",
+                  placeholder: "1500",
+                  min: 650,
+                  max: 5000,
                 },
                 {
                   label: "Rental Price ($/day)",
                   name: "rentalPrice",
                   type: "number",
-                  placeholder: "e.g., 200",
+                  placeholder: "2000",
+                  min: 1000,
+                  max: 50000,
                 },
                 {
                   label: "Color",
                   name: "color",
                   type: "text",
-                  placeholder: "e.g., Red",
+                  placeholder: "Red",
                 },
                 {
                   label: "Seat Capacity",
                   name: "seatCapacity",
                   type: "number",
-                  placeholder: "e.g., 5",
+                  placeholder: "5",
                   min: 1,
+                  max: 7,
                 },
                 {
                   label: "Luggage Capacity (bags)",
                   name: "luggageCapacity",
                   type: "number",
-                  placeholder: "e.g., 2",
+                  placeholder: "2",
                   min: 1,
+                  max: 5,
                 },
               ].map((field) => (
                 <div key={field.name}>
@@ -462,7 +548,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   className={`w-full p-3 border ${
                     errors.carFeatures ? "border-red-500" : "border-gray-300"
                   } rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 text-gray-700 placeholder-gray-400 resize-y`}
-                  placeholder="e.g., GPS, Air Conditioning, Bluetooth"
+                  placeholder="GPS, Air Conditioning, Bluetooth"
                   rows={4}
                 />
                 {errors.carFeatures && (
@@ -492,7 +578,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                       Images:
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {/* Existing Images (URLs from server) */}
                       {existingImages.map((url, index) => (
                         <div key={`existing-${index}`} className="relative">
                           <img
@@ -505,7 +590,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                           </p>
                         </div>
                       ))}
-                      {/* New Images (File objects) */}
                       {formData.images.map((file, index) => (
                         <div key={`new-${index}`} className="relative">
                           <img

@@ -7,6 +7,7 @@ import ConfirmationDialog from "./ConfirmationDialog.jsx";
 import Dialog from "./Dialog";
 import EditBookingModal from "./EditBooking.jsx";
 import Navbar from "./Navbar";
+import BookingCard from "./BookingCard.jsx";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -252,7 +253,7 @@ const UserBookings = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="px-6 py-10">
-        <h2 className="text-4xl font-bold text-gray-800 mb-8">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           🚘 Your Bookings
         </h2>
 
@@ -280,129 +281,17 @@ const UserBookings = () => {
               BookingEndDate.setHours(hours1, minutes1, 0);
 
               return (
-                <div
+                <BookingCard
                   key={booking._id}
-                  className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:shadow-2xl"
-                >
-                  <img
-                    src={`http://localhost:3000/uploads/${booking.carDetails.images[0]}`}
-                    alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
-                    className="w-full h-52 object-contain"
-                  />
-
-                  <div className="p-5 flex flex-col flex-grow justify-between">
-                    <div className="mb-4">
-                      <h3 className="text-xl font-bold text-gray-800">
-                        {booking.carDetails.carBrand}{" "}
-                        {booking.carDetails.carModel}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {booking.carDetails.carType}
-                      </p>
-                    </div>
-
-                    <div className="flex justify-between items-center mb-3">
-                      <p className="flex items-center text-sm text-purple-600 font-medium">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-5 h-5 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M9.75 9.75L12 6.75m0 0l2.25 3m-2.25-3v10.5"
-                          />
-                        </svg>
-                        {booking.carDetails.transmission}
-                      </p>
-
-                      {new Date().toDateString() >=
-                        new Date(booking.rentalStartDate).toDateString() && (
-                        <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-                          <button className="text-sm text-blue-600 hover:underline">
-                            Extend Booking
-                          </button>
-                        </Link>
-                      )}
-                    </div>
-
-                    <p className="text-lg font-semibold text-gray-800">
-                      PKR {booking.carDetails.rentRate} / day
-                    </p>
-
-                    <div className="mt-4 flex flex-col gap-2">
-                      {booking?.status === "returned" ? (
-                        <p className="text-green-600 font-bold">✔️ Completed</p>
-                      ) : booking?.carDetails.availability ===
-                        "In Maintenance" ? (
-                        <>
-                          <p className="text-red-600 font-bold">
-                            🛠️ In Maintenance
-                          </p>
-                          <p className="text-red-600 font-bold">
-                            ⏳ Payment Due
-                          </p>
-                          <button
-                            onClick={() => handleSeeDetails(booking)}
-                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
-                          >
-                            See Details
-                          </button>
-                        </>
-                      ) : booking?.status === "return initiated" ? (
-                        <p className="text-red-600 font-bold">
-                          ⏳ Pending Return
-                        </p>
-                      ) : CurrentDate >= BookingEndDate ? (
-                        <button
-                          onClick={() => ReturnCar(booking._id)}
-                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-                        >
-                          🔙 Return Car
-                        </button>
-                      ) : CurrentDate > BookingStartDate ? (
-                        <p className="text-blue-600 font-semibold">
-                          🚀 Your Booking Starts Now
-                        </p>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => setModelOpen(true)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                          >
-                            ✏️ Update Booking
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedBooking(booking._id);
-                              setShowDialog(true);
-                            }}
-                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-                          >
-                            ❌ Cancel Booking
-                          </button>
-                        </>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => openDialog(booking)}
-                      className="mt-4 text-sm text-blue-600 font-medium hover:underline"
-                    >
-                      📄 View Details
-                    </button>
-                  </div>
-
-                  <EditBookingModal
-                    booking={booking}
-                    isOpen={ModelOpen}
-                    onClose={() => setModelOpen(false)}
-                  />
-                </div>
+                  booking={booking}
+                  handleSeeDetails={handleSeeDetails}
+                  ReturnCar={ReturnCar}
+                  setModelOpen={setModelOpen}
+                  setSelectedBooking={setSelectedBooking}
+                  setShowDialog={setShowDialog}
+                  openDialog={openDialog}
+                  ModelOpen={ModelOpen}
+                />
               );
             })}
           </div>

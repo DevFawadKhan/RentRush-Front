@@ -1,16 +1,9 @@
-import React, { useState, useEffect } from "react";
-import {
-  FiDownload,
-  FiEye,
-  FiFilter,
-  FiPrinter,
-  FiSearch,
-} from "react-icons/fi";
-import Footer from "./Footer";
-import Navbar from "../customer/Navbar";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FiDownload, FiEye, FiFilter, FiSearch } from "react-icons/fi";
+import Navbar from "../customer/Navbar";
+import Footer from "./Footer";
 const Base_Url = import.meta.env.VITE_API_URL;
-import { Link } from "react-router-dom";
 // const Invoice = () => {
 
 //  return (
@@ -52,7 +45,6 @@ import { Link } from "react-router-dom";
 // export default Invoice;
 
 const InvoiceDashboard = () => {
-  const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -97,7 +89,7 @@ const InvoiceDashboard = () => {
   };
   // filterdata
   const Filterdata = invoices.filter((item) =>
-    item?.bookingId.toLowerCase().includes(searchTerm.toLowerCase()),
+    item?.bookingId.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
     <>
@@ -105,27 +97,7 @@ const InvoiceDashboard = () => {
       <div className="p-6 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Invoices</h1>
-          {/* Tabs */}
-          {/* <div className="flex border-b border-gray-200 mb-6">
-          <button
-            className={`py-2 px-4 font-medium ${activeTab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('all')}
-          >
-            All Invoices
-          </button>
-          <button
-            className={`py-2 px-4 font-medium ${activeTab === 'single' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('single')}
-          >
-            Single Invoices
-          </button>
-          <button
-            className={`py-2 px-4 font-medium ${activeTab === 'recurring' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('recurring')}
-          >
-            Recurring Invoices
-          </button>
-        </div> */}
+
           {/* Search and Filter */}
           <div className="flex justify-between items-center mb-6">
             <div className="relative w-64">

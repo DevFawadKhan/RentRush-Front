@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import ShowroomNavbar from "./showroomNavbar";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Toast from "../Toast";
 import CarCard from "./carCard";
 import CarMaintenanceChecklist from "./CarMaintenanceChecklist";
 import MarkCompleteMaintenance from "./MarkCompleteMaintenance";
+import ShowroomNavbar from "./showroomNavbar";
 const Base_Url = import.meta.env.VITE_API_URL;
 
 const CarMaintenancePage = () => {
@@ -19,7 +19,7 @@ const CarMaintenancePage = () => {
         `${Base_Url}/api/car/get-all-return-cars`,
         {
           withCredentials: true,
-        },
+        }
       );
       setCars(response.data); // Set the fetched data to vehicles state
     } catch (err) {
@@ -58,11 +58,11 @@ const CarMaintenancePage = () => {
   return (
     <>
       <ShowroomNavbar />
-      <div className="p-8 bg-[#F9FAFB] min-h-screen">
+      <div className="p-8 bg-white min-h-screen">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#0B132A]">
           Select a Car for Maintenance Update
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 p-3 justify-items-center">
           {cars?.map((car) => (
             <div
               key={car._id}

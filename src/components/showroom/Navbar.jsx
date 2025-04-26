@@ -36,18 +36,16 @@ const Navbar = () => {
     <nav className="bg-white shadow-md sticky top-0 z-50 h-[70px] flex justify-between items-center w-[100%]">
       <div className="mx-auto px-4 flex justify-between items-center w-[100%]">
         <div className="flex items-center">
-          <Link to="/">
-            <div className="flex items-center">
-              <img
-                src="/src/assets/logo.png"
-                alt="Logo"
-                className="-my-3 h-[80px] mr-2"
-              />
-              <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
-                RentRush
-              </h1>
-            </div>
+          <Link to="/customer/dashboard">
+            <img
+              src="/src/assets/logo.png"
+              alt="Logo"
+              className="-my-3 h-[80px] mr-2"
+            />
           </Link>
+          <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
+            RentRush
+          </h1>
         </div>
 
         <div className="flex flex-row justify-between">
