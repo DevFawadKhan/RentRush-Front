@@ -454,7 +454,7 @@ export const carBrandsWithModels = {
   Zeekr: ["001", "X", "009", "007", "CX1e"],
   Haval: ["Jolion", "Dargo", "H9", "H6"],
   Honda: [
-    "Vezel HEV",
+    "Vezel",
     "Fit",
     "Accord",
     "Civic",

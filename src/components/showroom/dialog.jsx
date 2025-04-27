@@ -391,7 +391,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
                   label: "Engine Displacement (cc)",
                   name: "engineDisplacement",
                   type: "number",
-                  placeholder: "1500",
+                  placeholder: "1500cc",
                   min: 650,
                   max: 5000,
                 },
