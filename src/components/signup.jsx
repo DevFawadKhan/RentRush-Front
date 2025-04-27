@@ -44,18 +44,20 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
   };
 
   const validatePassword = (password) => {
-    // Password should contain at least one letter, one number and one special character
-    const regex =
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^..&*()_+])[A-Za-z\d!@#..$%^&*()_+]{8,}$/;
+    // Password should contain at least one letter, one number, and one special character
+    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/;
     if (!regex.test(password)) {
       setPasswordError(
-        "Password must contain letters, numbers, and special characters",
+        "Password must be at least 8 characters long and include letters, numbers, and special characters.",
       );
       return false;
     }
     setPasswordError("");
     return true;
   };
+  
+  
+  
 
   const handleSignup = (e) => {
     e.preventDefault();

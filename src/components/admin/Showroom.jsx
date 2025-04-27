@@ -1,4 +1,9 @@
-import { faBan, faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBan,
+  faCheck,
+  faSearch,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import ConfirmationDialog from "./ConfirmationDialog";
@@ -6,12 +11,13 @@ import axios from "axios";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
-const Showroom = ({ value }) => {
+const Showroom = ({ value, refectch }) => {
   const [statuses, setStatuses] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedShowroom, setSelectedShowroom] = useState(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [nextStatus, setNextStatus] = useState("");
+  const [actionType, setActionType] = useState(""); // To track whether it's ban/activate or approve/reject
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -33,26 +39,79 @@ const Showroom = ({ value }) => {
         [id]: nextStatus,
       }));
       setIsModalOpen(false);
+      refectch();
     } catch (error) {
       alert(error.response?.data?.msg || "An error occurred");
     }
   };
 
-  const openConfirmDialog = (id, status) => {
+  const updateShowroomApproval = async (id, approve) => {
+    try {
+      const url = `${Base_Url}/api/admin/approve/${id}`;
+      const response = await axios.put(url, { isApproved: approve });
+      alert(response.data?.message);
+
+      // Update the selected showroom's approval status
+      setSelectedShowroom((prev) => ({
+        ...prev,
+        isApproved: approve,
+      }));
+      setIsModalOpen(false);
+      refectch();
+    } catch (error) {
+      alert(error.response?.message || "An error occurred");
+    }
+  };
+
+  const openConfirmDialog = (id, status, type) => {
     setSelectedShowroom((prev) => ({ ...prev, _id: id }));
     setNextStatus(status);
+    setActionType(type);
     setIsConfirmDialogOpen(true);
   };
 
   const handleStatusChange = () => {
     if (selectedShowroom?._id) {
-      banShowroom(selectedShowroom._id);
+      if (actionType === "ban") {
+        banShowroom(selectedShowroom._id);
+      } else if (actionType === "approve") {
+        updateShowroomApproval(selectedShowroom._id, nextStatus === "approved");
+      }
     }
     setIsConfirmDialogOpen(false);
+    refectch();
   };
 
-  const filteredShowrooms = value.filter((showroom) =>
+  // Filter showrooms for different sections
+  const needApprovalShowrooms = value.filter(
+    (showroom) => !showroom.isApproved
+  );
+
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+  const newShowrooms = value.filter((showroom) => {
+    const createdAt = new Date(showroom.createdAt);
+    return createdAt > twoDaysAgo;
+  });
+
+  const filteredAllShowrooms = value.filter((showroom) =>
     showroom.showroomName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const renderShowroomCard = (data) => (
+    <div
+      key={data._id}
+      onClick={() => {
+        setSelectedShowroom(data);
+        setIsModalOpen(true);
+      }}
+      className="cursor-pointer bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-center"
+    >
+      <h3 className="text-xl font-bold text-[#2A3F85] hover:text-[#1D2951]">
+        {data.showroomName}
+      </h3>
+    </div>
   );
 
   return (
@@ -78,28 +137,52 @@ const Showroom = ({ value }) => {
         </div>
       </div>
 
-      {/* Showroom Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredShowrooms.length > 0 ? (
-          filteredShowrooms.map((data) => (
-            <div
-              key={data._id}
-              onClick={() => {
-                setSelectedShowroom(data);
-                setIsModalOpen(true);
-              }}
-              className="cursor-pointer bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-center"
-            >
-              <h3 className="text-xl font-bold text-[#2A3F85] hover:text-[#1D2951]">
-                {data.showroomName}
-              </h3>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 col-span-full text-center">
-            No showrooms found.
-          </p>
-        )}
+      {/* Need Approval Section */}
+      <div className="mb-12">
+        <h3 className="text-2xl font-semibold text-[#394A9A] mb-4">
+          Need Approval
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {needApprovalShowrooms.length > 0 ? (
+            needApprovalShowrooms.map(renderShowroomCard)
+          ) : (
+            <p className="text-gray-500 col-span-full text-center">
+              No showrooms need approval.
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* New Showrooms Section */}
+      <div className="mb-12">
+        <h3 className="text-2xl font-semibold text-[#394A9A] mb-4">
+          New Showrooms (Last 2 Days)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {newShowrooms.length > 0 ? (
+            newShowrooms.map(renderShowroomCard)
+          ) : (
+            <p className="text-gray-500 col-span-full text-center">
+              No new showrooms in the last 2 days.
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* All Showrooms Section */}
+      <div>
+        <h3 className="text-2xl font-semibold text-[#394A9A] mb-4">
+          All Showrooms
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredAllShowrooms.length > 0 ? (
+            filteredAllShowrooms.map(renderShowroomCard)
+          ) : (
+            <p className="text-gray-500 col-span-full text-center">
+              No showrooms found.
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Showroom Details Modal */}
@@ -123,6 +206,18 @@ const Showroom = ({ value }) => {
                 {selectedShowroom.address}
               </p>
               <p>
+                <span className="font-semibold">Approval Status:</span>{" "}
+                <span
+                  className={
+                    selectedShowroom.isApproved
+                      ? "text-green-600"
+                      : "text-yellow-600"
+                  }
+                >
+                  {selectedShowroom.isApproved ? "Approved" : "Pending"}
+                </span>
+              </p>
+              <p>
                 <span className="font-semibold">Status:</span>{" "}
                 <span
                   className={
@@ -138,6 +233,36 @@ const Showroom = ({ value }) => {
               </p>
             </div>
             <div className="mt-6 flex flex-col gap-3">
+              {!selectedShowroom.isApproved && (
+                <>
+                  <button
+                    className="w-full py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold transition-colors duration-200"
+                    onClick={() =>
+                      openConfirmDialog(
+                        selectedShowroom._id,
+                        "approved",
+                        "approve"
+                      )
+                    }
+                  >
+                    <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                    Approve Showroom
+                  </button>
+                  <button
+                    className="w-full py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-200"
+                    onClick={() =>
+                      openConfirmDialog(
+                        selectedShowroom._id,
+                        "rejected",
+                        "approve"
+                      )
+                    }
+                  >
+                    <FontAwesomeIcon icon={faTimes} className="mr-2" />
+                    Reject Showroom
+                  </button>
+                </>
+              )}
               <button
                 className={`w-full py-2 rounded-lg text-white font-semibold transition-colors duration-200 ${
                   statuses[selectedShowroom._id] === "active"
@@ -149,7 +274,8 @@ const Showroom = ({ value }) => {
                     selectedShowroom._id,
                     statuses[selectedShowroom._id] === "active"
                       ? "banned"
-                      : "active"
+                      : "active",
+                    "ban"
                   )
                 }
               >
@@ -180,9 +306,13 @@ const Showroom = ({ value }) => {
       {isConfirmDialogOpen && (
         <ConfirmationDialog
           message={
-            nextStatus === "banned"
-              ? "Are you sure you want to ban this showroom?"
-              : "Are you sure you want to activate this showroom?"
+            actionType === "ban"
+              ? nextStatus === "banned"
+                ? "Are you sure you want to ban this showroom?"
+                : "Are you sure you want to activate this showroom?"
+              : nextStatus === "approved"
+                ? "Are you sure you want to approve this showroom?"
+                : "Are you sure you want to reject this showroom?"
           }
           onConfirm={handleStatusChange}
           onCancel={() => setIsConfirmDialogOpen(false)}

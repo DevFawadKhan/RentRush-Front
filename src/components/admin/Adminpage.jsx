@@ -37,16 +37,17 @@ const Adminpage = () => {
     setShowroom(false);
   };
 
+  const fetchdata = async () => {
+    try {
+      const response = await axios.get(`${Base_Url}/api/admin/adminview`);
+      setCustomerdata(response.data.clientSection);
+      setShowroomdata(response.data.showroomSection);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchdata = async () => {
-      try {
-        const response = await axios.get(`${Base_Url}/api/admin/adminview`);
-        setCustomerdata(response.data.clientSection);
-        setShowroomdata(response.data.showroomSection);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchdata();
   }, []);
 
@@ -142,7 +143,7 @@ const Adminpage = () => {
         )}
 
         {Customer && <Customers data={Customerdata} />}
-        {showroom && <Showroom value={Showroomdata} />}
+        {showroom && <Showroom value={Showroomdata} refectch={fetchdata} />}
       </main>
     </div>
   );

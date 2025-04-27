@@ -15,7 +15,7 @@ const Navbar = () => {
         {},
         {
           withCredentials: true,
-        },
+        }
       );
       console.log(response.data.message);
     } catch (error) {
@@ -133,7 +133,14 @@ const Navbar = () => {
               <div className="border-t border-gray-100 my-1"></div>
               <div className="border-t border-gray-100 my-1"></div>
               <Link
-                to="/"
+                to="/login"
+                onClick={() => {
+                  sessionStorage.removeItem("token");
+                  sessionStorage.removeItem("role");
+                  sessionStorage.removeItem("showroomName");
+                  sessionStorage.removeItem("logo");
+                  sessionStorage.removeItem("name");
+                }}
                 className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
               >
                 <LogOut className="mr-3 text-gray-600" size={18} />

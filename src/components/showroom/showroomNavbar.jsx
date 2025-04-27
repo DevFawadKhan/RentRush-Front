@@ -62,7 +62,14 @@ function ShowroomNavbar() {
 
           {/* Logout Button */}
           <Link
-            to="/"
+            to="/login"
+            onClick={() => {
+              sessionStorage.removeItem("token");
+              sessionStorage.removeItem("role");
+              sessionStorage.removeItem("showroomName");
+              sessionStorage.removeItem("logo");
+              sessionStorage.removeItem("name");
+            }}
             className="bg-[#C17D3C] hover:bg-[#a96a33] text-white text-base font-semibold px-5 py-2.5 rounded-lg transition-all"
           >
             Logout
