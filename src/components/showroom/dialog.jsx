@@ -6,8 +6,8 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     make: "",
     model: "",
     mileage: "",
+    variant: "",
     year: "",
-    yearOfManufacture: "",
     engineDisplacement: "",
     rentalPrice: "",
     color: "",
@@ -33,7 +33,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         mileage: vehicle.mileage,
         engineDisplacement: vehicle.engineType,
         year: vehicle.year,
-        yearOfManufacture: vehicle.yearOfManufacture,
         rentalPrice: vehicle.rentRate,
         color: vehicle.color,
         transmission: vehicle.transmission,
@@ -57,7 +56,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         model: "",
         mileage: "",
         year: "",
-        yearOfManufacture: "",
         engineDisplacement: "",
         rentalPrice: "",
         color: "",
@@ -93,22 +91,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
     )
       newErrors.year = `Year must be between 2015 and ${currentYear}`;
 
-    if (!formData.yearOfManufacture)
-      newErrors.yearOfManufacture = "Year of Manufacture is required";
-    else if (
-      isNaN(formData.yearOfManufacture) ||
-      formData.yearOfManufacture < 2015 ||
-      formData.yearOfManufacture > currentYear
-    )
-      newErrors.yearOfManufacture = `Year must be between 2015 and ${currentYear}`;
-    else if (formData.yearOfManufacture > formData.year)
-      newErrors.yearOfManufacture =
-        "Year of Manufacture cannot be greater than Year of Registration";
-    else if (formData.yearOfManufacture < 2010)
-      newErrors.yearOfManufacture =
-        "Year of Manufacture cannot be less than 2010";
-    else if (formData.yearOfManufacture > currentYear)
-      newErrors.yearOfManufacture = `Year of Manufacture cannot be greater than ${currentYear}`;
+    if (!formData.variant) newErrors.variant = "Variant is required";
 
     if (!formData.engineDisplacement)
       newErrors.engineDisplacement = "Engine displacement is required";
@@ -185,7 +168,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         "seatCapacity",
         "luggageCapacity",
         "year",
-        "yearOfManufacture",
       ].includes(name)
     ) {
       if (value === "" || /^\d*$/.test(value)) {
@@ -204,7 +186,6 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         "seatCapacity",
         "luggageCapacity",
         "year",
-        "yearOfManufacture",
       ].includes(e.target.name)
     ) {
       const allowedKeys = [
@@ -277,7 +258,7 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
         model: "",
         mileage: "",
         year: "",
-        yearOfManufacture: "",
+        variant: "",
         engineDisplacement: "",
         rentalPrice: "",
         color: "",
@@ -385,12 +366,10 @@ function Dialog({ isOpen, onClose, onSave, isEditing, vehicle }) {
 
               {[
                 {
-                  label: "Year of Manufacture",
-                  name: "yearOfManufacture",
-                  type: "number",
-                  placeholder: "2025",
-                  min: 2010,
-                  max: new Date().getFullYear(),
+                  label: "Variant",
+                  name: "variant",
+                  type: "text",
+                  placeholder: "GLI",
                 },
                 {
                   label: "Mileage (km)",

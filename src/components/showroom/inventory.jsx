@@ -56,7 +56,7 @@ function ShowroomInventory() {
       formData.append("rentRate", data.rentalPrice);
       formData.append("carModel", data.model);
       formData.append("year", data.year);
-      formData.append("yearOfManufacture", data.yearOfManufacture);
+      formData.append("variant", data.variant);
       formData.append("color", data.color);
       formData.append("engineType", data.engineDisplacement);
       formData.append("bodyType", data.bodyType);
@@ -103,7 +103,7 @@ function ShowroomInventory() {
   const handleEdit = (index) => {
     console.log("Edit index:", index);
 
-    if (!vehicles[index]?.status || vehicles[index]?.status !== "returned") {
+    if (vehicles[index]?.availability !== "Available") {
       Toast("This car is booked, not available for editing", "error");
       return;
     }
@@ -161,7 +161,7 @@ function ShowroomInventory() {
                     Model
                   </th>
                   <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
-                    Year Of Manufacture
+                    Variant
                   </th>
                   <th className="sticky top-0 z-10 px-4 py-2 border-b border-gray-700">
                     Mileage
@@ -222,7 +222,7 @@ function ShowroomInventory() {
                         {vehicle.carModel}
                       </td>
                       <td className="px-4 py-2 border-b border-gray-700">
-                        {vehicle.yearOfManufacture ?? vehicle.year}
+                        {vehicle.variant}
                       </td>
                       <td className="px-4 py-2 border-b border-gray-700">
                         {vehicle.mileage} km
