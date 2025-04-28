@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import UserCard from "../customer/userCard";
 import axios from "axios";
+import Navbar from "./Navbar";
+
 const Base_Url = import.meta.env.VITE_API_URL;
 function Showroomcars() {
   const { id: showroomid } = useParams();
@@ -37,19 +39,8 @@ function Showroomcars() {
   );
   return (
     <>
+      <Navbar />
       <div className="w-full min-h-screen bg-gray-100">
-        {/* Navbar */}
-        <nav className="bg-blue-500 border rounded-md p-4 w-full h-14 flex items-center shadow-md px-8 mb-5">
-          <ul className="flex gap-6 text-white text-lg font-semibold">
-            <li className="hover:underline cursor-pointer">About</li>
-            <Link to="/customer/services">
-              <li className="hover:underline cursor-pointer">Services</li>
-            </Link>
-            <Link to="/customer/reviews">
-              <li className="hover:underline cursor-pointer">Reviews</li>
-            </Link>
-          </ul>
-        </nav>
 
         {/* Page Content */}
         <div className="max-w-7xl mx-auto px-4 pb-10">
