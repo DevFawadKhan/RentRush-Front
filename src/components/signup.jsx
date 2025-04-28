@@ -254,6 +254,7 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
+                minLength="8" maxLength="16"
                 id="password"
                 onChange={(e) => {
                   setpassword(e.target.value);
@@ -288,6 +289,7 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
     <input
       type={confirmshowpassword ? 'text' : 'password'}
       value={confirmPassword}
+      minLength="8" maxLength="16"
       id="confirm-password"
       onChange={(e) => setConfirmPassword(e.target.value)}
       placeholder="Re-enter your password"
