@@ -46,7 +46,7 @@ const Footer = () => {
             <Link to="/#steps"></Link>
             <li>
               <a href="#requirements" className="hover:text-blue-500">
-                Requirements
+              Documents
               </a>
             </li>
             <li>
