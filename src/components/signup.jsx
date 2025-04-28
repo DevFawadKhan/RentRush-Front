@@ -56,9 +56,6 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
     return true;
   };
   
-  
-  
-
   const handleSignup = (e) => {
     e.preventDefault();
 
@@ -232,7 +229,7 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
                 }}
                 type="email"
                 id="email"
-                placeholder="you@example.com"
+                placeholder="you@gmail.com"
                 className={`shadow placeholder:text-xs appearance-none border rounded w-full py-2 px-3 text-[#02073F] leading-tight focus:outline-none focus:shadow-outline ${
                   emailError ? "border-red-700" : ""
                 }`}
@@ -270,7 +267,7 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
                 className="absolute top-9 right-3 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </span>
               {passwordError && (
                 <p className="text-red-700 text-xs mt-1">{passwordError}</p>
@@ -302,7 +299,7 @@ const [confirmshowpassword, setconfirmshowpassword] = useState(false)
       className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
       onClick={() => setconfirmshowpassword(!confirmshowpassword)}
     >
-      {confirmshowpassword ? <EyeOff size={24} /> : <Eye size={24} />}
+      {confirmshowpassword ? <EyeOff size={20} /> : <Eye size={20} />}
     </span>
   </div>
 </div>
