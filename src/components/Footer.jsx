@@ -17,16 +17,16 @@ const Footer = () => {
             <span className="mr-2">Rent</span>
             <span className="text-white">Rush</span>
           </h1>
-          <p className="mt-2 text-gray-400 text-sm">
+          <p className="text-gray-400 text-sm">
             It's a never-ending battle of making your cars better and also
             trying to be better yourself.
-          </p>{" "}
-          <br></br>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+          </p>
+          {/* <br></br> */}
+          {/* <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
             <a href="/showroom/signup" className="text-sm hover:underline">
               Register
             </a>
-          </button>
+          </button> */}
         </div>
 
         {/* Account Section */}
@@ -88,7 +88,7 @@ const Footer = () => {
         {/* Contact Us Section */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-          <p className="text-gray-400">rentrush@gmail.com</p>
+          <p className="text-gray-400">rentrush26@gmail.com</p>
           <p className="text-gray-400">+92 336 1841504</p>
           <p className="text-gray-400">RentRush</p>
         </div>

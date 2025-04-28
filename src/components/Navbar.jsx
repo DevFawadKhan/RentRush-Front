@@ -15,7 +15,7 @@ const Navbar = () => {
     }
   }
   function scrollToRequirements() {
-    const element = document.getElementById("requirements");
+    const element = document.getElementById("Documents");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -66,7 +66,7 @@ const Navbar = () => {
                 onClick={scrollToRequirements}
                 className="list-none cursor-pointer  hover:text-[#C17D3C] text-[18px] text-[#000000] opacity-60 hover:opacity-100 font-medium"
               >
-                Requirements
+                Documents
               </li>
               <li
                 onClick={scrollToDetails}
