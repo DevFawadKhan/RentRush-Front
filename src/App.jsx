@@ -10,8 +10,6 @@ import ResetPassword from "./components/ResetPassword.jsx";
 import AdminLogin from "./components/admin/AdminLogin.jsx";
 import Adminpage from "./components/admin/Adminpage.jsx";
 import CarsDashboard from "./components/customer/Dashboard.jsx";
-import Reviews from "./components/customer/Reviews.jsx";
-import Services from "./components/customer/Services.jsx";
 import Showroomcars from "./components/customer/Showroomcars.jsx";
 import Bookings from "./components/customer/bookings.jsx";
 import Cars from "./components/customer/cars.jsx";
@@ -82,8 +80,6 @@ function App() {
               path="/customer/invoice"
               element={<Invoice></Invoice>}
             ></Route>
-            <Route path="/customer/services" element={<Services />}></Route>
-            <Route path="/customer/reviews" element={<Reviews />}></Route>
             <Route
               path="/customer/detailcars/:id"
               element={<Showroomcars />}
