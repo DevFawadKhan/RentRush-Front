@@ -520,8 +520,8 @@ export const carBrandsWithModels = {
     "Ravi",
   ],
   Toyota: [
-    "Prado V6",
-    "Prado V8",
+    "Prado",
+    "Prado",
     "Camry",
     "Corolla",
     "RAV4",
