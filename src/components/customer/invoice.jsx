@@ -4,45 +4,6 @@ import { FiDownload, FiEye, FiFilter, FiSearch } from "react-icons/fi";
 import Navbar from "../customer/Navbar";
 import Footer from "./Footer";
 const Base_Url = import.meta.env.VITE_API_URL;
-// const Invoice = () => {
-
-//  return (
-//     <div className="p-6 bg-gray-50 min-h-screen">
-//       <h1 className="text-2xl font-bold text-gray-800 mb-6">My Invoices</h1>
-//       <Link  to="/customer/Dashboard"><button className="bg-blue-600 text-white font-serif px-2 py-2 m-3">Home page</button></Link>
-//       {loading && <p>Loading invoices...</p>}
-//       {error && <p className="text-red-500">{error}</p>}
-//       {invoices.length === 0 && !loading && !error && <p>No invoices found.</p>}
-//       <div className="space-y-4">
-//         {invoices.map((invoice) => (
-//           <div
-//             key={invoice.bookingId}
-//             className="border p-4 rounded-lg bg-white shadow-md flex justify-between items-center"
-//           >
-//             <div>
-//               <p>
-//                 <strong>Booking ID:</strong> {invoice.bookingId}
-//               </p>
-//               <p>
-//                 <strong>Invoice:</strong> {invoice.invoiceUrl.split("/").pop()}
-//               </p>
-//             </div>
-//             <div className="space-x-2">
-//               <button
-//                 onClick={() => openPDF(invoice.invoiceUrl)}
-//                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-//               >
-//                 View
-//               </button>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Invoice;
 
 const InvoiceDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,23 +11,25 @@ const InvoiceDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const fetchInvoices = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${Base_Url}/api/getinvoice`, {
+        withCredentials: true,
+      });
+      setInvoices(response?.data?.data);
+      console.log("Fetched Invoice", response?.data?.data);
+
+      console.log("state", invoices);
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+      setError(error.response?.data?.message || "Failed to fetch invoices");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchInvoices = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`${Base_Url}/api/getinvoice`, {
-          withCredentials: true,
-        });
-        console.log("Fetched Invoice", response?.data);
-        setInvoices(response?.data?.data);
-        console.log("state", invoices);
-      } catch (error) {
-        console.error("Error fetching invoices:", error);
-        setError(error.response?.data?.message || "Failed to fetch invoices");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchInvoices();
   }, []);
   useEffect(() => {
@@ -112,10 +75,6 @@ const InvoiceDashboard = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-              <FiFilter className="mr-2" />
-              Filter
-            </button>
           </div>
           {/* Invoice Table */}
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -126,13 +85,19 @@ const InvoiceDashboard = () => {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Status
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Invoice
+                    Invoice Id
                   </th>
                   <th
                     scope="col"
@@ -165,10 +130,15 @@ const InvoiceDashboard = () => {
                   <tr key={invoice.bookingId} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-green-600`}
+                        className={`inline-flex text-md leading-5 font-semibold rounded-full text-black-600`}
                       >
-                        pending
+                        {new Date(invoice.createdAt).toLocaleDateString()}
                       </span>
+                    </td>
+                    <td
+                      className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${invoice?.isCompleted ? "text-green-600" : "text-red-600"}`}
+                    >
+                      {invoice?.isCompleted ? "Paid" : "Unpaid"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {invoice.bookingId}
@@ -176,9 +146,11 @@ const InvoiceDashboard = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {sessionStorage.getItem("name")}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">honda</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {invoice.carName}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      5000
+                      {!invoice.isCompleted ? invoice.balance : 0}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end space-x-2">
