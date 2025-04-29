@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { Search } from "lucide-react";
 import axios from "axios";
 import PropTypes from "prop-types";
+import Footer from "./Footer";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -80,6 +81,7 @@ const Showrooms = () => {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 };

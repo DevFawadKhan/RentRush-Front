@@ -7,6 +7,7 @@ import ConfirmationDialog from "./ConfirmationDialog.jsx";
 import Dialog from "./Dialog";
 import Navbar from "./Navbar";
 import BookingCard from "./BookingCard.jsx";
+import Footer from "./Footer";
 import { 
   FiLoader, 
   FiAlertCircle, 
@@ -325,6 +326,7 @@ const UserBookings = () => {
   }
 
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
       <div className="container mx-auto px-4 py-12">
@@ -715,6 +717,8 @@ const UserBookings = () => {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   );
 };
 
