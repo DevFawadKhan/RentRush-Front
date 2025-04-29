@@ -118,7 +118,7 @@ const UserProfile = () => {
                   value={phonenum}
                   onChange={(e) => setphonenum(e.target.value)}
                   className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
-                />
+                disabled/>
               ) : (
                 <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
                   {phonenum}
@@ -156,7 +156,7 @@ const UserProfile = () => {
                   value={cnic}
                   onChange={(e) => setcnic(e.target.value)}
                   className="border-2 border-gray-200 p-3 rounded-lg focus:outline-none focus:border-[#C17D3C] transition duration-300"
-                />
+                disabled />
               ) : (
                 <div className="border-2 border-gray-200 p-3 rounded-lg bg-gray-50">
                   {cnic}

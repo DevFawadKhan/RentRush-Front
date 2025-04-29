@@ -228,8 +228,8 @@ export const carBrandsWithModels = {
   ],
   IAME: [],
   Infiniti: ["Q50", "QX50", "QX55", "QX60", "QX80"],
-  Ineos: ["Grenadier", "Quartermaster", "Fusilier"], // New brand
-  Innoson: ["IVM Umu", "IVM Uzo"], // New brand (Nigeria)
+  Ineos: ["Grenadier", "Quartermaster", "Fusilier"],
+  Innoson: ["IVM Umu", "IVM Uzo"], 
   Iveco: ["Daily", "Eurocargo"],
   Jaguar: ["F-Pace", "E-Pace", "I-Pace", "F-Type"],
   Jaecoo: ["J7", "J8"], // New brand
@@ -454,6 +454,8 @@ export const carBrandsWithModels = {
   Zeekr: ["001", "X", "009", "007", "CX1e"],
   Haval: ["Jolion", "Dargo", "H9", "H6"],
   Honda: [
+    "Vezel",
+    "Fit",
     "Accord",
     "Civic",
     "CR-V",
@@ -518,7 +520,10 @@ export const carBrandsWithModels = {
     "Ravi",
   ],
   Toyota: [
+    "Prado V8",
+    "Prado V6",
     "Camry",
+    "Aqua",
     "Corolla",
     "RAV4",
     "Highlander",
@@ -538,6 +543,7 @@ export const carBrandsWithModels = {
     "Supra",
     "Fortuner",
     "Hilux",
+    "Vitz",
     "Yaris",
   ],
   United_Motors: ["Alpha"],

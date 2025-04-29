@@ -6,6 +6,7 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [error, setError] = useState(null);
 
+ 
   // Update current time every second for accurate timing
   useEffect(() => {
     const interval = setInterval(() => {

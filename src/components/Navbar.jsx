@@ -15,7 +15,7 @@ const Navbar = () => {
     }
   }
   function scrollToRequirements() {
-    const element = document.getElementById("requirements");
+    const element = document.getElementById("Documents");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -66,7 +66,7 @@ const Navbar = () => {
                 onClick={scrollToRequirements}
                 className="list-none cursor-pointer  hover:text-[#C17D3C] text-[18px] text-[#000000] opacity-60 hover:opacity-100 font-medium"
               >
-                Requirements
+                Documents
               </li>
               <li
                 onClick={scrollToDetails}
@@ -83,11 +83,41 @@ const Navbar = () => {
               <li className="list-none text-[#000000] opacity-60 hover:opacity-100 font-medium">
                 |
               </li>
-              <li className="list-none cursor-pointer  hover:text-[#C17D3C] text-[18px] text-[#000000] opacity-60 hover:opacity-100 font-medium">
-                <Link to="/signup" className="">
-                  Register
-                </Link>
-              </li>
+              <li className="list-none relative group cursor-pointer hover:text-[#C17D3C] text-[18px] text-[#000000] opacity-60 hover:opacity-100 font-medium">
+  <span className="flex items-center">
+      Register
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-4 w-4"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M19 9l-7 7-7-7"
+      />
+    </svg>
+  </span>
+  
+  {/* Dropdown Menu */}
+  <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-1 py-1 w-48 z-10">
+    <Link
+      to="/showroom/signup"
+      className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#C17D3C] hover:text-white"
+    >
+      Showroom
+    </Link>
+    <Link
+      to="/signup"
+      className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#C17D3C] hover:text-white"
+    >
+      Customer/User
+    </Link>
+  </div>
+</li>
             </div>
           </div>
           <div>

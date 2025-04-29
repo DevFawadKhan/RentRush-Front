@@ -51,7 +51,7 @@ function BookingCard({
             {booking.carDetails.transmission}
           </p>
 
-          {CurrentDate >= BookingStartDate && (
+          {CurrentDate <= BookingEndDate && (
             <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
               <button className="text-xs text-blue-600 hover:underline">
                 Extend Booking
@@ -84,7 +84,7 @@ function BookingCard({
             <p className="text-red-600 font-bold text-sm">⏳ Pending Return</p>
           ) : CurrentDate >= BookingEndDate ? (
             <button
-              onClick={() => ReturnCar(booking._id)}
+          onClick={()=>ReturnCar(booking._id)}
               className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
             >
               🔙 Return Car

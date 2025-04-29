@@ -3,9 +3,19 @@ import { useState } from "react";
 
 const CarCard = ({ car }) => {
   const [showModal, setShowModal] = useState(false);
-
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
+  const openDetailsModal = () => {
+    setShowDetailsModal(true);
+  };
+
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false);
+  };
+
+
 
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-72 relative flex flex-col">
@@ -40,12 +50,18 @@ const CarCard = ({ car }) => {
         </div>
 
         {/* Price */}
-        <div className="flex items-center mb-4">
-          <span className="text-xl font-bold"> {car.rentRate}Rs/Day</span>
-        </div>
+        <div className="flex justify-between items-center pb-4">
+            <span className="text-xl font-bold">{car.rentRate}Rs/Day</span>
+            <button
+              onClick={openDetailsModal}
+              className="text-blue-600 hover:underline"
+            >
+              View Details
+            </button>
+          </div>
 
         {/* Seating capacity */}
-        <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
+        <div className="flex text-xs text-gray-500 mb-2">
           <Users className="w-4 h-4 mr-1" />
           <span>{car.seatCapacity} Seats</span>
         </div>
@@ -75,6 +91,109 @@ const CarCard = ({ car }) => {
           </span>
         </div>
       </div>
+
+      {showDetailsModal && (
+          <div
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+            onClick={closeDetailsModal} // Close modal when clicking outside
+          >
+            <div
+              className="bg-white p-6 rounded-lg relative w-11/12 md:w-3/4 lg:w-1/2 h-auto max-h-[90vh] overflow-y-auto shadow-lg"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeDetailsModal}
+                className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
+              >
+                &times;
+              </button>
+
+              {/* Car Name */}
+              <h2 className="text-3xl font-bold text-center mb-4">
+                {car.name}
+              </h2>
+
+              {
+                <div className="flex justify-center gap-3 mb-6 flex-wrap">
+                  {car.images?.length > 0
+                    ? car.images.map((img, index) => (
+                        <img
+                          key={index}
+                          src={`http://localhost:3000/uploads/${img}`}
+                          alt={`Car ${index}`}
+                          className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
+                        />
+                      ))
+                    : [...Array(4)].map((_, i) => (
+                        <img
+                          key={i}
+                          src={car.image}
+                          alt={`Car Image ${i}`}
+                          className="w-20 h-16 md:w-24 md:h-20 object-cover rounded-lg border shadow-md"
+                        />
+                      ))}
+                </div>
+              }
+
+              {/* Car Details Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse border text-20px">
+                  <tbody>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Model</td>
+                      <td className="border p-2">{car.carModel}</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Color</td>
+                      <td className="border p-2">{car.color}</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Mileage</td>
+                      <td className="border p-2">{car.mileage} miles</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Body Type</td>
+                      <td className="border p-2">{car.bodyType}</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Transmission</td>
+                      <td className="border p-2">{car.transmission}</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Engine Type</td>
+                      <td className="border p-2">{car.engineType || "N/A"}</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">
+                        Registration Year
+                      </td>
+                      <td className="border p-2">{car.year || "N/A"}</td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Seat Capacity</td>
+                      <td className="border p-2">{car.seatCapacity} </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Luggage Capacity</td>
+                      <td className="border p-2">{car.luggageCapacity} </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Fuel Type</td>
+                      <td className="border p-2">{car.fuelType} </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Price</td>
+                      <td className="border p-2 font-bold">
+                        {car.rentRate} rs/Day
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
 
       {/* Modal */}
       {showModal && car.availability === "Rented Out" && (

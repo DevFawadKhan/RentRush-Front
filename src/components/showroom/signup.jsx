@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Toast from "../Toast";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import Navbar from "./Navbar";
 
 const Base_Url = import.meta.env.VITE_API_URL;
@@ -325,62 +326,65 @@ function ShowroomSignUp() {
                     )}
                   </td>
                 </tr>
-                <tr className="border-b">
-                  <td className="py-4 font-bold w-1/3">Password</td>
-                  <td className="py-4">
-                    <div className="relative">
-                      <input
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        type={showPassword ? "text" : "password"}
-                        placeholder="********"
-                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
-                          errors.password ? "border-red-900" : ""
-                        }`}
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-2 text-gray-500"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? "Hide" : "Show"}
-                      </button>
-                    </div>
-                    {errors.password && (
-                      <p className="text-red-900 text-xs mt-1">
-                        {errors.password}
-                      </p>
-                    )}
-                  </td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-4 font-bold w-1/3">Confirm Password</td>
-                  <td className="py-4">
-                    <input
-                      name="cpassword"
-                      value={formData.cpassword}
-                      onChange={handleChange}
-                      type="password"
-                      placeholder="********"
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
-                        errors.cpassword ? "border-red-900" : ""
-                      }`}
-                    />
-                    {/* <button
-                      type="button"
-                      className="absolute right-3 top-2 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? "Hide" : "Show"}
-                    </button> */}
-                    {errors.cpassword && (
-                      <p className="text-red-900 text-xs mt-1">
-                        {errors.cpassword}
-                      </p>
-                    )}
-                  </td>
-                </tr>
+                {/* Password Field */}
+<tr className="border-b">
+  <td className="py-4 font-bold w-1/3">Password</td>
+  <td className="py-4">
+    <div className="relative">
+      <input
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        type={showPassword ? "text" : "password"}
+        placeholder="********"
+        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+          errors.password ? "border-red-900" : ""
+        }`}
+      />
+      <span
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+        onClick={() => setShowPassword(!showPassword)}
+      >
+        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+      </span>
+    </div>
+    {errors.password && (
+      <p className="text-red-900 text-xs mt-1">
+        {errors.password}
+      </p>
+    )}
+  </td>
+</tr>
+
+{/* Confirm Password Field */}
+<tr className="border-b">
+  <td className="py-4 font-bold w-1/3">Confirm Password</td>
+  <td className="py-4">
+    <div className="relative">
+      <input
+        name="cpassword"
+        value={formData.cpassword}
+        onChange={handleChange}
+        type={showPassword ? "text" : "password"}
+        placeholder="********"
+        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+          errors.cpassword ? "border-red-900" : ""
+        }`}
+      />
+      <span
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+        onClick={() => setShowPassword(!showPassword)}
+      >
+        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+      </span>
+    </div>
+    {errors.cpassword && (
+      <p className="text-red-900 text-xs mt-1">
+        {errors.cpassword}
+      </p>
+    )}
+  </td>
+</tr>
               </tbody>
             </table>
 
