@@ -56,7 +56,7 @@ const CarCard = ({ car }) => {
               onClick={openDetailsModal}
               className="text-blue-600 hover:underline"
             >
-              View Details
+              View Car Details
             </button>
           </div>
 
@@ -73,7 +73,7 @@ const CarCard = ({ car }) => {
               onClick={openModal}
               className="text-blue-600 hover:underline text-sm"
             >
-              View Details
+            View Rental Information
             </button>
           </div>
         )}
