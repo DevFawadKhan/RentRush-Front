@@ -25,8 +25,6 @@ function BookingCard({
     </span>
   );
 
-  
-
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col w-[380px] transition duration-300 hover:shadow-lg border border-gray-200">
       <img
@@ -35,7 +33,7 @@ function BookingCard({
         className="w-full h-55 object-cover bg-gray-100"
       />
 
-      <div className="p-4 flex flex-col justify-between flex-grow space-y-3">
+      <div className="text-40px p-4 flex flex-col justify-between flex-grow space-y-3">
 
         {/* Progress Bar - Centered */}
 
@@ -52,10 +50,10 @@ function BookingCard({
           <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
             {booking.carDetails.carBrand} {booking.carDetails.carModel}
           </h3>
-          <p className="text-sm text-gray-500 mb-1">{booking.carDetails.carType}</p>
-          <p className="text-sm text-gray-600 flex items-center">
+          <p className="text-40px text-gray-500 mb-1">{booking.carDetails.carType}</p>
+          <p className="text-40px text-gray-600 flex items-center">
             <svg
-              className="w-4 h-4 mr-1 text-purple-500"
+              className="w-6 h-6 mr-1 text-purple-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -70,10 +68,10 @@ function BookingCard({
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-gray-700 font-medium">PKR {booking.carDetails.rentRate}/Day</span>
+          <span className="text-40px text-gray-700 font-medium">PKR {booking.carDetails.rentRate}/Day</span>
           {CurrentDate <= BookingEndDate && (
             <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-              <button className="text-sm text-blue-600 hover:underline">Extend Booking</button>
+              <button className="text-40px text-blue-600 hover:underline">Extend Booking</button>
             </Link>
           )}
         </div>
@@ -90,7 +88,7 @@ function BookingCard({
                 onClick={() => handleSeeDetails(booking)}
                 className="w-full bg-red-500 text-white py-1 rounded-md text-sm hover:bg-red-600 transition"
               >
-                See Details
+                📄 See Maintenance Details
               </button>
             </>
           ) : booking.status === "return initiated" ? (
@@ -128,9 +126,9 @@ function BookingCard({
         {/* View Details */}
         <button
           onClick={() => openDialog(booking)}
-          className="mt-2 text-sm text-blue-600 hover:underline text-left"
+          className="mt-2 text-30px text-blue-600 hover:underline text-left"
         >
-          📄 View Details
+          🚘 View Car Details
         </button>
       </div>
 
