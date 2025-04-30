@@ -96,7 +96,7 @@ const Footer = () => {
 
       {/* Footer Bottom Section */}
       <div className="border-t border-gray-700 pt-6 text-center text-sm text-gray-500 mt-8">
-        <p>&copy; 2024 RentRush. All rights reserved.</p>
+        <p>&copy; 2025 RentRush. All rights reserved.</p>
         <div className="mt-2 space-x-4">
           <a href="#" className="hover:text-blue-400">
             Terms
