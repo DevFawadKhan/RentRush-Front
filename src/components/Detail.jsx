@@ -51,7 +51,7 @@ function Detail() {
             <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-lg font-medium text-[#C17D3C]">Pro Tip</h3>
               <p className="mt-2 text-gray-600">
-                Scan and upload these documents in advance through our mobile app to save time at pickup!
+                Scan and upload these documents in advance!
               </p>
             </div>
           </div>
