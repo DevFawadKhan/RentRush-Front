@@ -35,6 +35,7 @@ function ShowroomNavbar() {
             { label: "Home", to: "/showroom/dashboard" },
             { label: "Inventory", to: "/showroom/inventory" },
             { label: "Maintenance", to: "/showroom/maintenance" },
+            { label: "Pending Payments", to: "/showroom/payments" },
           ].map(({ label, to }) => (
             <Link
               key={label}

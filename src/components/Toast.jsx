@@ -1,7 +1,7 @@
 // Toast.jsx
 import { toast } from "react-toastify";
 
-const Toast = (message, type, navigator = null) => {
+export const Toast = (message, type, navigator = null) => {
   const toastOptions = {
     position: "top-right",
     autoClose: 3000,

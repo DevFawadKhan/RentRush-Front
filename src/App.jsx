@@ -22,6 +22,7 @@ import ShowroomInventory from "./components/showroom/inventory.jsx";
 import CarMaintenancePage from "./components/showroom/maintenance.jsx";
 import ShowroomSignUp from "./components/showroom/signup.jsx";
 import SignUp from "./components/signup.jsx";
+import PaymentsPage from "./components/showroom/payment.jsx";
 function App() {
   return (
     <>
@@ -60,6 +61,7 @@ function App() {
               path="/showroom/inventory"
               element={<ShowroomInventory />}
             ></Route>
+            <Route path="/showroom/payments" element={<PaymentsPage />}></Route>
             <Route
               path="/customer/Dashboard"
               element={<CarsDashboard />}

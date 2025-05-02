@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import ConfirmationDialog from "./ConfirmationDialog";
 import axios from "axios";
+import Toast from "../Toast";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -32,7 +33,7 @@ const Showroom = ({ value, refectch }) => {
     try {
       const url = `${Base_Url}/api/admin/banshowroom/${id}`;
       const response = await axios.post(url);
-      alert(response.data.msg);
+      if (response?.data?.msg) Toast(response?.data?.msg, "success");
 
       setStatuses((prevStatuses) => ({
         ...prevStatuses,
@@ -41,15 +42,17 @@ const Showroom = ({ value, refectch }) => {
       setIsModalOpen(false);
       refectch();
     } catch (error) {
-      alert(error.response?.data?.msg || "An error occurred");
+      Toast(error.response?.data?.msg || "An error occurred", "error");
     }
   };
 
   const updateShowroomApproval = async (id, approve) => {
     try {
       const url = `${Base_Url}/api/admin/approve/${id}`;
-      const response = await axios.put(url, { isApproved: approve });
-      alert(response.data?.message);
+      const response = await axios.put(url, { isApproved: approve ? 1 : 0 });
+      if (response.data?.message === "Showroom approval rejected!") {
+        Toast("Showroom approval rejected!", "warn");
+      } else Toast(response.data?.message, "success");
 
       // Update the selected showroom's approval status
       setSelectedShowroom((prev) => ({
@@ -59,7 +62,7 @@ const Showroom = ({ value, refectch }) => {
       setIsModalOpen(false);
       refectch();
     } catch (error) {
-      alert(error.response?.message || "An error occurred");
+      Toast(error.response?.message || "An error occurred", "error");
     }
   };
 

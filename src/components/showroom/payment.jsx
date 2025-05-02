@@ -2,16 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Toast from "../Toast";
 import CarCard from "./carCard";
-import CarMaintenanceChecklist from "./CarMaintenanceChecklist";
-import MarkCompleteMaintenance from "./MarkCompleteMaintenance";
-import PaymentReceivedDialog from "./MarkCompleteMaintenance";
+import PaymentReceivedDialog from "./PaymentReceivedDialog";
 import ShowroomNavbar from "./showroomNavbar";
 const Base_Url = import.meta.env.VITE_API_URL;
 
-const CarMaintenancePage = () => {
-  const [maintenanceSelectedCar, setMaintenanceSelectedCar] = useState(null);
-  const [completeMaintenanceSelectedCar, setCompleteMaintenanceSelectedCar] =
-    useState(null);
+const PaymentsPage = () => {
   const [paymentReceivedSelectedCar, setPaymentReceivedSelectedCar] =
     useState(null);
   const [cars, setCars] = useState(null);
@@ -19,7 +14,7 @@ const CarMaintenancePage = () => {
   const fetchVehicles = async () => {
     try {
       const response = await axios.get(
-        `${Base_Url}/api/car/get-all-return-cars`,
+        `${Base_Url}/api/car/get-all-payment-cars`,
         {
           withCredentials: true,
         }
@@ -40,21 +35,8 @@ const CarMaintenancePage = () => {
     }
   }, []);
 
-  const handleMaintenanceCarSelect = (car) => {
-    setMaintenanceSelectedCar(car);
-  };
-
-  const handleCompleteMaintenanceCarSelect = (car) => {
-    setCompleteMaintenanceSelectedCar(car);
-  };
-
   const handlePaymentReceivedCarSelect = (car) => {
     setPaymentReceivedSelectedCar(car);
-  };
-
-  const handleCloseCompleteMaintenanceSelectedCar = () => {
-    setCompleteMaintenanceSelectedCar(null);
-    fetchVehicles();
   };
 
   const handleClosePaymentReceivedSelectedCar = () => {
@@ -62,50 +44,34 @@ const CarMaintenancePage = () => {
     fetchVehicles();
   };
 
-  const handleCloseChecklist = () => {
-    setMaintenanceSelectedCar(null);
-    fetchVehicles();
+  const filterCarsByStatus = (cars) => {
+    return cars?.filter((car) => car.rentalInfo?.status === "pending payment");
   };
+  const filteredCars = filterCarsByStatus(cars);
 
   return (
     <>
       <ShowroomNavbar />
       <div className="p-8 bg-white min-h-screen">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#0B132A]">
-          Select a Car for Maintenance Update
+          Select a Car to Mark Payment Received
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 p-3 justify-items-center">
-          {cars?.map((car) => (
+          {filteredCars?.map((car) => (
             <div
               key={car._id}
               onClick={() => {
-                if (car.availability === "Pending Return") {
-                  handleMaintenanceCarSelect(car);
-                } else if (car.availability === "Maintenance Complete") {
+                if (car.rentalInfo?.status === "pending payment") {
                   handlePaymentReceivedCarSelect(car);
-                } else {
-                  handleCompleteMaintenanceCarSelect(car);
                 }
               }}
-              className="cursor-pointer"
+              className={`cursor-pointer ${car.rentalInfo?.status !== "pending payment" ? "opacity-50 pointer-events-none" : ""}`}
             >
               <CarCard car={car} />
             </div>
           ))}
         </div>
 
-        {maintenanceSelectedCar && (
-          <CarMaintenanceChecklist
-            car={maintenanceSelectedCar}
-            onClose={handleCloseChecklist}
-          />
-        )}
-        {completeMaintenanceSelectedCar && (
-          <MarkCompleteMaintenance
-            carId={completeMaintenanceSelectedCar._id}
-            onClose={handleCloseCompleteMaintenanceSelectedCar}
-          />
-        )}
         {paymentReceivedSelectedCar && (
           <PaymentReceivedDialog
             carId={paymentReceivedSelectedCar._id}
@@ -117,4 +83,4 @@ const CarMaintenancePage = () => {
   );
 };
 
-export default CarMaintenancePage;
+export default PaymentsPage;
