@@ -16,109 +16,119 @@ function BookingCard({
   const BookingStartDate = new Date(booking.rentalStartDate);
   const BookingEndDate = new Date(booking.rentalEndDate);
 
+  const isActive = CurrentDate >= BookingStartDate && CurrentDate <= BookingEndDate;
+  const isOverdue = CurrentDate > BookingEndDate && booking.status !== "returned";
+
+  const StatusBadge = ({ label, color }) => (
+    <span className={`px-2 py-1 text-xs rounded-full font-semibold ${color}`}>
+      {label}
+    </span>
+  );
+
   return (
-    <div className="bg-white shadow-md rounded-xl overflow-hidden flex flex-col w-[300px] transition duration-300 hover:shadow-xl">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col w-[380px] transition duration-300 hover:shadow-lg border border-gray-200">
       <img
         src={`http://localhost:3000/uploads/${booking.carDetails.images[0]}`}
         alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
-        className="w-full h-48 object-contain bg-gray-100"
+        className="w-full h-55 object-cover bg-gray-100"
       />
 
-      <div className="p-4 flex flex-col flex-grow justify-between">
-        <div className="mb-3">
-          <h3 className="text-lg font-bold text-gray-800 truncate">
+      <div className="text-40px p-4 flex flex-col justify-between flex-grow space-y-3">
+
+        {/* Progress Bar - Centered */}
+
+        <div className="flex justify-center mb-6">
+          <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
+            {/* Progress Bar Container */}
+            <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
+              </div>
+              </div>
+              </div>
+
+        {/* Car Info */}
+        <div>
+          <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
             {booking.carDetails.carBrand} {booking.carDetails.carModel}
           </h3>
-          <p className="text-sm text-gray-500">{booking.carDetails.carType}</p>
-        </div>
-
-        <div className="flex justify-between items-center mb-3">
-          <p className="flex items-center text-sm text-purple-600 font-medium">
+          <p className="text-40px text-gray-500 mb-1">{booking.carDetails.carType}</p>
+          <p className="text-40px text-gray-600 flex items-center">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 mr-1"
+              className="w-6 h-6 mr-1 text-purple-500"
               fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
-              stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
+              <path   strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M9.75 9.75L12 6.75m0 0l2.25 3m-2.25-3v10.5"
-              />
+                d="M9.75 9.75L12 6.75m0 0l2.25 3m-2.25-3v10.5" />
             </svg>
             {booking.carDetails.transmission}
           </p>
+        </div>
 
+        <div className="flex justify-between items-center">
+          <span className="text-40px text-gray-700 font-medium">PKR {booking.carDetails.rentRate}/Day</span>
           {CurrentDate <= BookingEndDate && (
             <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
-              <button className="text-xs text-blue-600 hover:underline">
-                Extend Booking
-              </button>
+              <button className="text-40px text-blue-600 hover:underline">Extend Booking</button>
             </Link>
           )}
         </div>
 
-        <p className="text-base font-semibold text-gray-800 mb-2">
-          PKR {booking.carDetails.rentRate} / day
-        </p>
-
-        <div className="flex flex-col gap-2">
+        {/* Booking Status & Actions */}
+        <div className="space-y-2">
+          {/* Status Message */}
           {booking.status === "returned" ? (
-            <p className="text-green-600 font-bold text-sm">✔️ Completed</p>
+            <StatusBadge label="✔️ Completed" color="bg-green-100 text-green-700" />
           ) : booking.carDetails.availability === "In Maintenance" ? (
             <>
-              <p className="text-red-600 font-bold text-sm">
-                🛠️ In Maintenance
-              </p>
-              <p className="text-red-600 font-bold text-sm">⏳ Payment Due</p>
+              <StatusBadge label="🛠 In Maintenance" color="bg-red-100 text-red-700" />
               <button
                 onClick={() => handleSeeDetails(booking)}
-                className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
+                className="w-full bg-red-500 text-white py-1 rounded-md text-sm hover:bg-red-600 transition"
               >
-                See Details
+                📄 See Maintenance Details
               </button>
             </>
           ) : booking.status === "return initiated" ? (
-            <p className="text-red-600 font-bold text-sm">⏳ Pending Return</p>
-          ) : CurrentDate >= BookingEndDate ? (
+            <StatusBadge label="⏳ Pending Return" color="bg-orange-100 text-orange-700" />
+          ) : isOverdue ? (
             <button
-          onClick={()=>ReturnCar(booking._id)}
-              className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
+              onClick={() => ReturnCar(booking._id)}
+              className="w-full bg-red-600 text-white py-1 rounded-md text-sm hover:bg-red-700"
             >
-              🔙 Return Car
+              🔙 Return Car (Overdue)
             </button>
-          ) : CurrentDate > BookingStartDate ? (
-            <p className="text-blue-600 font-semibold text-sm">
-              🚀 Your Booking Starts Now
-            </p>
+          ) : isActive ? (
+            <StatusBadge label="🚗 Active Booking" color="bg-blue-100 text-blue-700" />
           ) : (
-            <>
+            <div className="flex gap-2">
               <button
                 onClick={() => setModelOpen(true)}
-                className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition"
+                className="flex-1 bg-blue-500 text-white py-1 rounded-md text-sm hover:bg-blue-600"
               >
-                ✏️ Update Booking
+                ✏️ Update
               </button>
               <button
                 onClick={() => {
                   setSelectedBooking(booking._id);
                   setShowDialog(true);
                 }}
-                className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition"
+                className="flex-1 bg-red-500 text-white py-1 rounded-md text-sm hover:bg-red-600"
               >
-                ❌ Cancel Booking
+                ❌ Cancel
               </button>
-            </>
+            </div>
           )}
         </div>
 
+        {/* View Details */}
         <button
           onClick={() => openDialog(booking)}
-          className="mt-3 text-xs text-blue-600 font-medium hover:underline"
+          className="mt-2 text-30px text-blue-600 hover:underline text-left"
         >
-          📄 View Details
+          🚘 View Car Details
         </button>
       </div>
 
