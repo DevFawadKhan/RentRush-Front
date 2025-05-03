@@ -423,13 +423,10 @@ export const carBrandsWithModels = {
     "Nexo",
     "Santa Cruz",
   ],
-  Isuzu: ["D-Max", "MU-X"],
   Kia: [
     "Sportage",
     "EV5",
-    "EV9",
     "K4",
-    "PV5",
     "Picanto",
   ],
   MG: ["4", "5", "ZS", "ZS EV", "HS", "Cyberster"],
@@ -480,5 +477,4 @@ export const carBrandsWithModels = {
     "Vitz",
     "Yaris",
   ],
-  United_Motors: ["Alpha"],
 };
