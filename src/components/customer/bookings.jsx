@@ -45,8 +45,7 @@ const UserBookings = () => {
   const filterOptions = [
     { value: "all", label: "All Bookings", icon: <FiCalendar className="mr-2" /> },
     { value: "current", label: "Current Bookings", icon: <FiClock className="mr-2" /> },
-    { value: "past", label: "Past Bookings", icon: <FiArchive className="mr-2" /> },
-    { value: "completed", label: "Completed Bookings", icon: <FiCheckCircle className="mr-2" /> }
+    { value: "past", label: "Past Bookings", icon: <FiArchive className="mr-2" /> }
   ];
 
   const handleSeeDetails = (booking) => {
