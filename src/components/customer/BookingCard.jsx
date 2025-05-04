@@ -15,8 +15,16 @@ function BookingCard({
   const CurrentDate = new Date();
   const BookingStartDate = new Date(booking.rentalStartDate);
   const BookingEndDate = new Date(booking.rentalEndDate);
+const BookingStartDateTime = new Date(`${booking.rentalStartDate} ${booking.StartTime}`);
+const BookingEndDateTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
+console.log("CurrentDateTime:", CurrentDate);
+console.log("BookingStartDateTime:", BookingStartDateTime);
+console.log("BookingEndDateTime:", BookingEndDateTime);
 
-  const isActive = CurrentDate >= BookingStartDate && CurrentDate <= BookingEndDate;
+const isActive = CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime;
+
+console.log("isActive:", isActive);
+
   const isOverdue = CurrentDate > BookingEndDate && booking.status !== "returned";
 
   const StatusBadge = ({ label, color }) => (
@@ -35,15 +43,14 @@ function BookingCard({
 
       <div className="text-40px p-4 flex flex-col justify-between flex-grow space-y-3">
 
-        {/* Progress Bar - Centered */}
+     {/* progress bar code comment  for test the module */}
+{/* 
 
-        <div className="flex justify-center mb-6">
+<div className="flex justify-center mb-6">
           <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
-            {/* Progress Bar Container */}
-            <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
+         
               </div>
-              </div>
-              </div>
+              </div> */}
 
         {/* Car Info */}
         <div>
