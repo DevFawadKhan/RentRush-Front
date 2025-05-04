@@ -95,7 +95,8 @@ const UserBookings = () => {
 
   useEffect(() => {
     if (selectedBookingDetails) {
-      const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime } =
+      const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime,
+         } =
         selectedBookingDetails;
 
       const convertTo24HourFormat = (time) => {
@@ -538,11 +539,11 @@ const UserBookings = () => {
             endDateTime: selectedBookingDetails.rentalEndDate,
             starttime: selectedBookingDetails.rentalStartTime,
             endtime: selectedBookingDetails.rentalEndTime,
+            BookingStatus:selectedBookingDetails.status
           }}
           progress={progress}
         />
       )}
-
       {/* Maintenance Modal */}
       {showMaintenanceModal && maintenanceDetails && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">

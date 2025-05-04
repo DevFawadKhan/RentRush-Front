@@ -2,38 +2,40 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { FiAlertTriangle, FiClock, FiX } from "react-icons/fi";
 
-const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
+const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate,Status }) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState("pending");
+  const [timeDisplay, setTimeDisplay] = useState("");
 
- 
-  // Update current time every second for accurate timing
+  console.log("booking status", Status);
+
+  //  Interval sirf tab chale jab Status !== "returned" ho
   useEffect(() => {
+    if (Status === "returned") {
+      return; // Agar return ho gaya hai to interval set nahi karna
+    }
+
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
     }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
-  // Parse AM/PM time and date to timestamp
+    return () => clearInterval(interval); // Cleanup
+  }, [Status]); //  Status ko dependency me rakha
+
+  // Time parsing helper
   const parseDateTimeToTimestamp = (dateStr, timeStr) => {
     try {
       const [time, period] = timeStr.split(" ");
       let [hours, minutes] = time.split(":").map(Number);
 
-      // Convert to 24-hour format
       if (period.toUpperCase() === "PM" && hours !== 12) hours += 12;
       if (period.toUpperCase() === "AM" && hours === 12) hours = 0;
 
-      // Parse date (assuming format like "2025-04-20")
       const [year, month, day] = dateStr.split("-").map(Number);
-
-      // Create Date object (month is 0-indexed in JavaScript)
       const date = new Date(year, month - 1, day, hours, minutes);
 
-      if (isNaN(date.getTime())) {
-        throw new Error("Invalid date/time");
-      }
+      if (isNaN(date.getTime())) throw new Error("Invalid date/time");
 
       return date.getTime();
     } catch (err) {
@@ -42,18 +44,13 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
     }
   };
 
-  // Convert startTime/StartDate and endTime/EndDate to timestamps
   const startTimestamp = parseDateTimeToTimestamp(StartDate, startTime);
   const endTimestamp = parseDateTimeToTimestamp(EndDate, endTime);
 
-  // Format time difference into days, hours, minutes, seconds
   const formatTimeDifference = (timeDiff) => {
     const absTimeDiff = Math.max(0, Math.floor(timeDiff));
-
     const days = Math.floor(absTimeDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (absTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
+    const hours = Math.floor((absTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((absTimeDiff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((absTimeDiff % (1000 * 60)) / 1000);
 
@@ -66,54 +63,29 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
     return result.join(" ") || "0s";
   };
 
-  // Validate inputs
+
   useEffect(() => {
-    if (
-      !startTime ||
-      !endTime ||
-      !StartDate ||
-      !EndDate ||
-      !startTimestamp ||
-      !endTimestamp
-    ) {
+    if (!startTime || !endTime || !StartDate || !EndDate || !startTimestamp || !endTimestamp) {
       setError("Invalid date or time inputs");
     } else if (startTimestamp >= endTimestamp) {
       setError("Start time must be before end time");
     } else {
       setError(null);
     }
-  }, [startTime, endTime, StartDate, EndDate, startTimestamp, endTimestamp]);
+  }, [startTime, endTime, StartDate, EndDate, startTimestamp, endTimestamp, Status]);
 
-  // Calculate progress percentage
-  const totalDuration =
-    endTimestamp && startTimestamp ? endTimestamp - startTimestamp : 0;
+  const totalDuration = endTimestamp && startTimestamp ? endTimestamp - startTimestamp : 0;
   const elapsedTime = startTimestamp ? currentTime - startTimestamp : 0;
   const progress =
-    totalDuration > 0
-      ? Math.min(100, Math.max(0, (elapsedTime / totalDuration) * 100))
-      : 0;
-
-  // Determine booking status
-  const [status, setStatus] = useState("pending");
-  const [timeDisplay, setTimeDisplay] = useState("");
+    totalDuration > 0 ? Math.min(100, Math.max(0, (elapsedTime / totalDuration) * 100)) : 0;
 
   useEffect(() => {
-    // Debug logging
-    console.log(
-      "Current Time:",
-      new Date(currentTime).toISOString(),
-      currentTime,
-    );
-    console.log(
-      "Start Time:",
-      startTimestamp ? new Date(startTimestamp).toISOString() : "Invalid",
-      startTimestamp,
-    );
-    console.log(
-      "End Time:",
-      endTimestamp ? new Date(endTimestamp).toISOString() : "Invalid",
-      endTimestamp,
-    );
+
+    if (Status === "returned") {
+      setStatus("returned");
+      setTimeDisplay("Car Returned");
+      return;
+    }
 
     if (error) {
       setTimeDisplay("Error: Invalid times");
@@ -123,21 +95,19 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
 
     if (currentTime < startTimestamp) {
       const timeToStart = startTimestamp - currentTime;
-      console.log("Pending - Time to start:", timeToStart);
       setStatus("pending");
       setTimeDisplay(`Time left: ${formatTimeDifference(timeToStart)}`);
     } else if (currentTime >= startTimestamp && currentTime <= endTimestamp) {
       const remaining = endTimestamp - currentTime;
-      console.log("Active - Time remaining:", remaining);
       setStatus("active");
       setTimeDisplay(`Time left: ${formatTimeDifference(remaining)}`);
     } else if (currentTime > endTimestamp) {
       const overdueTime = currentTime - endTimestamp;
-      console.log("Overdue - Time overdue:", overdueTime);
       setStatus("overdue");
       setTimeDisplay(`Overdue by: ${formatTimeDifference(overdueTime)}`);
     }
-  }, [currentTime, startTimestamp, endTimestamp, error]);
+  }, [currentTime, startTimestamp, endTimestamp, error, Status]); 
+
 
   const getProgressColor = () => {
     switch (status) {
@@ -147,6 +117,8 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
         return "bg-gradient-to-r from-gray-500 to-gray-700";
       case "error":
         return "bg-gradient-to-r from-red-300 to-red-500";
+      case "returned": 
+        return "bg-gradient-to-r from-green-500 to-green-700";
       default:
         return "bg-gradient-to-r from-blue-500 to-blue-700";
     }
@@ -162,6 +134,8 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
         return "Overdue";
       case "error":
         return "Error";
+      case "returned": 
+        return "Car Returned";
       default:
         return "";
     }
@@ -170,18 +144,17 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate }) => {
   const getStatusIcon = () => {
     switch (status) {
       case "pending":
-        return <FiClock className="mr-1" />;
       case "active":
         return <FiClock className="mr-1" />;
       case "overdue":
-        return <FiAlertTriangle className="mr-1" />;
       case "error":
         return <FiAlertTriangle className="mr-1" />;
+      case "returned":
+        return <FiClock className="mr-1" />;
       default:
         return null;
     }
   };
-
   return (
     <div className="w-full mb-6">
       <div className="w-full max-w-[90vw] sm:max-w-[600px] mx-auto relative">
@@ -282,6 +255,7 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails, showroom }) => {
           endTime={bookingDetails.endtime}
           StartDate={bookingDetails.startDateTime}
           EndDate={bookingDetails.endDateTime}
+          Status={bookingDetails.BookingStatus}
         />
 
         {/* Combined Table for Booking and Car Details */}
