@@ -3,6 +3,12 @@ import { CircleGauge, Fuel, GripHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import Toast from "../Toast";
 const Base_Url = import.meta.env.VITE_API_URL;
+import { 
+  FiMapPin, 
+  FiX, 
+  FiCalendar, 
+  FiCheckCircle,
+} from "react-icons/fi";
 
 const UserCard = ({ car, handleRefetch }) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -212,6 +218,10 @@ const UserCard = ({ car, handleRefetch }) => {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse border text-20px">
                   <tbody>
+                  <tr className="hover:bg-gray-50">
+                      <td className="border p-2 font-bold">Brand</td>
+                      <td className="border p-2">{car.carBrand}</td>
+                    </tr>
                     <tr className="hover:bg-gray-50">
                       <td className="border p-2 font-bold">Model</td>
                       <td className="border p-2">{car.carModel}</td>
@@ -365,123 +375,155 @@ const UserCard = ({ car, handleRefetch }) => {
             </div>
           </div>
         )}
-        {ModelVisible && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            // onClick={onClose} // Close dialog when clicking outside
-          >
-            <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 h-auto max-h-[90vh] overflow-y-auto p-6 relative">
-              {/* Close Button */}
-              <button
-                onClick={() => setModelVisible(false)}
-                className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
-              >
-                &times;
-              </button>
-              {/* Modal Title */}
-              <h2 className="text-3xl font-bold text-center mb-4">
-                {car.carBrand} {car.carModel}
-              </h2>
 
-              {/* Car Images */}
-              <div className="flex justify-center gap-3 mb-6 flex-wrap">
-                {car.images?.map((img, index) => (
-                  <img
-                    key={index}
-                    src={`http://localhost:3000/uploads/${img}`}
-                    alt={`Car ${index}`}
-                    className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
-                  />
-                ))}
-                {errorMessage && (
-                  <p className="text-red-500 text-center font-bold">
-                    {errorMessage}
-                  </p>
-                )}
-              </div>
-              {/* Combined Table for Booking and Car Details */}
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border text-sm">
-                  <tbody>
-                    {/* Row 1: Booking Details */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Booked By</td>
+       {ModelVisible && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div className="bg-white rounded-xl shadow-2xl w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 h-auto max-h-[90vh] overflow-y-auto p-6 relative">
+      {/* Close Button */}
+      <button
+        onClick={() => setModelVisible(false)}
+        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-100"
+      >
+        <FiX className="text-2xl" />
+      </button>
+      
+      {/* Modal Header */}
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-gray-800">
+          {car.carBrand} {car.carModel}
+        </h2>
+        <p className="text-gray-600 mt-2">Booking Confirmation</p>
+      </div>
 
-                      <td className="border p-2">
-                        {sessionStorage.getItem("name")}
-                      </td>
-                      <td className="border p-2 font-bold">Renting Period</td>
-                      <td className="border ">
-                        StartTime/Date {rentalStartTime} {rentalStartDate}{" "}
-                        EndTime/Date {rentalEndTime}
-                        {rentalEndDate}
-                      </td>
-                    </tr>
-                    {/* Row 2: Car Details */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Car Model</td>
-                      <td className="border p-2">{car.carModel}</td>
-                      <td className="border p-2 font-bold">Color</td>
-                      <td className="border p-2">{car.color}</td>
-                    </tr>
+      {/* Car Images Gallery */}
+      <div className="mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {car.images?.map((img, index) => (
+            <div key={index} className="relative group overflow-hidden rounded-lg">
+              <img
+                src={`http://localhost:3000/uploads/${img}`}
+                alt={`Car ${index}`}
+                className="w-full h-48 object-cover rounded-lg border border-gray-200 shadow-sm transition-transform duration-300 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+            </div>
+          ))}
+        </div>
+        {errorMessage && (
+          <p className="text-red-500 text-center font-medium mt-4">
+            {errorMessage}
+          </p>
+        )}
+      </div>
 
-                    {/* Row 3: Additional Car Details */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Mileage</td>
-                      <td className="border p-2">{car.mileage} miles</td>
-                      <td className="border p-2 font-bold">Transmission</td>
-                      <td className="border p-2">{car.transmission}</td>
-                    </tr>
-
-                    {/* Row 4: Additional Car Details */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Engine Type</td>
-                      <td className="border p-2">{car.engineType}</td>
-                      <td className="border p-2 font-bold">
-                        Registration Year
-                      </td>
-                      <td className="border p-2">{car.year}</td>
-                    </tr>
-
-                    {/* Row 5: Additional Car Details */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Body Type</td>
-                      <td className="border p-2">{car.bodyType}</td>
-                      <td className="border p-2 font-bold">Price</td>
-                      <td className="border p-2 font-bold">
-                        {car.rentRate} rs/Day
-                      </td>
-                    </tr>
-
-                    {/* Row 6: Additional Car Details */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Showroom Name</td>
-
-                      <td className="border p-2">{car.userId?.showroomName}</td>
-                      <td className="border p-2 font-bold">Showroom Address</td>
-                      <td className="border p-2">{car.userId?.address}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="flex justify-center gap-10">
-                <button
-                  type="submit"
-                  onClick={handleSubmit}
-                  className="text-white hover:bg-blue-900 text-center bg-blue-600 px-2 py-2 mt-3"
-                >
-                  Confirm booking
-                </button>
-                <button
-                  onClick={() => setModelVisible(false)}
-                  className="text-white bg-red-600 px-2 py-2 mt-3"
-                >
-                  Cancel
-                </button>
-              </div>
+      {/* Booking Details Card */}
+      <div className="bg-blue-50 rounded-xl p-5 mb-6 border border-blue-100">
+        <h3 className="text-xl font-semibold text-blue-800 mb-3 flex items-center">
+          <FiCalendar className="mr-2" /> Booking Details
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-600">Booked By</p>
+            <p className="font-medium">{sessionStorage.getItem("name")}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Rental Period</p>
+            <div className="space-y-1">
+              <p className="font-medium">
+                <span className="font-semibold">From:</span> {rentalStartDate} at {rentalStartTime}
+              </p>
+              <p className="font-medium">
+                <span className="font-semibold">To:</span> {rentalEndDate} at {rentalEndTime}
+              </p>
             </div>
           </div>
-        )}
+        </div>
+      </div>
+
+      {/* Car Details Section */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <FiCheckCircle className="mr-2 text-green-600" /> Vehicle Information
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column */}
+          <div className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Model</p>
+              <p className="font-medium">{car.carModel}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Color</p>
+              <p className="font-medium">{car.color}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Mileage</p>
+              <p className="font-medium">{car.mileage} miles</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Engine Type</p>
+              <p className="font-medium">{car.engineType}</p>
+            </div>
+          </div>
+          
+          {/* Right Column */}
+          <div className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Transmission</p>
+              <p className="font-medium">{car.transmission}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Registration Year</p>
+              <p className="font-medium">{car.year}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Body Type</p>
+              <p className="font-medium">{car.bodyType}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-500">Price</p>
+              <p className="font-medium text-blue-600">{car.rentRate} rs/Day</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Showroom Details */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <FiMapPin className="mr-2 text-red-600" /> Showroom Information
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <p className="text-sm text-gray-500">Showroom Name</p>
+            <p className="font-medium">{car.userId?.showroomName}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <p className="text-sm text-gray-500">Address</p>
+            <p className="font-medium">{car.userId?.address}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center"
+        >
+          <FiCheckCircle className="mr-2" /> Confirm Booking
+        </button>
+        <button
+          onClick={() => setModelVisible(false)}
+          className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center"
+        >
+          <FiX className="mr-2" /> Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       </div>
     </>
   );
