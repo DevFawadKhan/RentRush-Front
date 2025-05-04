@@ -1,65 +1,51 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Toast from "../Toast";
 import { toast } from "react-toastify";
+import { FiCalendar, FiClock, FiDownload, FiX, FiDollarSign } from "react-icons/fi";
+
 const Base_Url = import.meta.env.VITE_API_URL;
+
 const CarDetailsScreen = () => {
-  // State for Extend Booking modal
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [rentalStartDate, setRentalStartDate] = useState("");
   const [rentalEndDate, setRentalEndDate] = useState("");
   const [rentalEndTime, setRentalEndTime] = useState("");
   const [rentalStartTime, setRentalStartTime] = useState("");
-  const [image, setimage] = useState([]);
-  const [Price, setPrice] = useState(0);
-  const [BookingDetails, setBookingDetails] = useState([]);
-  // USESTATE FOR EndDate and EndTime POST ON EDIT BOOKING API
-  const [EndDate, setEndDate] = useState("");
-  const [EndTime, setEndTime] = useState("");
-  // State for progress and time left
+  const [image, setImage] = useState([]);
+  const [rentRate, setPrice] = useState(0);
+  const [bookingDetails, setBookingDetails] = useState([]);
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [progress, setProgress] = useState(0);
-  const { bookingId } = useParams(); // GET BOOKING ID FROM URL
-  console.log("booking id", bookingId);
+  const { bookingId } = useParams();
 
   useEffect(() => {
-    const FetchBookingDetail = async () => {
+    const fetchBookingDetail = async () => {
       try {
         const res = await axios.get(
           `${Base_Url}/api/bookcar/bookcar-detail/${bookingId}`,
-          {
-            withCredentials: true,
-          },
+          { withCredentials: true }
         );
-        console.log("response from booking detail", res.data);
 
         setRentalStartDate(res.data.rentalStartDate);
         setRentalEndDate(res.data.rentalEndDate);
         setRentalStartTime(res.data.rentalStartTime);
         setRentalEndTime(res.data.rentalEndTime);
         setPrice(res.data.totalPrice);
-        setimage(res.data.images);
+        setImage(res.data.images);
 
         const booking = res.data;
         const startDate = new Date(booking.rentalStartDate);
         const endDate = new Date(booking.rentalEndDate);
 
-        // ✅ Fix for same date booking (count as 1 day)
-        let totalDays = Math.ceil(
-          (endDate - startDate) / (1000 * 60 * 60 * 24),
-        );
+        let totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         if (totalDays === 0) totalDays = 1;
 
-        // ✅ Handle timing for same date booking
         let totalHours = 0;
-
-        if (
-          booking.rentalStartDate === booking.rentalEndDate &&
-          booking.rentalStartTime &&
-          booking.rentalEndTime
-        ) {
-          // ✅ Convert to 24-hour format
+        if (booking.rentalStartDate === booking.rentalEndDate && booking.rentalStartTime && booking.rentalEndTime) {
           const convertTo24HourFormat = (time) => {
             const [timePart, modifier] = time.split(" ");
             let [hours, minutes] = timePart.split(":").map(Number);
@@ -68,15 +54,9 @@ const CarDetailsScreen = () => {
             return { hours, minutes };
           };
 
-          const { hours: startHour, minutes: startMinute } =
-            convertTo24HourFormat(booking.rentalStartTime);
-          const { hours: endHour, minutes: endMinute } = convertTo24HourFormat(
-            booking.rentalEndTime,
-          );
-
+          const { hours: startHour, minutes: startMinute } = convertTo24HourFormat(booking.rentalStartTime);
+          const { hours: endHour, minutes: endMinute } = convertTo24HourFormat(booking.rentalEndTime);
           totalHours = endHour - startHour + (endMinute - startMinute) / 60;
-
-          // ✅ Handle negative values in case of incorrect time order
           if (totalHours < 0) totalHours = 0;
         } else if (startDate && endDate) {
           totalHours = (endDate - startDate) / (1000 * 60 * 60);
@@ -84,7 +64,7 @@ const CarDetailsScreen = () => {
 
         setBookingDetails({
           ...booking,
-          totalHours: isNaN(totalHours) ? "0.00" : totalHours.toFixed(2), // ✅ Prevent NaN
+          totalHours: isNaN(totalHours) ? "0.00" : totalHours.toFixed(2),
           totalDays,
         });
       } catch (error) {
@@ -93,11 +73,10 @@ const CarDetailsScreen = () => {
     };
 
     if (bookingId) {
-      FetchBookingDetail();
+      fetchBookingDetail();
     }
   }, [bookingId]);
 
-  // USE Effect for Progress Bar
   useEffect(() => {
     if (rentalStartDate && rentalEndDate && rentalStartTime && rentalEndTime) {
       const convertTo24HourFormat = (time) => {
@@ -108,11 +87,8 @@ const CarDetailsScreen = () => {
         return { hours, minutes };
       };
 
-      // ✅ Start date + time ko combine karo
-      const { hours: startHour, minutes: startMinute } =
-        convertTo24HourFormat(rentalStartTime);
-      const { hours: endHour, minutes: endMinute } =
-        convertTo24HourFormat(rentalEndTime);
+      const { hours: startHour, minutes: startMinute } = convertTo24HourFormat(rentalStartTime);
+      const { hours: endHour, minutes: endMinute } = convertTo24HourFormat(rentalEndTime);
 
       const start = new Date(rentalStartDate);
       start.setHours(startHour, startMinute, 0);
@@ -128,9 +104,9 @@ const CarDetailsScreen = () => {
         const progressPercentage = (elapsedTime / totalDuration) * 100;
         setProgress(progressPercentage);
       } else if (now > end.getTime()) {
-        setProgress(100); // ✅ Booking complete
+        setProgress(100);
       } else {
-        setProgress(0); // ✅ Booking abhi start nahi hui
+        setProgress(0);
       }
     }
   }, [rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime]);
@@ -138,14 +114,12 @@ const CarDetailsScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!EndDate || !EndTime) {
+    if (!endDate || !endTime) {
       Toast("All Fields are required", "error");
       return;
     }
 
-    const rentalEndDateTime = new Date(`${EndDate}T${EndTime}:00`);
-    console.log("Rental End DateTime:", rentalEndDateTime);
-
+    const rentalEndDateTime = new Date(`${endDate}T${endTime}:00`);
     if (rentalEndDateTime <= new Date()) {
       return Toast("End date and time must be in the future", "error");
     }
@@ -153,39 +127,29 @@ const CarDetailsScreen = () => {
     try {
       const res = await axios.patch(
         `${Base_Url}/api/bookcar/extend-booking/${bookingId}`,
-        {
-          rentalEndDate: EndDate,
-          rentalEndTime: EndTime,
-        },
-        {
-          withCredentials: true,
-        },
+        { rentalEndDate: endDate, rentalEndTime: endTime },
+        { withCredentials: true }
       );
-
-      console.log("Response:", res.data);
 
       if (res.status === 200) {
         Toast(
-          <>
-            Please Generate your Updated invoice{" "}
+          <div className="flex items-center">
+            <span className="mr-2">Please generate your updated invoice</span>
             <a
               href={res.data.invoiceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "blue", textDecoration: "underline" }}
+              className="text-blue-600 hover:text-blue-800 flex items-center"
             >
-              Click here to download the Invoice
+              <FiDownload className="mr-1" /> Download Invoice
             </a>
-          </>,
+          </div>
         );
       } else {
         Toast(res?.data?.message || "An error occurred", "error");
       }
     } catch (error) {
-      console.error(
-        "Error in Extend booking:",
-        error.response?.data?.message || error.message,
-      );
+      console.error("Error in Extend booking:", error.response?.data?.message || error.message);
       Toast(error.response?.data?.message || "An error occurred", "error");
     }
 
@@ -195,124 +159,175 @@ const CarDetailsScreen = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Navbar />
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
-        {/* Car Image */}
-        <div className="mb-6">
-          <img
-            src={`http://localhost:3000/uploads/${image[0]}`}
-            alt={image}
-            className="w-full h-48 object-cover rounded-lg"
-          />
-        </div>
-        {/* Progress Bar */}
-        <div className="mb-6 w-full max-w-[90vw] sm:max-w-[600px]">
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div
-              className="bg-blue-600 h-2.5 rounded-full animate-pulse"
-              style={{ width: `${progress}%` }}
-            ></div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+          {/* Car Image Header */}
+          <div className="relative h-64 w-full">
+            {image[0] && (
+              <img
+                src={`http://localhost:3000/uploads/${image[0]}`}
+                alt="Car"
+                className="w-full h-full object-cover"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute bottom-4 left-4 text-white">
+              <h1 className="text-2xl font-bold">Booking Details</h1>
+              <p className="text-sm opacity-80">ID: {bookingId}</p>
+            </div>
           </div>
-          <p className="text-sm text-gray-500 mt-2 text-center">
-            {progress === 100 ? "Booking complete" : "Time Left"}
-          </p>
-        </div>
 
-        {/* Details Table */}
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <span className="text-gray-700">Rental Start Date</span>
-            <span className="text-gray-900 font-semibold">
-              {rentalStartDate}
-            </span>
+          {/* Progress Bar */}
+          <div className="px-6 pt-6">
+            <div className="mb-2 flex justify-between text-sm text-gray-600">
+              <span>Booking Progress</span>
+              <span>{progress === 100 ? "Completed" : `${Math.round(progress)}%`}</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className={`h-2.5 rounded-full ${progress === 100 ? 'bg-green-500' : 'bg-blue-600'}`}
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-700">Rental End Date</span>
-            <span className="text-gray-900 font-semibold">{rentalEndDate}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-700">Rental Duration</span>
-            <span className="text-gray-900 font-semibold">
-              {Math.ceil(BookingDetails.totalDays)}
-              {" day"}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-700">Rental Hours</span>
-            <span className="text-gray-900 font-semibold">
-              {BookingDetails.totalHours}
-            </span>
-          </div>
-        </div>
 
-        {/* Total Amount */}
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="flex justify-between">
-            <span className="text-lg font-bold text-gray-800">
-              Total Amount
-            </span>
-            <span className="text-lg font-bold text-gray-800">{Price}</span>
+          {/* Booking Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-700 mb-3 flex items-center">
+                  <FiCalendar className="mr-2 text-blue-600" /> Rental Period
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Start Date:</span>
+                    <span className="font-medium">{rentalStartDate}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Start Time:</span>
+                    <span className="font-medium">{rentalStartTime}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">End Date:</span>
+                    <span className="font-medium">{rentalEndDate}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">End Time:</span>
+                    <span className="font-medium">{rentalEndTime}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-700 mb-3 flex items-center">
+                  <FiClock className="mr-2 text-blue-600" /> Duration
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Days:</span>
+                    <span className="font-medium">
+                      {Math.ceil(bookingDetails.totalDays)} day{bookingDetails.totalDays !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Hours:</span>
+                    <span className="font-medium">{bookingDetails.totalHours}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-700 mb-3 flex items-center">
+                  <FiDollarSign className="mr-2 text-blue-600" /> Payment Details
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Daily Rate:</span>
+                    <span className="font-medium">{rentRate / bookingDetails.totalDays} Rs</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Amount:</span>
+                    <span className="font-bold text-lg text-blue-600">{rentRate} Rs</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg">
+                <h3 className="font-semibold text-blue-800 mb-3">Extend Your Booking</h3>
+                <p className="text-sm text-blue-700 mb-4">
+                  Need more time with your vehicle? Extend your rental period here.
+                </p>
+                <button
+                  onClick={() => setShowBookingModal(true)}
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-2 px-4 rounded-md transition-colors shadow-sm"
+                >
+                  Extend Booking
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Extend Booking Button */}
-        <div className="mt-6">
-          <button
-            onClick={() => setShowBookingModal(true)}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Extend Booking
-          </button>
-        </div>
-        {/* Extend Booking Modal */}
-        {showBookingModal && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg relative h-auto w-96">
-              {/* Close Button */}
-              <button
-                onClick={() => setShowBookingModal(false)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-black"
-              >
-                {" "}
-                &#10005;
-              </button>
-              {/* Form */}
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="flex flex-col">
-                  <label htmlFor="endDate" className="text-sm font-semibold">
-                    Rental End Date
+      {/* Extend Booking Modal */}
+      {showBookingModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl relative w-full max-w-md mx-4">
+            <button
+              onClick={() => setShowBookingModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
+            >
+              <FiX className="text-xl" />
+            </button>
+            
+            <div className="p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Extend Booking</h2>
+              <p className="text-gray-600 mb-6">Select new end date and time for your rental</p>
+              
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    New End Date
                   </label>
                   <input
-                    value={EndDate}
-                    onChange={(e) => setEndDate(e.target.value)}
                     type="date"
-                    className="border p-2 rounded-md"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    min={rentalEndDate}
+                    required
                   />
                 </div>
-                <div className="flex flex-col">
-                  <label htmlFor="endTime" className="text-sm font-semibold">
-                    Rental End Time
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    New End Time
                   </label>
                   <input
-                    value={EndTime}
-                    onChange={(e) => setEndTime(e.target.value)}
                     type="time"
-                    className="border p-2 rounded-md"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
                   />
                 </div>
+                
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white p-2 rounded-md w-full hover:bg-blue-700"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-md mt-4"
                 >
-                  Confirm Booking
+                  Confirm Extension
                 </button>
               </form>
             </div>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 
