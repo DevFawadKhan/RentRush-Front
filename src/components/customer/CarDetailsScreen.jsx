@@ -3,13 +3,14 @@ import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Toast from "../Toast";
-import { toast } from "react-toastify";
 import { FiCalendar, FiClock, FiDownload, FiX, FiDollarSign } from "react-icons/fi";
+import logo from "/src/assets/logo.png";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
 const CarDetailsScreen = () => {
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [rentalStartDate, setRentalStartDate] = useState("");
   const [rentalEndDate, setRentalEndDate] = useState("");
   const [rentalEndTime, setRentalEndTime] = useState("");
@@ -124,6 +125,10 @@ const CarDetailsScreen = () => {
       return Toast("End date and time must be in the future", "error");
     }
 
+    setShowConfirmationModal(true);
+  };
+
+  const confirmExtension = async () => {
     try {
       const res = await axios.patch(
         `${Base_Url}/api/bookcar/extend-booking/${bookingId}`,
@@ -134,7 +139,7 @@ const CarDetailsScreen = () => {
       if (res.status === 200) {
         Toast(
           <div className="flex items-center">
-            <span className="mr-2">Please generate your updated invoice</span>
+            <span className="mr-2">Booking extended successfully!</span>
             <a
               href={res.data.invoiceUrl}
               target="_blank"
@@ -143,19 +148,22 @@ const CarDetailsScreen = () => {
             >
               <FiDownload className="mr-1" /> Download Invoice
             </a>
-          </div>
+          </div>,
+          "success"
         );
-      } else {
-        Toast(res?.data?.message || "An error occurred", "error");
+        
+        // Update the local state with the new end date and time
+        setRentalEndDate(endDate);
+        setRentalEndTime(endTime);
       }
     } catch (error) {
-      console.error("Error in Extend booking:", error.response?.data?.message || error.message);
       Toast(error.response?.data?.message || "An error occurred", "error");
+    } finally {
+      setEndDate("");
+      setEndTime("");
+      setShowBookingModal(false);
+      setShowConfirmationModal(false);
     }
-
-    setEndDate("");
-    setEndTime("");
-    setShowBookingModal(false);
   };
 
   return (
@@ -320,9 +328,47 @@ const CarDetailsScreen = () => {
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-md mt-4"
                 >
-                  Confirm Extension
+                  Continue to Confirm
                 </button>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {showConfirmationModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl relative w-full max-w-md mx-4">
+            <div className="p-6 text-center">
+              {/* Logo and Branding */}
+              <div className="flex flex-col items-center mb-4">
+                <img src={logo} alt="RentRush Logo" className="h-12 mb-2" />
+                <h2 className="text-xl font-bold text-gray-800">RentRush</h2>
+              </div>
+              
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                Confirm Booking Extension
+              </h3>
+              
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to extend your booking until {endDate} at {endTime}?
+              </p>
+
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setShowConfirmationModal(false)}
+                  className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg transition-colors"
+                >
+                  No, Cancel
+                </button>
+                <button
+                  onClick={confirmExtension}
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-colors"
+                >
+                  Yes, Extend
+                </button>
+              </div>
             </div>
           </div>
         </div>
