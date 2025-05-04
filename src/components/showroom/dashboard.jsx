@@ -4,9 +4,15 @@ import Drawer from "./drawer";
 import CarCard from "./carCard";
 import axios from "axios";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
-import { FiRefreshCw, FiPlus, FiCheckCircle, FiClock, FiAlertTriangle } from "react-icons/fi";
+import {
+  FiRefreshCw,
+  FiPlus,
+  FiCheckCircle,
+  FiClock,
+  FiAlertTriangle,
+} from "react-icons/fi";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -16,6 +22,11 @@ const ShowroomDashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const showroomLogoUrl = `${
+    import.meta.env.VITE_API_URL
+  }/Uploads/${sessionStorage.getItem("logo")}`;
+  const showroomName = sessionStorage.getItem("showroomName");
+
   const fetchVehicles = async () => {
     try {
       setLoading(true);
@@ -23,7 +34,9 @@ const ShowroomDashboard = () => {
         withCredentials: true,
       });
       setCars(response.data);
-      const hasRentedCars = response.data.some(car => car.availability === "Rented Out");
+      const hasRentedCars = response.data.some(
+        (car) => car.availability === "Rented Out"
+      );
       setActiveTab(hasRentedCars ? "Rented Out" : "Available");
     } catch (err) {
       console.error(err);
@@ -41,10 +54,12 @@ const ShowroomDashboard = () => {
   const closeDrawer = () => setIsDrawerOpen(false);
 
   // Filter cars
-  const availableCars = cars.filter(car => car.availability === "Available");
-  const rentedCars = cars.filter(car => car.availability === "Rented Out");
-  const maintenanceCars = cars.filter(car => 
-    car.availability === "Pending Return" || car.availability === "In Maintenance"
+  const availableCars = cars.filter((car) => car.availability === "Available");
+  const rentedCars = cars.filter((car) => car.availability === "Rented Out");
+  const maintenanceCars = cars.filter(
+    (car) =>
+      car.availability === "Pending Return" ||
+      car.availability === "In Maintenance"
   );
 
   const tabConfig = [
@@ -52,71 +67,97 @@ const ShowroomDashboard = () => {
       name: "Available",
       count: availableCars.length,
       icon: <FiCheckCircle className="mr-2" />,
-      color: "bg-green-500 hover:bg-green-600"
+      color: "bg-green-500 hover:bg-green-600",
     },
     {
       name: "Rented Out",
       count: rentedCars.length,
       icon: <FiClock className="mr-2" />,
-      color: "bg-blue-500 hover:bg-blue-600"
+      color: "bg-blue-500 hover:bg-blue-600",
     },
     {
       name: "Maintenance",
       count: maintenanceCars.length,
       icon: <FiAlertTriangle className="mr-2" />,
-      color: "bg-yellow-500 hover:bg-yellow-600"
-    }
+      color: "bg-yellow-500 hover:bg-yellow-600",
+    },
   ];
 
   const getCurrentCars = () => {
-    switch(activeTab) {
-      case "Rented Out": return rentedCars;
-      case "Maintenance": return maintenanceCars;
-      default: return availableCars;
+    switch (activeTab) {
+      case "Rented Out":
+        return rentedCars;
+      case "Maintenance":
+        return maintenanceCars;
+      default:
+        return availableCars;
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <ShowroomNavbar onMenuClick={toggleDrawer} />
-      
+      {/* <LowerNavbar /> */}
+
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
 
       <main className="container mx-auto px-4 py-8">
         {/* Header with actions */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-1">Vehicle Dashboard</h1>
-            <p className="text-gray-600">Manage your showroom's vehicle inventory</p>
+        <div className="flex items-start mb-6">
+          <div className="flex items-center mr-10 gap-1">
+            <img
+              src={showroomLogoUrl}
+              alt="Showroom Logo"
+              className="h-14 w-14 rounded-[10px] border-2 border-gray-200 shadow-sm mr-2"
+            />
+            <div className="flex flex-col">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 tracking-tight">
+                {showroomName}
+              </h2>
+            </div>
           </div>
-          
-          <div className="flex gap-3">
-            <button
-              onClick={fetchVehicles}
-              className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition"
-            >
-              <FiRefreshCw className="mr-2" />
-              Refresh
-            </button>
-            <Link 
-  to="/showroom/inventory" 
-  className="inline-flex items-center px-6 py-2 bg-[#C17D3C] text-white rounded-lg hover:bg-[#A56A33] transition"
->
-  <FiPlus className="mr-2" />
-  Add New Vehicle
-</Link>
+          <span className="line-vertical hidden md:block w-[2px] h-16 bg-gray-300 mx-4" />
+
+          <div className="ml-auto flex-1 items-start between gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start  mb-4 gap-1">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-1">
+                  Vehicle Dashboard
+                </h1>
+                <p className="text-gray-600">
+                  Manage your showroom's vehicle inventory
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={fetchVehicles}
+                  className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition"
+                >
+                  <FiRefreshCw className="mr-2" />
+                  Refresh
+                </button>
+                <Link
+                  to="/showroom/inventory"
+                  className="inline-flex items-center px-6 py-2 bg-[#C17D3C] text-white rounded-lg hover:bg-[#A56A33] transition"
+                >
+                  <FiPlus className="mr-2" />
+                  Add New Vehicle
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Filter tabs */}
         <div className="flex flex-wrap gap-3 mb-8">
-          {tabConfig.map(tab => (
+          {tabConfig.map((tab) => (
             <button
               key={tab.name}
               onClick={() => setActiveTab(tab.name)}
               className={`flex items-center px-4 py-2 rounded-lg font-medium text-white transition-all ${
-                activeTab === tab.name 
-                  ? `${tab.color} shadow-lg transform scale-105` 
+                activeTab === tab.name
+                  ? `${tab.color} shadow-lg transform scale-105`
                   : "bg-gray-300 hover:bg-gray-400"
               }`}
             >
@@ -148,8 +189,8 @@ const ShowroomDashboard = () => {
                   No {activeTab.toLowerCase()} vehicles found
                 </h3>
                 <p className="text-gray-500 mb-6">
-                  {activeTab === "Available" 
-                    ? "All vehicles are currently rented or in maintenance" 
+                  {activeTab === "Available"
+                    ? "All vehicles are currently rented or in maintenance"
                     : "No vehicles match this status"}
                 </p>
                 {/* <button className="px-6 py-2 bg-[#C17D3C] text-white rounded-lg hover:bg-[#A56A33] transition">

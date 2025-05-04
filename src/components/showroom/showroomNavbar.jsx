@@ -1,7 +1,16 @@
 import React from "react";
+import { motion } from "framer-motion";
+
 import { Link } from "react-router-dom";
 
 function ShowroomNavbar() {
+  const navItems = [
+    { label: "Home", to: "/showroom/dashboard" },
+    { label: "Inventory", to: "/showroom/inventory" },
+    { label: "Maintenance", to: "/showroom/maintenance" },
+    { label: "Payments", to: "/showroom/payments" },
+    { label: "Invoices", to: "/showroom/invoices" },
+  ];
   const showroomLogoUrl = `${
     import.meta.env.VITE_API_URL
   }/uploads/${sessionStorage.getItem("logo")}`;
@@ -22,45 +31,38 @@ function ShowroomNavbar() {
               <h1 className="list-none cursor-pointer font-bold text-[28px] text-[#00004b] leading-none">
                 RentRush
               </h1>
-              <span className="text-[14px] text-[#666] font-medium">
-                Showroom Dashboard
-              </span>
             </div>
           </Link>
         </div>
 
         {/* Center: Navigation Links */}
-        <div className="hidden md:flex items-center gap-10">
-          {[
-            { label: "Home", to: "/showroom/dashboard" },
-            { label: "Inventory", to: "/showroom/inventory" },
-            { label: "Maintenance", to: "/showroom/maintenance" },
-            { label: "Pending Payments", to: "/showroom/payments" },
-          ].map(({ label, to }) => (
+        <div className="hidden lg:flex items-center gap-12">
+          {navItems.map(({ label, to }) => (
             <Link
               key={label}
               to={to}
-              className="text-[18px] font-semibold text-[#444] hover:text-[#C17D3C] transition-all"
+              className={`relative text-lg font-medium transition-colors ${
+                location.pathname === to
+                  ? "text-orange-500"
+                  : "text-gray-600 hover:text-orange-500"
+              }`}
             >
               {label}
+              {location.pathname === to && (
+                <motion.div
+                  className="absolute -bottom-1 left-0 w-full h-0.5 bg-orange-500"
+                  layoutId="underline"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
             </Link>
           ))}
         </div>
 
         {/* Right: Showroom Details + Logout */}
         <div className="flex items-center gap-6">
-          {/* Showroom Info */}
-          <div className="hidden sm:flex items-center gap-3 pr-4 border-r">
-            <img
-              src={showroomLogoUrl}
-              alt="Showroom Logo"
-              className="h-11 w-11 rounded-full object-cover"
-            />
-            <span className="text-[17px] font-semibold text-[#1a1a2e] truncate max-w-[150px]">
-              {showroomName}
-            </span>
-          </div>
-
           {/* Logout Button */}
           <Link
             to="/login"

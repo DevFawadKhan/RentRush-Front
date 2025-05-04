@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FiDownload, FiEye, FiSearch, FiFilter } from "react-icons/fi";
-import Navbar from "../customer/Navbar";
-import Footer from "./Footer";
+import ShowroomNavbar from "./showroomNavbar";
+import Footer from "../Footer";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -42,7 +42,7 @@ const dummyInvoices = [
   },
 ];
 
-const InvoiceDashboard = () => {
+const ShowroomInvoiceDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +53,7 @@ const InvoiceDashboard = () => {
   const fetchInvoices = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${Base_Url}/api/getinvoice`, {
+      const response = await axios.get(`${Base_Url}/api/get-showroom-invoice`, {
         withCredentials: true,
       });
       setInvoices(response?.data?.data || []);
@@ -122,7 +122,7 @@ const InvoiceDashboard = () => {
 
   return (
     <>
-      <Navbar />
+      <ShowroomNavbar />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 text-center sm:text-left">
@@ -255,7 +255,7 @@ const InvoiceDashboard = () => {
                             {invoice.bookingId}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {invoice?.user?.ownerName}
+                            {invoice.user?.ownerName}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-500">
                             {invoice.carName}
@@ -317,4 +317,4 @@ const InvoiceDashboard = () => {
   );
 };
 
-export default InvoiceDashboard;
+export default ShowroomInvoiceDashboard;

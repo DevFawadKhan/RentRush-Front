@@ -18,8 +18,9 @@ const Showroom = ({ value, refectch }) => {
   const [selectedShowroom, setSelectedShowroom] = useState(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [nextStatus, setNextStatus] = useState("");
-  const [actionType, setActionType] = useState(""); // To track whether it's ban/activate or approve/reject
+  const [actionType, setActionType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
     const initialStatuses = {};
@@ -54,7 +55,6 @@ const Showroom = ({ value, refectch }) => {
         Toast("Showroom approval rejected!", "warn");
       } else Toast(response.data?.message, "success");
 
-      // Update the selected showroom's approval status
       setSelectedShowroom((prev) => ({
         ...prev,
         isApproved: approve,
@@ -85,46 +85,61 @@ const Showroom = ({ value, refectch }) => {
     refectch();
   };
 
-  // Filter showrooms for different sections
+  // Filter showrooms based on active tab
   const needApprovalShowrooms = value.filter(
     (showroom) => !showroom.isApproved
   );
-
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-
-  const newShowrooms = value.filter((showroom) => {
-    const createdAt = new Date(showroom.createdAt);
-    return createdAt > twoDaysAgo;
-  });
-
-  const filteredAllShowrooms = value.filter((showroom) =>
+  const bannedShowrooms = value.filter(
+    (showroom) => showroom.status.toLowerCase() === "banned"
+  );
+  const filteredShowrooms = value.filter((showroom) =>
     showroom.showroomName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const renderShowroomCard = (data) => (
-    <div
-      key={data._id}
-      onClick={() => {
-        setSelectedShowroom(data);
-        setIsModalOpen(true);
-      }}
-      className="cursor-pointer bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-center"
-    >
-      <h3 className="text-xl font-bold text-[#2A3F85] hover:text-[#1D2951]">
-        {data.showroomName}
-      </h3>
-    </div>
-  );
+  const getCurrentShowrooms = () => {
+    switch (activeTab) {
+      case "needApproval":
+        return needApprovalShowrooms;
+      case "banned":
+        return bannedShowrooms;
+      default:
+        return filteredShowrooms;
+    }
+  };
+
+  const renderShowroomCard = (data) => {
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    const createdAt = new Date(data.createdAt);
+    return (
+      <div
+        key={data._id}
+        onClick={() => {
+          setSelectedShowroom(data);
+          setIsModalOpen(true);
+        }}
+        className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-between transform hover:-translate-y-1"
+      >
+        <h3 className="text-lg font-semibold text-gray-800">
+          {data.showroomName}
+        </h3>
+        {createdAt > twoDaysAgo && (
+          <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            NEW
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <section className="mb-8 mx-10 w-full">
-      <h2 className="text-4xl font-bold text-[#394A9A] mb-6 text-center">
-        Showroom Accounts
+    <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Showroom Management
       </h2>
 
       {/* Search Input */}
-      <div className="max-w-lg mx-auto mb-10">
+      <div className="mb-8 max-w-md mx-auto">
         <div className="relative">
           <FontAwesomeIcon
             icon={faSearch}
@@ -135,171 +150,184 @@ const Showroom = ({ value, refectch }) => {
             placeholder="Search showrooms by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-3 pl-12 pr-4 rounded-full border-2 border-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-[#394A9A] focus:border-[#394A9A] transition-all text-sm"
+            className="w-full py-3 pl-12 pr-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm shadow-sm"
           />
         </div>
       </div>
 
-      {/* Need Approval Section */}
-      <div className="mb-12">
-        <h3 className="text-2xl font-semibold text-[#394A9A] mb-4">
-          Need Approval
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {needApprovalShowrooms.length > 0 ? (
-            needApprovalShowrooms.map(renderShowroomCard)
-          ) : (
-            <p className="text-gray-500 col-span-full text-center">
-              No showrooms need approval.
-            </p>
-          )}
+      {/* Tabs */}
+      <div className="mb-8">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+            {[
+              {
+                name: "All Showrooms",
+                key: "all",
+                count: filteredShowrooms.length,
+              },
+              {
+                name: "Need Approval",
+                key: "needApproval",
+                count: needApprovalShowrooms.length,
+              },
+              { name: "Banned", key: "banned", count: bannedShowrooms.length },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`${
+                  activeTab === tab.key
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-all duration-200`}
+              >
+                {tab.name}
+                <span
+                  className={`${
+                    activeTab === tab.key
+                      ? "bg-blue-100 text-blue-600"
+                      : "bg-gray-100 text-gray-600"
+                  } ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${tab.key === "needApproval" && tab.count !== 0 ? "bg-red-500 text-white" : ""}`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
 
-      {/* New Showrooms Section */}
-      <div className="mb-12">
-        <h3 className="text-2xl font-semibold text-[#394A9A] mb-4">
-          New Showrooms (Last 2 Days)
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {newShowrooms.length > 0 ? (
-            newShowrooms.map(renderShowroomCard)
-          ) : (
-            <p className="text-gray-500 col-span-full text-center">
-              No new showrooms in the last 2 days.
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* All Showrooms Section */}
-      <div>
-        <h3 className="text-2xl font-semibold text-[#394A9A] mb-4">
-          All Showrooms
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredAllShowrooms.length > 0 ? (
-            filteredAllShowrooms.map(renderShowroomCard)
-          ) : (
-            <p className="text-gray-500 col-span-full text-center">
-              No showrooms found.
-            </p>
-          )}
-        </div>
+      {/* Showroom Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {getCurrentShowrooms().length > 0 ? (
+          getCurrentShowrooms().map(renderShowroomCard)
+        ) : (
+          <p className="text-gray-500 col-span-full text-center py-8">
+            No showrooms found for this category.
+          </p>
+        )}
       </div>
 
       {/* Showroom Details Modal */}
       {isModalOpen && selectedShowroom && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-xl">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              {selectedShowroom.showroomName}
-            </h3>
-            <div className="space-y-2 text-gray-700">
-              <p>
-                <span className="font-semibold">Owner:</span>{" "}
-                {selectedShowroom.ownerName}
-              </p>
-              <p>
-                <span className="font-semibold">CNIC:</span>{" "}
-                {selectedShowroom.cnic}
-              </p>
-              <p>
-                <span className="font-semibold">Address:</span>{" "}
-                {selectedShowroom.address}
-              </p>
-              <p>
-                <span className="font-semibold">Approval Status:</span>{" "}
-                <span
-                  className={
-                    selectedShowroom.isApproved
-                      ? "text-green-600"
-                      : "text-yellow-600"
-                  }
-                >
-                  {selectedShowroom.isApproved ? "Approved" : "Pending"}
-                </span>
-              </p>
-              <p>
-                <span className="font-semibold">Status:</span>{" "}
-                <span
-                  className={
-                    statuses[selectedShowroom._id] === "active"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }
-                >
-                  {statuses[selectedShowroom._id] === "active"
-                    ? "Active"
-                    : "Banned"}
-                </span>
-              </p>
+        <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 hover:scale-[1.01]">
+            <div className="p-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-5 tracking-tight">
+                {selectedShowroom.showroomName}
+              </h3>
+              <div className="space-y-3 text-gray-700 text-sm">
+                <p className="flex items-center">
+                  <span className="font-semibold w-24">Owner:</span>
+                  <span>{selectedShowroom.ownerName}</span>
+                </p>
+                <p className="flex items-center">
+                  <span className="font-semibold w-24">CNIC:</span>
+                  <span>{selectedShowroom.cnic}</span>
+                </p>
+                <p className="flex items-center">
+                  <span className="font-semibold w-24">Address:</span>
+                  <span>{selectedShowroom.address}</span>
+                </p>
+                <p className="flex items-center">
+                  <span className="font-semibold w-24">Approval:</span>
+                  <span
+                    className={`${
+                      selectedShowroom.isApproved === 1
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    } font-medium`}
+                  >
+                    {selectedShowroom.isApproved === 1 ? "Approved" : "Pending"}
+                  </span>
+                </p>
+                {selectedShowroom.isApproved === 1 && (
+                  <p className="flex items-center">
+                    <span className="font-semibold w-24">Status:</span>
+                    <span
+                      className={`${
+                        statuses[selectedShowroom._id] === "active"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      } font-medium`}
+                    >
+                      {statuses[selectedShowroom._id] === "active"
+                        ? "Active"
+                        : "Banned"}
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="mt-6 flex flex-col gap-3">
-              {!selectedShowroom.isApproved && (
-                <>
+
+            <div className="bg-gray-50 px-6 py-4 rounded-b-2xl">
+              <div className="flex flex-wrap gap-3 justify-end">
+                {selectedShowroom.isApproved === 0 && (
+                  <>
+                    <button
+                      className="flex-1 min-w-[120px] py-2.5 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                      onClick={() =>
+                        openConfirmDialog(
+                          selectedShowroom._id,
+                          "approved",
+                          "approve"
+                        )
+                      }
+                    >
+                      <FontAwesomeIcon icon={faCheck} />
+                      Approve
+                    </button>
+                    <button
+                      className="flex-1 min-w-[120px] py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                      onClick={() =>
+                        openConfirmDialog(
+                          selectedShowroom._id,
+                          "rejected",
+                          "approve"
+                        )
+                      }
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                      Reject
+                    </button>
+                  </>
+                )}
+                {selectedShowroom.isApproved === 1 && (
                   <button
-                    className="w-full py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold transition-colors duration-200"
+                    className={`flex-1 min-w-[120px] py-2.5 px-4 ${
+                      statuses[selectedShowroom._id] === "active"
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-green-600 hover:bg-green-700"
+                    } text-white rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2`}
                     onClick={() =>
                       openConfirmDialog(
                         selectedShowroom._id,
-                        "approved",
-                        "approve"
+                        statuses[selectedShowroom._id] === "active"
+                          ? "banned"
+                          : "active",
+                        "ban"
                       )
                     }
                   >
-                    <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                    Approve Showroom
+                    <FontAwesomeIcon
+                      icon={
+                        statuses[selectedShowroom._id] === "active"
+                          ? faBan
+                          : faCheck
+                      }
+                    />
+                    {statuses[selectedShowroom._id] === "active"
+                      ? "Ban"
+                      : "Activate"}
                   </button>
-                  <button
-                    className="w-full py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-200"
-                    onClick={() =>
-                      openConfirmDialog(
-                        selectedShowroom._id,
-                        "rejected",
-                        "approve"
-                      )
-                    }
-                  >
-                    <FontAwesomeIcon icon={faTimes} className="mr-2" />
-                    Reject Showroom
-                  </button>
-                </>
-              )}
-              <button
-                className={`w-full py-2 rounded-lg text-white font-semibold transition-colors duration-200 ${
-                  statuses[selectedShowroom._id] === "active"
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-green-500 hover:bg-green-600"
-                }`}
-                onClick={() =>
-                  openConfirmDialog(
-                    selectedShowroom._id,
-                    statuses[selectedShowroom._id] === "active"
-                      ? "banned"
-                      : "active",
-                    "ban"
-                  )
-                }
-              >
-                <FontAwesomeIcon
-                  icon={
-                    statuses[selectedShowroom._id] === "active"
-                      ? faBan
-                      : faCheck
-                  }
-                  className="mr-2"
-                />
-                {statuses[selectedShowroom._id] === "active"
-                  ? "Ban Showroom"
-                  : "Activate Showroom"}
-              </button>
-              <button
-                className="w-full py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Close
-              </button>
+                )}
+                <button
+                  className="flex-1 min-w-[120px] py-2.5 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors duration-200"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
