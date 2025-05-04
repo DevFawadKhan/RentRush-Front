@@ -43,14 +43,14 @@ function ShowroomNavbar() {
               to={to}
               className={`relative text-lg font-medium transition-colors ${
                 location.pathname === to
-                  ? "text-orange-500"
-                  : "text-gray-600 hover:text-orange-500"
+                  ? "text-[#C17D3C]"
+                  : "text-gray-600 hover:text-[#C17D3C]"
               }`}
             >
               {label}
               {location.pathname === to && (
                 <motion.div
-                  className="absolute -bottom-1 left-0 w-full h-0.5 bg-orange-500"
+                  className="absolute -bottom-1 left-0 w-full h-0.5 bg-[#C17D3C]"
                   layoutId="underline"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
