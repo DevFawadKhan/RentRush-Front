@@ -51,7 +51,7 @@ const Showrooms = () => {
             Explore Our Showrooms
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover our exclusive collection across our premium locations
+            Discover Our Showrooms Collection Across Different Locations
           </p>
         </div>
 

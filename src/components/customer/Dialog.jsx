@@ -1,6 +1,7 @@
+import { FileCheckIcon } from "lucide-react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { FiAlertTriangle, FiClock, FiX } from "react-icons/fi";
+import { FiAlertTriangle, FiCheck, FiCheckCircle, FiClock, FiX } from "react-icons/fi";
 
 const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate,Status }) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -150,7 +151,7 @@ const BookingProgressBar = ({ startTime, endTime, StartDate, EndDate,Status }) =
       case "error":
         return <FiAlertTriangle className="mr-1" />;
       case "returned":
-        return <FiClock className="mr-1" />;
+        return <FiCheckCircle className="mr-1" />;
       default:
         return null;
     }

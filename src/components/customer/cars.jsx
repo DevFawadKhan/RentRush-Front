@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserCard from "./userCard.jsx";
 import Navbar from "./Navbar";
 import { Search } from "lucide-react";
