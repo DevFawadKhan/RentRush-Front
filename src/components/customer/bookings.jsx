@@ -43,9 +43,9 @@ const UserBookings = () => {
 
   // Filter options
   const filterOptions = [
-    { value: "all", label: "All Bookings", icon: <FiCalendar className="mr-2" /> },
     { value: "current", label: "Current Bookings", icon: <FiClock className="mr-2" /> },
-    { value: "past", label: "Past Bookings", icon: <FiArchive className="mr-2" /> }
+    { value: "past", label: "Past Bookings", icon: <FiArchive className="mr-2" /> },
+    { value: "all", label: "All Bookings", icon: <FiCalendar className="mr-2" /> }
   ];
 
   const handleSeeDetails = (booking) => {
@@ -95,8 +95,7 @@ const UserBookings = () => {
 
   useEffect(() => {
     if (selectedBookingDetails) {
-      const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime,
-         } =
+      const { rentalStartDate, rentalEndDate, rentalStartTime, rentalEndTime } =
         selectedBookingDetails;
 
       const convertTo24HourFormat = (time) => {
@@ -292,10 +291,10 @@ const UserBookings = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
         <Navbar />
         <div className="flex-grow flex items-center justify-center">
-          <div className="text-center">
+          <div className="text-center bg-white p-8 rounded-xl shadow-lg">
             <FiLoader className="animate-spin text-4xl text-blue-600 mx-auto mb-4" />
             <p className="text-lg text-gray-600">Loading your bookings...</p>
           </div>
@@ -306,16 +305,16 @@ const UserBookings = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
         <Navbar />
         <div className="flex-grow flex items-center justify-center px-4">
-          <div className="max-w-md text-center bg-white p-8 rounded-xl shadow-md">
+          <div className="max-w-md text-center bg-white p-8 rounded-xl shadow-lg">
             <FiAlertCircle className="text-5xl text-red-500 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Oops!</h3>
             <p className="text-gray-600 mb-6">{error}</p>
             <Link
               to="/cars"
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-300 inline-block"
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition duration-300 inline-block shadow-md hover:shadow-lg"
             >
               Browse Available Cars
             </Link>
@@ -327,397 +326,397 @@ const UserBookings = () => {
 
   return (
     <>
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Navbar />
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">
-            Your Bookings
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {bookings.length > 0
-              ? "Manage and view your booking history"
-              : "You don't have any bookings yet"}
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <Navbar />
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">
+              Your Bookings
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {bookings.length > 0
+                ? "Manage and view your booking history"
+                : "You don't have any bookings yet"}
+            </p>
+          </div>
+
+          {bookings.length > 0 && (
+            <div className="flex justify-end mb-5 relative">
+              <button
+                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              >
+                <FiFilter className="mr-2" />
+                {filterOptions.find(opt => opt.value === filter)?.label || "Filter"}
+              </button>
+              
+              {showFilterDropdown && (
+                <div className="absolute top-12 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    {filterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setFilter(option.value);
+                          setShowFilterDropdown(false);
+                        }}
+                        className={`flex items-center w-full px-4 py-2 text-left text-sm ${
+                          filter === option.value
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-100"
+                        } transition-colors duration-150`}
+                      >
+                        {option.icon}
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {filteredBookings.length === 0 ? (
+            <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto text-center">
+              {filter === "all" ? (
+                <>
+                  <FiCalendar className="text-5xl text-blue-500 mx-auto mb-4" />
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                    No Bookings Found
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    It looks like you haven't made any bookings yet. Start by browsing
+                    our available cars.
+                  </p>
+                  <Link
+                    to="/cars"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition duration-300 inline-block shadow-md hover:shadow-lg"
+                  >
+                    Explore Cars
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <FiCalendar className="text-5xl text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                    No {filterOptions.find(opt => opt.value === filter)?.label} Found
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    You don't have any {filter === "current" ? "current" : "past"} bookings.
+                    {filter === "current" && " All your bookings might be completed or upcoming."}
+                  </p>
+                  <button
+                    onClick={() => setFilter("all")}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition duration-300 inline-block shadow-md hover:shadow-lg"
+                  >
+                    View All Bookings
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredBookings.map((booking) => {
+                if (!booking.carDetails) return null;
+
+                const CurrentDate = new Date();
+                const BookingStartDate = new Date(booking?.rentalStartDate);
+                const BookingEndDate = new Date(booking?.rentalEndDate);
+
+                const [time, modifier] = booking?.StartTime.split(" ");
+                let [hours, minutes] = time.split(":").map(Number);
+                if (modifier === "PM" && hours !== 12) hours += 12;
+                if (modifier === "AM" && hours === 12) hours = 0;
+                BookingStartDate.setHours(hours, minutes, 0);
+
+                const [time1, modifier1] = booking?.rentalEndTime.split(" ");
+                let [hours1, minutes1] = time1.split(":").map(Number);
+                if (modifier1 === "PM" && hours1 !== 12) hours1 += 12;
+                if (modifier1 === "AM" && hours1 === 12) hours1 = 0;
+                BookingEndDate.setHours(hours1, minutes1, 0);
+
+                return (
+                  <BookingCard
+                    key={booking._id}
+                    booking={booking}
+                    handleSeeDetails={handleSeeDetails}
+                    ReturnCar={ReturnCar}
+                    setModelOpen={setModelOpen}
+                    setSelectedBooking={setSelectedBooking}
+                    setShowDialog={setShowDialog}
+                    openDialog={openDialog}
+                    ModelOpen={ModelOpen}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {bookings.length > 0 && (
-          <div className="flex justify-end mb-8 relative">
-            <button
-              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-              className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <FiFilter className="mr-2" />
-              {filterOptions.find(opt => opt.value === filter)?.label || "Filter"}
-            </button>
-            
-            {showFilterDropdown && (
-              <div className="absolute top-12 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
-                  {filterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setFilter(option.value);
-                        setShowFilterDropdown(false);
-                      }}
-                      className={`flex items-center w-full px-4 py-2 text-left text-sm ${
-                        filter === option.value
-                          ? "bg-blue-50 text-blue-700"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {option.icon}
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {filteredBookings.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-md p-8 max-w-2xl mx-auto text-center">
-            {filter === "all" ? (
-              <>
-                <FiCalendar className="text-5xl text-blue-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">
-                  No Bookings Found
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  It looks like you haven't made any bookings yet. Start by browsing
-                  our available cars.
-                </p>
-                <Link
-                  to="/cars"
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-300 inline-block"
-                >
-                  Explore Cars
-                </Link>
-              </>
-            ) : (
-              <>
-                <FiCalendar className="text-5xl text-gray-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">
-                  No {filterOptions.find(opt => opt.value === filter)?.label} Found
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  You don't have any {filter === "current" ? "current" : "past"} bookings.
-                  {filter === "current" && " All your bookings might be completed or upcoming."}
-                </p>
-                <button
-                  onClick={() => setFilter("all")}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-300 inline-block"
-                >
-                  View All Bookings
-                </button>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBookings.map((booking) => {
-              if (!booking.carDetails) return null;
-
-              const CurrentDate = new Date();
-              const BookingStartDate = new Date(booking?.rentalStartDate);
-              const BookingEndDate = new Date(booking?.rentalEndDate);
-
-              const [time, modifier] = booking?.StartTime.split(" ");
-              let [hours, minutes] = time.split(":").map(Number);
-              if (modifier === "PM" && hours !== 12) hours += 12;
-              if (modifier === "AM" && hours === 12) hours = 0;
-              BookingStartDate.setHours(hours, minutes, 0);
-
-              const [time1, modifier1] = booking?.rentalEndTime.split(" ");
-              let [hours1, minutes1] = time1.split(":").map(Number);
-              if (modifier1 === "PM" && hours1 !== 12) hours1 += 12;
-              if (modifier1 === "AM" && hours1 === 12) hours1 = 0;
-              BookingEndDate.setHours(hours1, minutes1, 0);
-
-              return (
-                <BookingCard
-                  key={booking._id}
-                  booking={booking}
-                  handleSeeDetails={handleSeeDetails}
-                  ReturnCar={ReturnCar}
-                  setModelOpen={setModelOpen}
-                  setSelectedBooking={setSelectedBooking}
-                  setShowDialog={setShowDialog}
-                  openDialog={openDialog}
-                  ModelOpen={ModelOpen}
-                />
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Details Modal */}
-      {showDetailsModal && car && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl relative w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
-            <button
-              onClick={closeDetailsModal}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition p-2 rounded-full hover:bg-gray-100"
-            >
-              <FiX className="text-2xl" />
-            </button>
-            <div className="p-8">
-              <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">
-                {car.carBrand} {car.carModel}
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="space-y-6">
-                  <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
-                      Vehicle Details
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Model:</span>
-                        <span className="font-medium">{car.carModel}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Year:</span>
-                        <span className="font-medium">{car.carYear}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Color:</span>
-                        <span className="font-medium">{car.carColor}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Fuel Type:</span>
-                        <span className="font-medium">{car.fuelType}</span>
+        {/* Details Modal */}
+        {showDetailsModal && car && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-2xl relative w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
+              <button
+                onClick={closeDetailsModal}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition p-2 rounded-full hover:bg-gray-100"
+              >
+                <FiX className="text-2xl" />
+              </button>
+              <div className="p-8">
+                <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">
+                  {car.carBrand} {car.carModel}
+                </h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="space-y-6">
+                    <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                      <h3 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+                        Vehicle Details
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Model:</span>
+                          <span className="font-medium">{car.carModel}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Year:</span>
+                          <span className="font-medium">{car.carYear}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Color:</span>
+                          <span className="font-medium">{car.carColor}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Fuel Type:</span>
+                          <span className="font-medium">{car.fuelType}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+                      Gallery
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {car.images?.map((img, index) => (
+                        <img
+                          key={index}
+                          src={`http://localhost:3000/uploads/${img}`}
+                          alt={`Car ${index}`}
+                          className="w-full h-40 object-cover rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                
-                <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                  <h3 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
-                    Gallery
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Confirmation Dialog */}
+        {ShowDialog && (
+          <ConfirmationDialog
+            message="Are you sure you want to cancel this booking?"
+            onCancel={() => setShowDialog(false)}
+            onConfirm={() => CancleFunction(selectedBooking)}
+          />
+        )}
+
+        {/* Booking Details Dialog */}
+        {isDialogOpen && selectedBookingDetails && (
+          <Dialog
+            isOpen={isDialogOpen}
+            onClose={closeDialog}
+            car={selectedBookingDetails.carDetails}
+            showroom={selectedBookingDetails.showroomDetails}
+            bookingDetails={{
+              customerName: selectedBookingDetails.customerName,
+              startDateTime: selectedBookingDetails.rentalStartDate,
+              endDateTime: selectedBookingDetails.rentalEndDate,
+              starttime: selectedBookingDetails.rentalStartTime,
+              endtime: selectedBookingDetails.rentalEndTime,
+              BookingStatus:selectedBookingDetails.status
+            }}
+            progress={progress}
+          />
+        )}
+        {/* Maintenance Modal */}
+        {showMaintenanceModal && maintenanceDetails && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-2xl relative w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
+              <button
+                onClick={() => setShowMaintenanceModal(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition p-2 rounded-full hover:bg-gray-100"
+              >
+                <FiX className="text-2xl" />
+              </button>
+              
+              <div className="p-8">
+                <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
+                  Maintenance Details
+                </h2>
+                <p className="text-center text-gray-600 mb-8">
+                  Here's the maintenance history for your booking
+                </p>
+
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-8">
+                  <h3 className="text-xl font-semibold text-blue-800 mb-4">
+                    Booking Summary
                   </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {car.images?.map((img, index) => (
-                      <img
-                        key={index}
-                        src={`http://localhost:3000/uploads/${img}`}
-                        alt={`Car ${index}`}
-                        className="w-full h-40 object-cover rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
-                      />
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-gray-600">Booking ID:</p>
+                      <p className="font-medium text-gray-900">
+                        {selectedBookingDetails._id}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Showroom:</p>
+                      <p className="font-medium text-gray-900">
+                        {selectedBookingDetails.showroomDetails.showroomName}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Vehicle:</p>
+                      <p className="font-medium text-gray-900">
+                        {selectedBookingDetails.carDetails.carBrand}{" "}
+                        {selectedBookingDetails.carDetails.carModel}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Rental Period:</p>
+                      <p className="font-medium text-gray-900">
+                        {new Date(
+                          selectedBookingDetails.rentalStartDate
+                        ).toLocaleDateString()}{" "}
+                        <FiClock className="inline ml-1 mr-1" />
+                        {selectedBookingDetails.rentalStartTime} -{" "}
+                        {new Date(
+                          selectedBookingDetails.rentalEndDate
+                        ).toLocaleDateString()}{" "}
+                        <FiClock className="inline ml-1 mr-1" />
+                        {selectedBookingDetails.rentalEndTime}
+                      </p>
+                    </div>
                   </div>
+                </div>
+
+                <div className="mb-8">
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
+                    Maintenance Logs
+                  </h3>
+                  
+                  {maintenanceDetails.length > 0 ? (
+                    <div className="space-y-6">
+                      {maintenanceDetails.map((log, index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-md transition"
+                        >
+                          <div className="flex justify-between items-start mb-4">
+                            <h4 className="text-lg font-semibold text-gray-800">
+                              Maintenance #{index + 1}
+                            </h4>
+                            <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                              {new Date(log.date).toLocaleDateString()}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                              <h5 className="font-medium text-gray-700 mb-2 flex items-center">
+                                <FiClock className="mr-2" /> Tasks Performed
+                              </h5>
+                              <ul className="space-y-2">
+                                {Object.entries(log.tasks[0])
+                                  .filter(([_, value]) => value === false)
+                                  .map(([key], taskIndex) => (
+                                    <li key={taskIndex} className="capitalize">
+                                      • {key}
+                                    </li>
+                                  ))}
+                              </ul>
+                            </div>
+
+                            <div>
+                              <h5 className="font-medium text-gray-700 mb-2 flex items-center">
+                                <FiClock className="mr-2" /> Descriptions
+                              </h5>
+                              <ul className="space-y-2">
+                                {log.repairDescriptions.length > 0 &&
+                                  Object.entries(log.repairDescriptions[0]).map(
+                                    ([part, description], descIndex) => (
+                                      <li key={descIndex}>
+                                        <span className="font-medium capitalize">
+                                          {part}:
+                                        </span>{" "}
+                                        {description}
+                                      </li>
+                                    )
+                                  )}
+                              </ul>
+                            </div>
+
+                            <div>
+                              <h5 className="font-medium text-gray-700 mb-2 flex items-center">
+                                <FiClock className="mr-2" /> Costs
+                              </h5>
+                              <ul className="space-y-2">
+                                {log.repairCosts.length > 0 &&
+                                  Object.entries(log.repairCosts[0]).map(
+                                    ([part, cost], costIndex) => (
+                                      <li key={costIndex}>
+                                        <span className="font-medium capitalize">
+                                          {part}:
+                                        </span>{" "}
+                                        Rs. {cost.toLocaleString()}
+                                      </li>
+                                    )
+                                  )}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
+                      <p className="text-yellow-800 font-medium">
+                        No maintenance logs found for this booking.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+                  <button
+                    onClick={() =>
+                      handleViewInvoice(selectedBookingDetails.currentInvoiceUrl)
+                    }
+                    className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition shadow-md hover:shadow-lg"
+                  >
+                    <FiEye className="mr-2" /> View Invoice
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleDownloadInvoice(
+                        selectedBookingDetails.currentInvoiceUrl
+                      )
+                    }
+                    className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-medium rounded-lg transition shadow-md hover:shadow-lg"
+                  >
+                    <FiDownload className="mr-2" /> Download Invoice
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Confirmation Dialog */}
-      {ShowDialog && (
-        <ConfirmationDialog
-          message="Are you sure you want to cancel this booking?"
-          onCancel={() => setShowDialog(false)}
-          onConfirm={() => CancleFunction(selectedBooking)}
-        />
-      )}
-
-      {/* Booking Details Dialog */}
-      {isDialogOpen && selectedBookingDetails && (
-        <Dialog
-          isOpen={isDialogOpen}
-          onClose={closeDialog}
-          car={selectedBookingDetails.carDetails}
-          showroom={selectedBookingDetails.showroomDetails}
-          bookingDetails={{
-            customerName: selectedBookingDetails.customerName,
-            startDateTime: selectedBookingDetails.rentalStartDate,
-            endDateTime: selectedBookingDetails.rentalEndDate,
-            starttime: selectedBookingDetails.rentalStartTime,
-            endtime: selectedBookingDetails.rentalEndTime,
-            BookingStatus:selectedBookingDetails.status
-          }}
-          progress={progress}
-        />
-      )}
-      {/* Maintenance Modal */}
-      {showMaintenanceModal && maintenanceDetails && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl relative w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
-            <button
-              onClick={() => setShowMaintenanceModal(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition p-2 rounded-full hover:bg-gray-100"
-            >
-              <FiX className="text-2xl" />
-            </button>
-            
-            <div className="p-8">
-              <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
-                Maintenance Details
-              </h2>
-              <p className="text-center text-gray-600 mb-8">
-                Here's the maintenance history for your booking
-              </p>
-
-              <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-8">
-                <h3 className="text-xl font-semibold text-blue-800 mb-4">
-                  Booking Summary
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-gray-600">Booking ID:</p>
-                    <p className="font-medium text-gray-900">
-                      {selectedBookingDetails._id}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Showroom:</p>
-                    <p className="font-medium text-gray-900">
-                      {selectedBookingDetails.showroomDetails.showroomName}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Vehicle:</p>
-                    <p className="font-medium text-gray-900">
-                      {selectedBookingDetails.carDetails.carBrand}{" "}
-                      {selectedBookingDetails.carDetails.carModel}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Rental Period:</p>
-                    <p className="font-medium text-gray-900">
-                      {new Date(
-                        selectedBookingDetails.rentalStartDate
-                      ).toLocaleDateString()}{" "}
-                      <FiClock className="inline ml-1 mr-1" />
-                      {selectedBookingDetails.rentalStartTime} -{" "}
-                      {new Date(
-                        selectedBookingDetails.rentalEndDate
-                      ).toLocaleDateString()}{" "}
-                      <FiClock className="inline ml-1 mr-1" />
-                      {selectedBookingDetails.rentalEndTime}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
-                  Maintenance Logs
-                </h3>
-                
-                {maintenanceDetails.length > 0 ? (
-                  <div className="space-y-6">
-                    {maintenanceDetails.map((log, index) => (
-                      <div
-                        key={index}
-                        className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-md transition"
-                      >
-                        <div className="flex justify-between items-start mb-4">
-                          <h4 className="text-lg font-semibold text-gray-800">
-                            Maintenance #{index + 1}
-                          </h4>
-                          <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                            {new Date(log.date).toLocaleDateString()}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          <div>
-                            <h5 className="font-medium text-gray-700 mb-2 flex items-center">
-                              <FiClock className="mr-2" /> Tasks Performed
-                            </h5>
-                            <ul className="space-y-2">
-                              {Object.entries(log.tasks[0])
-                                .filter(([_, value]) => value === false)
-                                .map(([key], taskIndex) => (
-                                  <li key={taskIndex} className="capitalize">
-                                    • {key}
-                                  </li>
-                                ))}
-                            </ul>
-                          </div>
-
-                          <div>
-                            <h5 className="font-medium text-gray-700 mb-2 flex items-center">
-                              <FiClock className="mr-2" /> Descriptions
-                            </h5>
-                            <ul className="space-y-2">
-                              {log.repairDescriptions.length > 0 &&
-                                Object.entries(log.repairDescriptions[0]).map(
-                                  ([part, description], descIndex) => (
-                                    <li key={descIndex}>
-                                      <span className="font-medium capitalize">
-                                        {part}:
-                                      </span>{" "}
-                                      {description}
-                                    </li>
-                                  )
-                                )}
-                            </ul>
-                          </div>
-
-                          <div>
-                            <h5 className="font-medium text-gray-700 mb-2 flex items-center">
-                              <FiClock className="mr-2" /> Costs
-                            </h5>
-                            <ul className="space-y-2">
-                              {log.repairCosts.length > 0 &&
-                                Object.entries(log.repairCosts[0]).map(
-                                  ([part, cost], costIndex) => (
-                                    <li key={costIndex}>
-                                      <span className="font-medium capitalize">
-                                        {part}:
-                                      </span>{" "}
-                                      Rs. {cost.toLocaleString()}
-                                    </li>
-                                  )
-                                )}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
-                    <p className="text-yellow-800 font-medium">
-                      No maintenance logs found for this booking.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-                <button
-                  onClick={() =>
-                    handleViewInvoice(selectedBookingDetails.currentInvoiceUrl)
-                  }
-                  className="flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
-                >
-                  <FiEye className="mr-2" /> View Invoice
-                </button>
-                <button
-                  onClick={() =>
-                    handleDownloadInvoice(
-                      selectedBookingDetails.currentInvoiceUrl
-                    )
-                  }
-                  className="flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition"
-                >
-                  <FiDownload className="mr-2" /> Download Invoice
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-    <Footer />
+        )}
+      </div>
+      <Footer />
     </>
   );
 };

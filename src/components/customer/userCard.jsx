@@ -255,7 +255,7 @@ const UserCard = ({ car, handleRefetch }) => {
                       <td className="border p-2">{car.fuelType} </td>
                     </tr>
                     <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Price</td>
+                      <td className="border p-2 font-bold">Rental Price</td>
                       <td className="border p-2 font-bold">
                         {car.rentRate} rs/Day
                       </td>
