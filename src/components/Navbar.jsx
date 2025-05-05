@@ -12,9 +12,9 @@ const Navbar = () => {
   const navLinks = [
     { id: "Home", text: "Home", path: "/" },
     { id: "steps", text: "How It Works", path: "/#steps" },
-    { id: "Documents", text: "Documents", path: null },
-    { id: "detail", text: "Why Choose Us", path: null },
-    { id: "rent", text: "Testimonials", path: null },
+    { id: "Documents", text: "Rental Details", path: "/#steps" },
+    { id: "detail", text: "Why Choose Us", path: "/#steps" },
+    { id: "rent", text: "Testimonials", path: "/#steps" },
   ];
 
   return (
@@ -59,7 +59,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* Register Dropdown */}
             <div className="relative group hidden md:block">
-              <button className="flex items-center space-x-1 px-4 py-2 rounded-full text-5l font-medium text-[#00004b] bg-white border border-gray-200 hover:border-[#C17D3C] hover:text-[#C17D3C] transition-all duration-200 shadow-sm">
+              <button className="flex items-center space-x-1 px-5 py-2 rounded-full text-5l font-medium text-[#00004b] bg-white border border-gray-200 hover:border-[#C17D3C] hover:text-[#C17D3C] transition-all duration-200 shadow-sm">
                 <span>Register</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
