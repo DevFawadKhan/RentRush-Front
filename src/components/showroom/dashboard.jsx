@@ -108,7 +108,7 @@ const ShowroomDashboard = () => {
             <img
               src={showroomLogoUrl}
               alt="Showroom Logo"
-              className="h-14 w-14 rounded-[10px] border-2 border-gray-200 shadow-sm mr-2"
+              className="h-20 w-22 rounded-[10px] border-2 border-gray-200 shadow-sm mr-2"
             />
             <div className="flex flex-col">
               <h2 className="text-xl md:text-2xl font-bold text-gray-800 tracking-tight">

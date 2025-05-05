@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-
 import { Link } from "react-router-dom";
 
 function ShowroomNavbar() {
@@ -25,7 +24,7 @@ function ShowroomNavbar() {
             <img
               src="/src/assets/logo.png"
               alt="Logo"
-              className="-my-3 h-[80px] mr-2"
+              className="-my-3 h-[100px] mr-2"
             />
             <div className="flex flex-col">
               <h1 className="list-none cursor-pointer font-bold text-[28px] text-[#00004b] leading-none">
