@@ -171,112 +171,143 @@ const UserCard = ({ car, handleRefetch }) => {
         </div>
 
         {showDetailsModal && (
-          <div
-            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
-            onClick={closeDetailsModal} // Close modal when clicking outside
-          >
-            <div
-              className="bg-white p-6 rounded-lg relative w-11/12 md:w-3/4 lg:w-1/2 h-auto max-h-[90vh] overflow-y-auto shadow-lg"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+  <div
+    className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-300 animate-fadeIn"
+    onClick={closeDetailsModal}
+  >
+    <div
+      className="bg-white p-6 rounded-xl relative w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 h-[85vh] max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all duration-300 animate-scaleIn"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Close Button */}
+      <button
+        onClick={closeDetailsModal}
+        className="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl transition-colors duration-200 hover:scale-110"
+      >
+        &times;
+      </button>
+
+      {/* Large Centered Car Image with Name Overlay */}
+      <div className="relative mb-8 rounded-xl overflow-hidden h-64 md:h-30 flex items-center justify-center">
+        {car.images?.length > 0 ? (
+          <img
+            src={`http://localhost:3000/uploads/${car.images[0]}`}
+            alt={car.name}
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <img
+            src={car.image}
+            alt={car.name}
+            className="w-full h-full object-contain"
+          />
+        )}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
+            {car.carBrand} {car.carModel}
+          </h2>
+        </div>
+      </div>
+
+      {/* Thumbnail Gallery */}
+      {car.images?.length > 1 && (
+        <div className="flex gap-3 mb-8 overflow-x-auto py-2">
+          {car.images.map((img, index) => (
+            <button
+              key={index}
+              className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-[#C17D3C] transition-all"
+              onClick={() => {
+                // Logic to change main image when thumbnail is clicked
+                const newImages = [...car.images];
+                [newImages[0], newImages[index]] = [newImages[index], newImages[0]];
+                // Update car images state here
+              }}
             >
-              {/* Close Button */}
-              <button
-                onClick={closeDetailsModal}
-                className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
-              >
-                &times;
-              </button>
+              <img
+                src={`http://localhost:3000/uploads/${img}`}
+                alt={`Thumbnail ${index}`}
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
-              {/* Car Name */}
-              <h2 className="text-3xl font-bold text-center mb-4">
-                {car.name}
-              </h2>
+      {/* Car Details */}
+      <div className="space-y-6">
+        {/* Key Specifications */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-500">Brand</p>
+            <p className="font-semibold">{car.carBrand}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-500">Model</p>
+            <p className="font-semibold">{car.carModel}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-500">Color</p>
+            <p className="font-semibold">{car.color}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-500">Mileage</p>
+            <p className="font-semibold">{car.mileage} miles</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-500">Body Type</p>
+            <p className="font-semibold">{car.bodyType}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-500">Transmission</p>
+            <p className="font-semibold">{car.transmission}</p>
+          </div>
+        </div>
 
-              {
-                <div className="flex justify-center gap-3 mb-6 flex-wrap">
-                  {car.images?.length > 0
-                    ? car.images.map((img, index) => (
-                        <img
-                          key={index}
-                          src={`http://localhost:3000/uploads/${img}`}
-                          alt={`Car ${index}`}
-                          className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
-                        />
-                      ))
-                    : [...Array(4)].map((_, i) => (
-                        <img
-                          key={i}
-                          src={car.image}
-                          alt={`Car Image ${i}`}
-                          className="w-20 h-16 md:w-24 md:h-20 object-cover rounded-lg border shadow-md"
-                        />
-                      ))}
-                </div>
-              }
-
-              {/* Car Details Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border text-20px">
-                  <tbody>
-                  <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Brand</td>
-                      <td className="border p-2">{car.carBrand}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Model</td>
-                      <td className="border p-2">{car.carModel}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Color</td>
-                      <td className="border p-2">{car.color}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Mileage</td>
-                      <td className="border p-2">{car.mileage} miles</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Body Type</td>
-                      <td className="border p-2">{car.bodyType}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Transmission</td>
-                      <td className="border p-2">{car.transmission}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Engine Type</td>
-                      <td className="border p-2">{car.engineType || "N/A"}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">
-                        Registration Year
-                      </td>
-                      <td className="border p-2">{car.year || "N/A"}</td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Seat Capacity</td>
-                      <td className="border p-2">{car.seatCapacity} </td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Luggage Capacity</td>
-                      <td className="border p-2">{car.luggageCapacity} </td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Fuel Type</td>
-                      <td className="border p-2">{car.fuelType} </td>
-                    </tr>
-                    <tr className="hover:bg-gray-50">
-                      <td className="border p-2 font-bold">Rental Price</td>
-                      <td className="border p-2 font-bold">
-                        {car.rentRate} rs/Day
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+         {/* Additional Details */}
+         <div className="bg-gray-50 p-6 rounded-xl">
+          <h3 className="text-xl font-semibold mb-4 text-[#00004b]">Additional Information</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-500">Engine Type</p>
+              <p className="font-medium">{car.engineType || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Registration Year</p>
+              <p className="font-medium">{car.year || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Seat Capacity</p>
+              <p className="font-medium">{car.seatCapacity}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Luggage Capacity</p>
+              <p className="font-medium">{car.luggageCapacity}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Fuel Type</p>
+              <p className="font-medium">{car.fuelType}</p>
             </div>
           </div>
-        )}
+        </div>
 
+        {/* Price Section */}
+        <div className="bg-[#C17D3C]/10 p-4 rounded-lg border border-[#C17D3C]/30">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+              <p className="text-sm text-[#C17D3C]">Daily Rental Rate</p>
+              <p className="text-2xl font-bold text-[#00004b]">
+                {car.rentRate} rs/Day
+              </p>
+            </div>
+            <button className="bg-[#C17D3C] text-white px-8 py-3 rounded-lg hover:bg-[#A56A33] transition-colors duration-200 shadow-md w-full md:w-auto">
+              Book Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         {showBookingModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg relative h-auto w-96">

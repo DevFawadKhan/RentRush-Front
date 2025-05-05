@@ -17,7 +17,8 @@ import {
   FiX,
   FiFilter,
   FiClock,
-  FiCheckCircle,
+  // FiCheckCircle,
+  FiChevronDown,
   FiArchive
 } from "react-icons/fi";
 
@@ -43,9 +44,9 @@ const UserBookings = () => {
 
   // Filter options
   const filterOptions = [
+    { value: "all", label: "All Bookings", icon: <FiCalendar className="mr-2" /> },
     { value: "current", label: "Current Bookings", icon: <FiClock className="mr-2" /> },
-    { value: "past", label: "Past Bookings", icon: <FiArchive className="mr-2" /> },
-    { value: "all", label: "All Bookings", icon: <FiCalendar className="mr-2" /> }
+    { value: "past", label: "Past Bookings", icon: <FiArchive className="mr-2" /> }
   ];
 
   const handleSeeDetails = (booking) => {
@@ -329,52 +330,62 @@ const UserBookings = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <Navbar />
         <div className="container mx-auto px-4 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">
-              Your Bookings
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {bookings.length > 0
-                ? "Manage and view your booking history"
-                : "You don't have any bookings yet"}
-            </p>
-          </div>
+        <div className="mb-8">
+  {/* Header with improved spacing and visual hierarchy */}
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+    <div className="text-center md:text-left">
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+        Your Bookings
+      </h1>
+      <p className="text-lg text-gray-600">
+        {bookings.length > 0
+          ? "Manage and view your booking history"
+          : "You don't have any bookings yet"}
+      </p>
+    </div>
 
-          {bookings.length > 0 && (
-            <div className="flex justify-end mb-5 relative">
-              <button
-                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-                className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-              >
-                <FiFilter className="mr-2" />
-                {filterOptions.find(opt => opt.value === filter)?.label || "Filter"}
-              </button>
-              
-              {showFilterDropdown && (
-                <div className="absolute top-12 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="py-1">
-                    {filterOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          setFilter(option.value);
-                          setShowFilterDropdown(false);
-                        }}
-                        className={`flex items-center w-full px-4 py-2 text-left text-sm ${
-                          filter === option.value
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-700 hover:bg-gray-100"
-                        } transition-colors duration-150`}
-                      >
-                        {option.icon}
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+    {/* Filter button with enhanced styling */}
+    {bookings.length > 0 && (
+      <div className="relative flex justify-center md:justify-end">
+        <button
+          onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+          className="flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#C17D3C] transition-all duration-200 text-gray-700"
+        >
+          <FiFilter className="mr-2 text-[#C17D3C]" />
+          <span className="font-medium">
+            {filterOptions.find(opt => opt.value === filter)?.label || "Filter By"}
+          </span>
+          <FiChevronDown className={`ml-2 transition-transform duration-200 ${showFilterDropdown ? 'rotate-180' : ''}`} />
+        </button>
+        
+        {/* Enhanced dropdown menu */}
+        {showFilterDropdown && (
+          <div className="absolute top-12 right-0 z-10 w-56 origin-top-right rounded-lg bg-white shadow-xl ring-1 ring-gray-200 focus:outline-none overflow-hidden">
+            <div className="py-1">
+              {filterOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setFilter(option.value);
+                    setShowFilterDropdown(false);
+                  }}
+                  className={`flex items-center w-full px-4 py-2.5 text-left text-sm ${
+                    filter === option.value
+                      ? "bg-[#C17D3C]/10 text-[#C17D3C] font-medium"
+                      : "text-gray-700 hover:bg-gray-50"
+                  } transition-colors duration-150`}
+                >
+                  <span className="mr-3 text-[#C17D3C]">{option.icon}</span>
+                  <span>{option.label}</span>
+                </button>
+              ))}
             </div>
-          )}
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</div>
 
           {filteredBookings.length === 0 ? (
             <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto text-center">
