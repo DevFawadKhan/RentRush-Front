@@ -87,7 +87,7 @@ const EditBookingModal = ({ booking, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
         <h2 className="text-xl font-semibold mb-4">Edit Booking</h2>
         <form onSubmit={(e) => e.preventDefault()}>

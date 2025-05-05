@@ -19,6 +19,8 @@ const Showrooms = () => {
       const response = await axios.get(`${Base_Url}/api/admin/adminview`);
       setData(response.data.showroomSection);
       console.log("Showrooms fetched:", response.data.showroomSection);
+      response.data.showroomSection
+      console.log("Showroom approve",response.data.showroomSection[0].isApproved);
     } catch (error) {
       setError(error.message);
       console.error("Error fetching data:", error.message);
@@ -110,7 +112,7 @@ const Showrooms = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredData.map((showroom, index) => (
+              {filteredData.filter((showroom=>showroom.isApproved === 1)).map((showroom, index) => (
                 <ShowroomCard key={index} value={showroom} />
               ))}
             </div>
