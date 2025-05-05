@@ -33,7 +33,7 @@ const Navbar = () => {
                 className="h-[100px] w-auto"
               />
               <div className="flex flex-col">
-                <span className="text-4xl font-bold text-[#00004b] leading-tight">RentRush</span>
+                <span className="text-4xl font-bold text-[#C17D3C] leading-tight">RentRush</span>
               </div>
             </Link>
           </div>
