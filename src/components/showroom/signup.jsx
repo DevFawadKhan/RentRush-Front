@@ -185,37 +185,35 @@ function ShowroomSignUp() {
     <>
       <Navbar />
       <div className="relative min-h-screen py-8 px-4 flex items-center justify-center">
-        {/* Background Image with Overlay */}
+     
         <div className="absolute inset-0 bg-black/50 z-0">
           <img 
-            // src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80"
-           src="/src/assets/background.png"
+            src="/src/assets/background.png"
             alt="Car Showroom Background"
             className="w-full h-full object-cover"
           />
         </div>
         
-        {/* Form Container */}
-        <div className="relative z-10 w-full max-w-2xl p-8 bg-white/50 rounded-2xl shadow-xl backdrop-blur-sm border border-white/20">
+        <div className="relative z-10 w-full max-w-md p-6 bg-white/50 rounded-2xl shadow-xl backdrop-blur-sm border border-white/20">
           <div className="flex flex-col items-center mb-5">
             <img
               src="/src/assets/logo.png"
-              className="h-[150px] object-contain"
+              className="h-[100px] object-contain" 
               alt="Logo"
             />
-            <h2 className="mt-4 text-3xl font-bold text-[#00004b] text-center leading-tight">
+            <h2 className="mt-2 text-2xl font-bold text-[#00004b] text-center leading-tight">  
               Showroom Registration
             </h2>
-            <p className="text-gray-900 mt-2 text-center leading-tight">
+            <p className="text-gray-900 mt-1 text-sm text-center leading-tight">  {/* Added text-sm */}
               Create your account to start listing vehicles
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">  {/* Reduced space-y from 6 to 4 */}
             {/* Logo Upload */}
             <div className="flex flex-col items-center">
               <label className="relative cursor-pointer group">
-                <div className="w-32 h-32 rounded-full border-4 border-dashed border-gray-900 group-hover:border-[#C17D3C] transition-colors flex items-center justify-center overflow-hidden">
+                <div className="w-24 h-24 rounded-full border-4 border-dashed border-gray-900 group-hover:border-[#C17D3C] transition-colors flex items-center justify-center overflow-hidden">  {/* Reduced size from 32 to 24 */}
                   {logo ? (
                     <img
                       src={logo}
@@ -224,8 +222,8 @@ function ShowroomSignUp() {
                     />
                   ) : (
                     <div className="flex flex-col items-center text-gray-900">
-                      <Upload size={32} className="mb-2" />
-                      <span className="text-sm">Upload Logo</span>
+                      <Upload size={24} className="mb-1" />  {/* Reduced icon size */}
+                      <span className="text-xs">Upload Logo</span>  {/* Reduced text size */}
                     </div>
                   )}
                 </div>
@@ -239,16 +237,16 @@ function ShowroomSignUp() {
                 />
               </label>
               {!logo && (
-                <p className="mt-2 text-xs text-gray-900 leading-tight">
+                <p className="mt-1 text-xs text-gray-900 leading-tight"> 
                   Recommended: Square image, 300x300px
                 </p>
               )}
             </div>
 
             {/* Form Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4">  
               {/* Showroom Name */}
-              <div className="space-y-2">
+              <div className="space-y-1"> 
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <Building className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Showroom Name
@@ -260,7 +258,7 @@ function ShowroomSignUp() {
                   onBlur={handleBlur}
                   type="text"
                   placeholder="Cars Club"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                     errors.sname ? "border-red-500" : "border-gray-300"
                   }`}
                 />
@@ -270,7 +268,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* Owner Name */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <User className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Owner Name
@@ -282,7 +280,7 @@ function ShowroomSignUp() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="John Doe"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                     errors.owner ? "border-red-500" : "border-gray-300"
                   }`}
                 />
@@ -292,7 +290,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* CNIC */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <CreditCard className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Owner's CNIC
@@ -304,7 +302,7 @@ function ShowroomSignUp() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="12345-6789012-3"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                     errors.cnic ? "border-red-500" : "border-gray-300"
                   }`}
                 />
@@ -314,7 +312,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* Contact */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <Phone className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Contact Number
@@ -326,7 +324,7 @@ function ShowroomSignUp() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="0300-1234567"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                     errors.contact ? "border-red-500" : "border-gray-300"
                   }`}
                 />
@@ -336,7 +334,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* Address */}
-              <div className="space-y-2 md:col-span-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <MapPin className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Address
@@ -348,7 +346,7 @@ function ShowroomSignUp() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="1234 Main St, City"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                     errors.address ? "border-red-500" : "border-gray-300"
                   }`}
                 />
@@ -358,7 +356,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* Email */}
-              <div className="space-y-2 md:col-span-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <Mail className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Email
@@ -370,7 +368,7 @@ function ShowroomSignUp() {
                   onBlur={handleBlur}
                   type="email"
                   placeholder="name@example.com"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                     errors.email ? "border-red-500" : "border-gray-300"
                   }`}
                 />
@@ -380,7 +378,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* Password */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <Lock className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Password
@@ -393,7 +391,7 @@ function ShowroomSignUp() {
                     onBlur={handleBlur}
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                       errors.password ? "border-red-500" : "border-gray-300"
                     }`}
                   />
@@ -402,7 +400,7 @@ function ShowroomSignUp() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#C17D3C]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}  {/* Reduced icon size */}
                   </button>
                 </div>
                 {errors.password && (
@@ -414,7 +412,7 @@ function ShowroomSignUp() {
               </div>
 
               {/* Confirm Password */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="flex items-center text-sm font-medium text-gray-900 leading-tight">
                   <Lock className="w-4 h-4 mr-2 text-[#C17D3C]" />
                   Confirm Password
@@ -427,7 +425,7 @@ function ShowroomSignUp() {
                     onBlur={handleBlur}
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent ${
                       errors.cpassword ? "border-red-500" : "border-gray-300"
                     }`}
                   />
@@ -436,7 +434,7 @@ function ShowroomSignUp() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#C17D3C]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
                 {errors.cpassword && (
@@ -446,11 +444,11 @@ function ShowroomSignUp() {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-4">
+            <div className="pt-2">  {/* Reduced padding-top */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-3 px-4 bg-[#C17D3C] hover:bg-[#B06F35] text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:ring-offset-2 ${
+                className={`w-full py-2 px-4 bg-[#C17D3C] hover:bg-[#B06F35] text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:ring-offset-2 ${
                   isSubmitting ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
