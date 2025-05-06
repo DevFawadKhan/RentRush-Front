@@ -23,10 +23,10 @@ console.log("BookingEndDateTime:", BookingEndDateTime);
 
 const isActive = CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime;
 console.log("isActive:", isActive);
-const datePart = CurrentDate.toISOString().split("T")[0];
-     const userEndTime = new Date(`${datePart} ${booking.EndTime}`);
-  // const isOverdue = CurrentDate > BookingEndDate && booking.status !== "returned";
+const userEndTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
   const isOverdue=CurrentDate> userEndTime 
+  console.log("CurrentDate",CurrentDate)
+  console.log("UserTime",userEndTime);
     console.log("overdue",isOverdue)
   const StatusBadge = ({ label, color }) => (
     <span className={`px-2 py-1 text-xs rounded-full font-semibold ${color}`}>
