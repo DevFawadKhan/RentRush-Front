@@ -24,10 +24,11 @@ console.log("BookingEndDateTime:", BookingEndDateTime);
 const isActive = CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime;
 console.log("isActive:", isActive);
 const userEndTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
-  const isOverdue=CurrentDate> userEndTime 
+  const isOverdue=CurrentDate> userEndTime
   console.log("CurrentDate",CurrentDate)
   console.log("UserTime",userEndTime);
     console.log("overdue",isOverdue)
+    // console.log("booking peding payment",)
   const StatusBadge = ({ label, color }) => (
     <span className={`px-2 py-1 text-xs rounded-full font-semibold ${color}`}>
       {label}
@@ -79,9 +80,10 @@ const userEndTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
           {/* Status Message */}
           {booking.status === "returned" ? (
             <StatusBadge label="✔️ Completed" color="bg-green-100 text-green-700" />
-          ) : booking.carDetails.availability === "In Maintenance" ? (
+          ):booking.carDetails.availability==="In Maintenance"||booking.carDetails.availability==="Pending Payment"?(
             <>
-              <StatusBadge label="🛠 In Maintenance" color="bg-red-100 text-red-700" />
+              <StatusBadge label="🛠 In Maintenance" color="bg-red-100 text-red-700"/>
+              <StatusBadge label=" Payment Due" color="bg-red-100 text-red-700" />
               <button
                 onClick={() => handleSeeDetails(booking)}
                 className="w-full bg-red-500 text-white py-1 rounded-md text-sm hover:bg-red-600 transition"
