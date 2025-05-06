@@ -338,6 +338,7 @@ const UserCard = ({ car, handleRefetch }) => {
                     required
                     min={new Date().toISOString().split("T")[0]}
                   />
+                  {console.log("date",new Date().toISOString().split("T")[0])}
                 </div>
 
                 <div className="flex flex-col">

@@ -68,7 +68,7 @@ const userEndTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
 
         <div className="flex justify-between items-center">
           <span className="text-40px text-gray-700 font-medium">PKR {booking.carDetails.rentRate}/Day</span>
-          {   BookingEndDate <= CurrentDate   && (
+          {   CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime  && (
             <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
               <button className="text-40px text-blue-600 hover:underline">Extend Booking</button>
             </Link>
