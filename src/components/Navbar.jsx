@@ -11,10 +11,10 @@ const Navbar = () => {
 
   const navLinks = [
     { id: "Home", text: "Home", path: "/" },
-    { id: "steps", text: "How It Works", path: "/#steps" },
-    { id: "Documents", text: "Rental Details", path: "/#steps" },
-    { id: "detail", text: "Why Choose Us", path: "/#steps" },
-    { id: "rent", text: "Testimonials", path: "/#steps" },
+    { id: "howitwork", text: "How It Works", },
+    { id: "rentaldetail", text: "Rental Details",  },
+    { id: "why choose", text: "Why Choose Us",  },
+    { id: "testimonials", text: "Testimonials",  },
   ];
 
   return (

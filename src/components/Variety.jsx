@@ -3,7 +3,7 @@ import TestContainer from "./TestContainer";
 
 function Variety() {
   return (
-    <div className="bg-white py-12">
+    <div id="testimonials" className="bg-white py-12">
       <h1 className="text-3xl text-center font-bold">
         Trusted by Thousands of Happy Customers
       </h1>

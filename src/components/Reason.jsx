@@ -21,7 +21,7 @@ function Reason() {
   ];
 
   return (
-    <div className="bg-[#0B132A] py-12 text-white">
+    <div id="why choose" className="bg-[#0B132A] py-12 text-white">
       <h1 className="text-3xl text-center font-bold">Why Choose Us</h1>
       <p className="text-sm text-center mx-4 mt-2">
         Choose RentRush for our unbeatable prices, extensive location options,

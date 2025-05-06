@@ -22,11 +22,12 @@ console.log("BookingStartDateTime:", BookingStartDateTime);
 console.log("BookingEndDateTime:", BookingEndDateTime);
 
 const isActive = CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime;
-
 console.log("isActive:", isActive);
-
-  const isOverdue = CurrentDate > BookingEndDate && booking.status !== "returned";
-
+const datePart = CurrentDate.toISOString().split("T")[0];
+     const userEndTime = new Date(`${datePart} ${booking.EndTime}`);
+  // const isOverdue = CurrentDate > BookingEndDate && booking.status !== "returned";
+  const isOverdue=CurrentDate> userEndTime 
+    console.log("overdue",isOverdue)
   const StatusBadge = ({ label, color }) => (
     <span className={`px-2 py-1 text-xs rounded-full font-semibold ${color}`}>
       {label}
@@ -42,16 +43,6 @@ console.log("isActive:", isActive);
       />
 
       <div className="text-40px p-4 flex flex-col justify-between flex-grow space-y-3">
-
-     {/* progress bar code comment  for test the module */}
-{/* 
-
-<div className="flex justify-center mb-6">
-          <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
-         
-              </div>
-              </div> */}
-
         {/* Car Info */}
         <div>
           <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
@@ -105,8 +96,8 @@ console.log("isActive:", isActive);
               onClick={() => ReturnCar(booking._id)}
               className="w-full bg-red-600 text-white py-1 rounded-md text-sm hover:bg-red-700"
             >
-              🔙 Return Car (Overdue)
-            </button>
+              🔙 Return Car  
+           </button>
           ) : isActive ? (
             <StatusBadge label="🚗 Active Booking" color="bg-blue-100 text-blue-700" />
           ) : (

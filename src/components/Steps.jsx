@@ -3,7 +3,7 @@ import React from "react";
 function Steps() {
   return (
     <div 
-      className="py-16 px-4 sm:px-6 lg:px-8 relative bg-cover bg-center bg-no-repeat"
+      id="howitwork" className="py-16 px-4 sm:px-6 lg:px-8 relative bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/src/assets/how it works.png')" }}
     >
       {/* Dark overlay */}
