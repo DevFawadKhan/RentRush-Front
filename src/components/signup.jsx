@@ -128,277 +128,241 @@ function SignUp() {
   return (
     <>
       <Navbar />
-      <div className="relative min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-        {/* Luxury Car Background */}
-        <div className="absolute inset-0 bg-black/50 z-0">
-          <img 
-            // src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80"
-           src="/src/assets/background.png"
-            alt="Car Showroom Background"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
-        {/* Premium Form Card */}
-        <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200">
-          <div className="flex flex-col md:flex-row">
-            {/* Luxury Image Side */}
-            <div className="hidden md:block md:w-1/3 bg-[url('/src/assets/car-interior.jpg')] bg-cover bg-center relative">
-              <div className="absolute inset-0 bg-[#C17D3C]/80 mix-blend-multiply"></div>
-              <div className="relative h-full flex flex-col justify-between p-8">
-                <div>
-                  <img 
-                    src="/src/assets/logo.png" 
-                    className="h-24 w-auto mb-6" 
-                    alt="Luxury Motors" 
-                  />
-                  <h3 className="text-2xl font-bold text-white mb-2">Join RentRush</h3>
-                  <p className="text-white/90 text-sm">Access Premium Cars and VIP Services</p>
-                </div>
-                <div className="text-white text-xs">
-                  <p>Already a Member?</p>
-                  <Link
-                    to="/login"
-                    className="font-medium text-white hover:underline inline-flex items-center mt-1"
-                  >
-                    Sign in here <span className="ml-1">→</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            
-            {/* Form Side */}
-            <div className="w-full md:w-2/3 p-10">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-                <p className="text-gray-600">Register to access our Cars collection</p>
-              </div>
-              
-              <form onSubmit={handleSignup} className="space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {/* Name Field */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name
-                    </label>
+      <div className="flex items-center justify-center min-h-screen py-16 background">
+        <div className="w-screen h-fit max-w-lg p-5 bg-gray-300 backdrop-blur-lg bg-white/30 border border-white/10 rounded-3xl shadow-lg">
+          <div className="flex justify-center">
+            <img
+              src="/src/assets/logo.png"
+              className="-ml-4 w-[100px]"
+              alt="Logo"
+            />
+          </div>
+          <h2 className="text-2xl font-bold text-[#02073F] text-center mb-4">
+            Register Account
+          </h2>
+
+          <form onSubmit={handleSignup} className="rounded mb-4">
+            {/* Form Table */}
+            <table className="w-full text-sm text-left">
+              <tbody>
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">Full Name</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="name"
                         name="name"
-                        type="text"
                         value={formData.name}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        type="text"
                         placeholder="John Doe"
-                        className={`pl-10 w-full px-4 py-3 border ${
-                          errors.name ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all`}
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.name ? "border-red-900" : ""
+                        }`}
                       />
+                      <User className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                     </div>
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-                  </div>
-
-                  {/* Email Field */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
+                    {errors.name && (
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.name}
+                      </p>
+                    )}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">Email</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="email"
                         name="email"
-                        type="email"
                         value={formData.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="you@example.com"
-                        className={`pl-10 w-full px-4 py-3 border ${
-                          errors.email ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all`}
+                        type="email"
+                        placeholder="name@example.com"
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.email ? "border-red-900" : ""
+                        }`}
                       />
+                      <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                     </div>
-                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-                  </div>
-
-                  {/* CNIC Field */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label htmlFor="cnic" className="block text-sm font-medium text-gray-700 mb-1">
-                      CNIC
-                    </label>
+                    {errors.email && (
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.email}
+                      </p>
+                    )}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">CNIC</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <CreditCard className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="cnic"
                         name="cnic"
                         type="text"
                         value={formData.cnic}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder="12345-6789012-3"
-                        className={`pl-10 w-full px-4 py-3 border ${
-                          errors.cnic ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all`}
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.cnic ? "border-red-900" : ""
+                        }`}
                       />
+                      <CreditCard className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                     </div>
-                    {errors.cnic && <p className="mt-1 text-sm text-red-600">{errors.cnic}</p>}
-                  </div>
-
-                  {/* Contact Field */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label htmlFor="contact" className="block text-sm font-medium text-gray-700 mb-1">
-                      Contact
-                    </label>
+                    {errors.cnic && (
+                      <p className="text-red-900 text-xs mt-1">{errors.cnic}</p>
+                    )}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">Contact Number</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Phone className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="contact"
                         name="contact"
                         type="tel"
                         value={formData.contact}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder="0300-1234567"
-                        className={`pl-10 w-full px-4 py-3 border ${
-                          errors.contact ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all`}
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.contact ? "border-red-900" : ""
+                        }`}
                       />
+                      <Phone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                     </div>
-                    {errors.contact && <p className="mt-1 text-sm text-red-600">{errors.contact}</p>}
-                  </div>
-
-                  {/* Address Field */}
-                  <div className="col-span-2">
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                      Address
-                    </label>
+                    {errors.contact && (
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.contact}
+                      </p>
+                    )}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">Address</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <MapPin className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="address"
                         name="address"
                         type="text"
                         value={formData.address}
                         onChange={handleChange}
-                        placeholder="1234 Main St, City, Country"
-                        className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all"
+                        placeholder="1234 Main St, City"
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.address ? "border-red-900" : ""
+                        }`}
                       />
+                      <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                     </div>
-                  </div>
-
-                  {/* Password Field */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                      Password
-                    </label>
+                    {errors.address && (
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.address}
+                      </p>
+                    )}
+                  </td>
+                </tr>
+                {/* Password Field */}
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">Password</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="password"
                         name="password"
-                        type={showPassword ? 'text' : 'password'}
                         value={formData.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="••••••••"
-                        className={`pl-10 w-full px-4 py-3 border ${
-                          errors.password ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all`}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="********"
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.password ? "border-red-900" : ""
+                        }`}
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#C17D3C] transition-colors"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#C17D3C]"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                       </button>
                     </div>
-                    {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-                    <p className="mt-1 text-xs text-gray-500">
-                      Must contain uppercase, lowercase, number, and special character
+                    {errors.password && (
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.password}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-900 mt-1">
+                      Must contain uppercase, lowercase, number & special char
                     </p>
-                  </div>
+                  </td>
+                </tr>
 
-                  {/* Confirm Password Field */}
-                  <div className="col-span-2 md:col-span-1">
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                      Confirm Password
-                    </label>
+                {/* Confirm Password Field */}
+                <tr className="border-b">
+                  <td className="py-4 font-bold w-1/3">Confirm Password</td>
+                  <td className="py-4">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-gray-400" />
-                      </div>
                       <input
-                        id="confirmPassword"
                         name="confirmPassword"
-                        type={showConfirmPassword ? 'text' : 'password'}
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="••••••••"
-                        className={`pl-10 w-full px-4 py-3 border ${
-                          errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:border-transparent transition-all`}
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="********"
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C17D3C] ${
+                          errors.confirmPassword ? "border-red-900" : ""
+                        }`}
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#C17D3C] transition-colors"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#C17D3C]"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       >
                         {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                       </button>
                     </div>
-                    {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 px-4 bg-[#C17D3C] text-white font-medium rounded-lg shadow-md hover:bg-[#B06F35] focus:outline-none focus:ring-2 focus:ring-[#C17D3C] focus:ring-offset-2 transition-all duration-300 flex items-center justify-center"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Creating Account...
-                      </>
-                    ) : (
-                      'Create Account'
+                    {errors.confirmPassword && (
+                      <p className="text-red-900 text-xs mt-1">
+                        {errors.confirmPassword}
+                      </p>
                     )}
-                  </button>
-                </div>
-              </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-              <div className="mt-6 text-center text-sm text-gray-600 md:hidden">
-                <p>Already have an account?{' '}
-                  <Link
-                    to="/login"
-                    className="font-medium text-[#C17D3C] hover:text-[#B06F35]"
-                  >
-                    Sign in
-                  </Link>
-                </p>
-              </div>
+            {/* Sign Up Button */}
+            <div className="flex items-center justify-center mt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`bg-[#C17D3C] hover:bg-[#B06F35] text-white font-bold py-2 px-4 rounded focus:outline-none w-full transition-colors ${
+                  isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                }`}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating Account...
+                  </span>
+                ) : 'Sign Up'}
+              </button>
             </div>
-          </div>
+          </form>
+
+          {/* Redirect to Login */}
+          <p className="mt-4 text-center text-[#02073F] text-xs">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-[#02073F] font-bold hover:text-[#ffffff]"
+            >
+              Log In
+            </Link>
+          </p>
         </div>
       </div>
       <Footer />
