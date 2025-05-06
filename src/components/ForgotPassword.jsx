@@ -25,7 +25,7 @@ const ForgotPassword = () => {
         navigate("/reset-confirmation", { state: { email } });
       }
     } catch (error) {
-      Toast(error.response?.data?.message || "An error occurred", "error");
+      Toast(error.response?.data?.message || "Enter the correct email address!", "error");
     } finally {
       setIsSubmitting(false);
     }
