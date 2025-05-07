@@ -56,7 +56,7 @@ const UserCard = ({ car, handleRefetch }) => {
       );
       console.log("Response received:", response.data);
       Toast(response.data.message);
-      const invoiceUrl = response.data.invoiceUrl;
+      const invoiceUrl = response.data?.invoiceUrl;
       setModelVisible(false);
       if (invoiceUrl) {
         Toast(

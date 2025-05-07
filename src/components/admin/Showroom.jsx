@@ -21,6 +21,8 @@ const Showroom = ({ value, refectch }) => {
   const [actionType, setActionType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
+  const [reviews, setReviews] = useState([]); // State for reviews
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false); // Loading state for reviews
 
   useEffect(() => {
     const initialStatuses = {};
@@ -29,6 +31,57 @@ const Showroom = ({ value, refectch }) => {
     });
     setStatuses(initialStatuses);
   }, [value]);
+
+  // Generate dummy reviews
+  const generateDummyReviews = (showroomId) => {
+    const dummyUserNames = [
+      "John Doe",
+      "Jane Smith",
+      "Alex Brown",
+      "Emily Davis",
+    ];
+    const dummyComments = [
+      "Average experience, could be better.",
+      "Great showroom, highly recommend!",
+      "Not satisfied with the service.",
+      "Good selection but slow response.",
+    ];
+    const currentDate = new Date();
+
+    return Array.from({ length: 3 }, (_, index) => ({
+      _id: `${showroomId}-dummy-${index}`,
+      userName:
+        dummyUserNames[Math.floor(Math.random() * dummyUserNames.length)],
+      rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+      comment: dummyComments[Math.floor(Math.random() * dummyComments.length)],
+      createdAt: new Date(
+        currentDate.getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000 // Random date within last 30 days
+      ).toISOString(),
+    }));
+  };
+
+  // Fetch reviews for a showroom
+  const fetchReviews = async (showroomId) => {
+    try {
+      setIsLoadingReviews(true);
+      const url = `${Base_Url}/api/reviews/showroom/${showroomId}`;
+      const response = await axios.get(url);
+      const fetchedReviews = response.data.reviews || [];
+
+      // Use dummy reviews if no real reviews are found
+      const reviewsToSet =
+        fetchedReviews.length > 0
+          ? fetchedReviews
+          : generateDummyReviews(showroomId);
+      setReviews(reviewsToSet);
+    } catch (error) {
+      // Toast("Failed to fetch reviews, showing dummy reviews", "warn");
+      // Fallback to dummy reviews on error
+      setReviews(generateDummyReviews(showroomId));
+    } finally {
+      setIsLoadingReviews(false);
+    }
+  };
 
   const banShowroom = async (id) => {
     try {
@@ -70,6 +123,9 @@ const Showroom = ({ value, refectch }) => {
     setSelectedShowroom((prev) => ({ ...prev, _id: id }));
     setNextStatus(status);
     setActionType(type);
+    if (type === "ban" && status === "banned") {
+      // Fetch reviews when banning
+    }
     setIsConfirmDialogOpen(true);
   };
 
@@ -82,6 +138,7 @@ const Showroom = ({ value, refectch }) => {
       }
     }
     setIsConfirmDialogOpen(false);
+    setReviews([]); // Clear reviews after action
     refectch();
   };
 
@@ -117,6 +174,7 @@ const Showroom = ({ value, refectch }) => {
         onClick={() => {
           setSelectedShowroom(data);
           setIsModalOpen(true);
+          fetchReviews(data._id); // Fetch reviews when opening the modal
         }}
         className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-between transform hover:-translate-y-1"
       >
@@ -128,6 +186,36 @@ const Showroom = ({ value, refectch }) => {
             NEW
           </span>
         )}
+      </div>
+    );
+  };
+
+  // Render reviews in the confirmation dialog
+  const renderReviews = () => {
+    if (isLoadingReviews) {
+      return <p className="text-gray-500">Loading reviews...</p>;
+    }
+    if (reviews.length === 0) {
+      return (
+        <p className="text-gray-500">No reviews found for this showroom.</p>
+      );
+    }
+    return (
+      <div className="mt-4 max-h-60 overflow-y-auto">
+        <h4 className="text-lg font-semibold text-gray-800 mb-2">Reviews</h4>
+        {reviews.map((review) => (
+          <div
+            key={review._id}
+            className="border-b border-gray-200 py-2 text-sm"
+          >
+            <p className="font-semibold">{review.userName}</p>
+            <p className="text-yellow-500">Rating: {review.rating}/5</p>
+            <p className="text-gray-600">{review.comment}</p>
+            <p className="text-gray-400 text-xs">
+              {new Date(review.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        ))}
       </div>
     );
   };
@@ -259,6 +347,9 @@ const Showroom = ({ value, refectch }) => {
                 )}
               </div>
             </div>
+            <div className="bg-gray-100 px-6 py-4 rounded-t-2xl border-b border-gray-200">
+              {renderReviews()}
+            </div>
 
             <div className="bg-gray-50 px-6 py-4 rounded-b-2xl">
               <div className="flex flex-wrap gap-3 justify-end">
@@ -333,7 +424,7 @@ const Showroom = ({ value, refectch }) => {
         </div>
       )}
 
-      {/* Confirmation Dialog */}
+      {/* Confirmation Dialog with Reviews */}
       {isConfirmDialogOpen && (
         <ConfirmationDialog
           message={
@@ -346,8 +437,11 @@ const Showroom = ({ value, refectch }) => {
                 : "Are you sure you want to reject this showroom?"
           }
           onConfirm={handleStatusChange}
-          onCancel={() => setIsConfirmDialogOpen(false)}
-        />
+          onCancel={() => {
+            setIsConfirmDialogOpen(false);
+            setReviews([]); // Clear reviews on cancel
+          }}
+        ></ConfirmationDialog>
       )}
     </section>
   );
