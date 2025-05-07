@@ -11,10 +11,10 @@ const Navbar = () => {
 
   const navLinks = [
     { id: "Home", text: "Home", path: "/" },
-    { id: "steps", text: "How It Works", path: "/#steps" },
-    { id: "Documents", text: "Rental Details", path: "/#steps" },
-    { id: "detail", text: "Why Choose Us", path: "/#steps" },
-    { id: "rent", text: "Testimonials", path: "/#steps" },
+    { id: "howitwork", text: "How It Works", },
+    { id: "rentaldetail", text: "Rental Details",  },
+    { id: "why choose", text: "Why Choose Us",  },
+    { id: "testimonials", text: "Testimonials",  },
   ];
 
   return (
@@ -33,7 +33,7 @@ const Navbar = () => {
                 className="h-[100px] w-auto"
               />
               <div className="flex flex-col">
-                <span className="text-4xl font-bold text-[#00004b] leading-tight">RentRush</span>
+                <span className="text-3xl font-bold text-[#C17D3C] leading-tight">RentRush</span>
               </div>
             </Link>
           </div>

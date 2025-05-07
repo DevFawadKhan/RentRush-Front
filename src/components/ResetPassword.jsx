@@ -95,7 +95,7 @@ const ResetPassword = () => {
         navigate("/login");
       }
     } catch (error) {
-      Toast(error.response?.data?.message || "An error occurred", "error");
+      Toast(error.response?.data?.message);
     }
   };
 

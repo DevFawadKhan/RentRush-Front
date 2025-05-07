@@ -1,155 +1,194 @@
-import { User, Calendar, LogOut, House, FileText } from "lucide-react";
+import { User, Calendar, LogOut, House, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+
 const Base_Url = import.meta.env.VITE_API_URL;
+
 const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [name, setname] = useState("");
-  const [First_letter, setFirst_letter] = useState("");
+  const [name, setName] = useState("");
+  const [firstLetter, setFirstLetter] = useState("");
+  const [activeLink, setActiveLink] = useState("");
+  const navigate = useNavigate();
 
-  const Call_LogoutApi = async () => {
+  const callLogoutApi = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${Base_Url}/api/logout`,
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-      console.log(response.data.message);
+      sessionStorage.clear();
+      navigate("/login");
     } catch (error) {
-      console.log(error.response?.data || error.message);
+      console.error(error.response?.data || error.message);
     }
   };
 
   useEffect(() => {
-    const Fetchemail = () => {
+    const fetchUserData = () => {
       try {
-        const userdata = sessionStorage.getItem("name");
-        if (userdata) {
-          setname(userdata);
-          setFirst_letter(userdata.charAt(0));
+        const userData = sessionStorage.getItem("name");
+        if (userData) {
+          setName(userData);
+          setFirstLetter(userData.charAt(0).toUpperCase());
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching user data:", error);
       }
     };
-    Fetchemail();
+    fetchUserData();
+    setActiveLink(window.location.pathname);
   }, []);
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
+  const navLinks = [
+    { path: "/customer/cars", label: "Cars" },
+    { path: "/customer/showrooms", label: "Showrooms" },
+    { path: "/customer/bookings", label: "Bookings" },
+    { path: "/customer/invoice", label: "Invoices" }
+  ];
+
+  const dropdownItems = [
+    { icon: House, path: "/customer/dashboard", label: "Home" },
+    { icon: User, path: "/customer/profile", label: "Profile" },
+    { icon: Calendar, path: "/customer/bookings", label: "My Bookings" },
+    { icon: FileText, path: "/customer/invoice", label: "Invoices" }
+  ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white/90 shadow-sm sticky top-0 z-30 backdrop-blur-md border-b border-gray-100">
       <div className="mx-auto px-6 py-3 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center">
-          <Link to="/customer/dashboard">
+        <motion.div 
+          className="flex items-center"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <Link to="/customer/dashboard" className="flex items-center">
             <img
               src="/src/assets/logo.png"
-              alt="Logo"
-              className="-my-3 h-[80px] mr-2"
+              alt="RentRush Logo"
+              className="h-16 mr-3 transition-all hover:rotate-[-5deg] hover:scale-105"
             />
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#C17D3C] to-[#D4A76A] bg-clip-text text-transparent leading-tight">
+              RentRush
+            </h1>
           </Link>
-          <h1 className="list-none cursor-pointer font-bold text-[30px] text-[#00004b]">
-            RentRush
-          </h1>
-        </div>
+        </motion.div>
 
         {/* Navigation Links */}
-        <div className="flex items-center space-x-8">
-          <Link
-            to="/customer/cars"
-            className="text-gray-700 hover:text-primary transition-colors"
-          >
-            Cars
-          </Link>
-          <Link
-            to="/customer/showrooms"
-            className="text-gray-700 hover:text-primary transition-colors"
-          >
-            Showrooms
-          </Link>
-          <Link
-            to="/customer/bookings"
-            className="text-gray-700 hover:text-primary transition-colors"
-          >
-            Bookings
-          </Link>
-          <Link
-            to="/customer/invoice"
-            className="text-gray-700 hover:text-primary transition-colors"
-          >
-            Invoice
-          </Link>
+        <div className="hidden md:flex items-center space-x-8">
+          {navLinks.map((link) => (
+            <motion.div
+              key={link.path}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                to={link.path}
+                className={`relative px-1 py-2 transition-colors font-medium group ${
+                  activeLink.startsWith(link.path) 
+                    ? "text-blue-600 font-semibold" 
+                    : "text-gray-600 hover:text-blue-600"
+                }`}
+              >
+                {link.label}
+                {activeLink.startsWith(link.path) && (
+                  <motion.span 
+                    className="absolute left-0 bottom-0 h-0.5 w-full bg-blue-600"
+                    layoutId="navUnderline"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                {!activeLink.startsWith(link.path) && (
+                  <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                )}
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
         {/* User Profile Dropdown */}
         <div className="relative">
-          <div
+          <motion.div
             onClick={toggleDropdown}
-            className="flex items-center space-x-3 hover:cursor-pointer p-2 border border-gray-300 rounded-full hover:shadow-md transition-shadow"
+            className="flex items-center space-x-2 cursor-pointer p-2 rounded-full hover:bg-gray-50 transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <div className="bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center">
-              <span className="text-lg font-bold">{First_letter}</span>
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-sm font-semibold">
+              {firstLetter}
             </div>
-            <span className="text-gray-700 font-medium pr-2">{name}</span>
-          </div>
+            <div className="hidden md:flex flex-col items-start">
+              <span className="text-gray-700 font-medium">{name}</span>
+              <span className="text-xs text-gray-400">Customer</span>
+            </div>
+            {isDropdownOpen ? (
+              <ChevronUp className="text-gray-500" size={18} />
+            ) : (
+              <ChevronDown className="text-gray-500" size={18} />
+            )}
+          </motion.div>
 
           {/* Dropdown Menu */}
-          {isDropdownOpen && (
-            <div className="absolute top-14 right-0 w-56 bg-white shadow-lg rounded-lg py-2 z-50 border border-gray-100">
-              <Link
-                to="/customer/dashboard"
-                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
+          <AnimatePresence>
+            {isDropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-xl shadow-lg ring-1 ring-gray-200 focus:outline-none z-50 overflow-hidden"
               >
-                <House className="mr-3 text-gray-600" size={18} />
-                <span className="text-gray-700">Home</span>
-              </Link>
-              <Link
-                to="/customer/profile"
-                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
-              >
-                <User className="mr-3 text-gray-600" size={18} />
-                <span className="text-gray-700">Profile</span>
-              </Link>
-              <Link
-                to="/customer/bookings"
-                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
-              >
-                <Calendar className="mr-3 text-gray-600" size={18} />
-                <span className="text-gray-700">My Bookings</span>
-              </Link>
-              <Link
-                to="/customer/invoice"
-                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
-              >
-                <FileText className="mr-3 text-gray-600" size={18} />
-                <span className="text-gray-700">Invoices</span>
-              </Link>
-              <div className="border-t border-gray-100 my-1"></div>
-              <div className="border-t border-gray-100 my-1"></div>
-              <Link
-                to="/login"
-                onClick={() => {
-                  sessionStorage.removeItem("token");
-                  sessionStorage.removeItem("role");
-                  sessionStorage.removeItem("showroomName");
-                  sessionStorage.removeItem("logo");
-                  sessionStorage.removeItem("name");
-                }}
-                className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
-              >
-                <LogOut className="mr-3 text-gray-600" size={18} />
-                <span onClick={Call_LogoutApi} className="text-gray-700">
-                  Logout
-                </span>
-              </Link>
-            </div>
-          )}
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <p className="text-sm font-medium text-gray-900">{name}</p>
+                  <p className="text-xs text-gray-500">Customer Account</p>
+                </div>
+                
+                <div className="py-1">
+                  {dropdownItems.map((item) => (
+                    <motion.div
+                      key={item.label}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <Link
+                        to={item.path}
+                        className={`flex items-center px-4 py-2.5 transition-colors ${
+                          activeLink === item.path
+                            ? "bg-blue-50 text-blue-600"
+                            : "text-gray-700 hover:bg-gray-50"
+                        }`}
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        <item.icon className="mr-3" size={18} />
+                        <span>{item.label}</span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <div className="border-t border-gray-100 py-1">
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <button
+                      onClick={callLogoutApi}
+                      className="flex w-full items-center px-4 py-2.5 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    >
+                      <LogOut className="mr-3" size={18} />
+                      <span>Sign out</span>
+                    </button>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </nav>

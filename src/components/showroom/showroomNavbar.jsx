@@ -27,7 +27,7 @@ function ShowroomNavbar() {
               className="-my-3 h-[100px] mr-2"
             />
             <div className="flex flex-col">
-              <h1 className="list-none cursor-pointer font-bold text-[28px] text-[#00004b] leading-none">
+              <h1 className="list-none cursor-pointer font-bold text-[28px]  text-[#C17D3C] leading-tight">
                 RentRush
               </h1>
             </div>

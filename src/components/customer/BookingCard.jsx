@@ -22,11 +22,13 @@ console.log("BookingStartDateTime:", BookingStartDateTime);
 console.log("BookingEndDateTime:", BookingEndDateTime);
 
 const isActive = CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime;
-
 console.log("isActive:", isActive);
-
-  const isOverdue = CurrentDate > BookingEndDate && booking.status !== "returned";
-
+const userEndTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
+  const isOverdue=CurrentDate> userEndTime
+  console.log("CurrentDate",CurrentDate)
+  console.log("UserTime",userEndTime);
+    console.log("overdue",isOverdue)
+    // console.log("booking peding payment",)
   const StatusBadge = ({ label, color }) => (
     <span className={`px-2 py-1 text-xs rounded-full font-semibold ${color}`}>
       {label}
@@ -42,16 +44,6 @@ console.log("isActive:", isActive);
       />
 
       <div className="text-40px p-4 flex flex-col justify-between flex-grow space-y-3">
-
-     {/* progress bar code comment  for test the module */}
-{/* 
-
-<div className="flex justify-center mb-6">
-          <div className="w-full max-w-[90vw] sm:max-w-[600px] relative">
-         
-              </div>
-              </div> */}
-
         {/* Car Info */}
         <div>
           <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
@@ -76,7 +68,7 @@ console.log("isActive:", isActive);
 
         <div className="flex justify-between items-center">
           <span className="text-40px text-gray-700 font-medium">PKR {booking.carDetails.rentRate}/Day</span>
-          {CurrentDate <= BookingEndDate && (
+          {   CurrentDate >= BookingStartDateTime && CurrentDate <= BookingEndDateTime  && (
             <Link to={`/customer/CarDetailsScreen/${booking._id}`}>
               <button className="text-40px text-blue-600 hover:underline">Extend Booking</button>
             </Link>
@@ -88,9 +80,10 @@ console.log("isActive:", isActive);
           {/* Status Message */}
           {booking.status === "returned" ? (
             <StatusBadge label="✔️ Completed" color="bg-green-100 text-green-700" />
-          ) : booking.carDetails.availability === "In Maintenance" ? (
+          ):booking.carDetails.availability==="In Maintenance"||booking.carDetails.availability==="Pending Payment"?(
             <>
-              <StatusBadge label="🛠 In Maintenance" color="bg-red-100 text-red-700" />
+              <StatusBadge label="🛠 In Maintenance" color="bg-red-100 text-red-700"/>
+              <StatusBadge label=" Payment Due" color="bg-red-100 text-red-700" />
               <button
                 onClick={() => handleSeeDetails(booking)}
                 className="w-full bg-red-500 text-white py-1 rounded-md text-sm hover:bg-red-600 transition"
@@ -105,8 +98,8 @@ console.log("isActive:", isActive);
               onClick={() => ReturnCar(booking._id)}
               className="w-full bg-red-600 text-white py-1 rounded-md text-sm hover:bg-red-700"
             >
-              🔙 Return Car (Overdue)
-            </button>
+              🔙 Return Car  
+           </button>
           ) : isActive ? (
             <StatusBadge label="🚗 Active Booking" color="bg-blue-100 text-blue-700" />
           ) : (
