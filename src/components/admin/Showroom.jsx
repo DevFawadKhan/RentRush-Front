@@ -347,9 +347,11 @@ const Showroom = ({ value, refectch }) => {
                 )}
               </div>
             </div>
-            <div className="bg-gray-100 px-6 py-4 rounded-t-2xl border-b border-gray-200">
-              {renderReviews()}
-            </div>
+            {selectedShowroom.isApproved === 1 && (
+              <div className="bg-gray-100 px-6 py-4 rounded-t-2xl border-b border-gray-200">
+                {renderReviews()}
+              </div>
+            )}
 
             <div className="bg-gray-50 px-6 py-4 rounded-b-2xl">
               <div className="flex flex-wrap gap-3 justify-end">
