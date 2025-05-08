@@ -21,29 +21,42 @@ function Reason() {
   ];
 
   return (
-    <div id="why choose" className="bg-[#0B132A] py-12 text-white">
-      <h1 className="text-3xl text-center font-bold">Why Choose Us</h1>
-      <p className="text-sm text-center mx-4 mt-2">
-        Choose RentRush for our unbeatable prices, extensive location options,
-        and a commitment to exceptional customer service.
-      </p>
-      <div className="flex flex-col lg:flex-row justify-center items-center mt-8">
-        <div className="hidden lg:block w-[40%]">
-          <img
-            src="/src/assets/choose/redcar.png"
-            className="w-full max-w-md"
-            alt="Car"
-          />
+    <div id="why-choose" className="relative py-20 text-white px-4">
+      {/* Background Image - Full width */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <img
+          src="/src/assets/choose/bg.png"
+          className="w-full h-full object-cover"
+          alt="Background"
+        />
+      </div>
+
+      {/* Content Container */}
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Header Section - Centered */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+            Why Choose Us
+          </h1>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Choose RentRush for our unbeatable prices, extensive location options,
+            and a commitment to exceptional customer service.
+          </p>
         </div>
-        <div className="w-full lg:w-[50%] flex flex-col space-y-4 px-6">
-          {arr.map((item, index) => (
-            <Card
-              key={index}
-              title={item.title}
-              desc={item.desc}
-              img={item.img}
-            />
-          ))}
+
+        {/* Main Content - Right-aligned cards */}
+        <div className="flex justify-end">
+          <div className="w-full lg:w-1/2 space-y-8">
+            {arr.map((item, index) => (
+              <Card
+                key={index}
+                title={item.title}
+                desc={item.desc}
+                img={item.img}
+                index={index}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
