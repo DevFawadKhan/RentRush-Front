@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Customers from "./Customers";
 import Showroom from "./Showroom";
+import Analytics from "./Analytics";
 
 const Base_Url = import.meta.env.VITE_API_URL;
 
@@ -29,41 +30,48 @@ const Adminpage = () => {
     totalCustomers: 0,
     totalShowrooms: 0,
     pendingApprovals: 0,
+    activeCustomers: 0,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
 
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await axios.get(`${Base_Url}/api/admin/adminview`);
-      setCustomerData(response.data.clientSection);
-      setShowroomData(response.data.showroomSection);
-      
+      const customers = response.data.clientSection || [];
+      const showrooms = response.data.showroomSection || [];
+
+      setCustomerData(customers);
+      setShowroomData(showrooms);
+
       // Calculate statistics
-      const filteredShowroomData = response.data.showroomSection.filter(
+      const filteredShowroomData = showrooms.filter(
         (showroom) => showroom.isApproved === 0
       );
-      
+
       setStats({
-        totalCustomers: response.data.clientSection.length,
-        totalShowrooms: response.data.showroomSection.length,
+        totalCustomers: customers.length,
+        totalShowrooms: showrooms.length,
         pendingApprovals: filteredShowroomData.length,
-        activeCustomers: response.data.clientSection.filter(c => c.isActive).length,
+        activeCustomers: customers.filter((c) => c.isActive).length,
       });
-      
+
       setPendingApprovals(filteredShowroomData);
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to fetch data. Please try again.");
+      setError(
+        error.response?.data?.message ||
+          "Failed to fetch data. Please try again."
+      );
       console.error("Fetch error:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
   const handleLogout = () => {
@@ -79,14 +87,16 @@ const Adminpage = () => {
     fetchData();
   }, []);
 
-  const filteredCustomers = customerData.filter(customer =>
-    customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCustomers = customerData.filter(
+    (customer) =>
+      customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredShowrooms = showroomData.filter(showroom =>
-    showroom.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    showroom.location?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredShowrooms = showroomData.filter(
+    (showroom) =>
+      showroom.showroomName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      showroom.address?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -99,7 +109,7 @@ const Adminpage = () => {
           </div>
           <h2 className="text-2xl font-bold tracking-wide">Admin Dashboard</h2>
         </div>
-        
+
         <div className="mb-6 relative">
           <input
             type="text"
@@ -117,7 +127,7 @@ const Adminpage = () => {
             </button>
           )}
         </div>
-        
+
         <nav className="space-y-1">
           {[
             {
@@ -144,7 +154,6 @@ const Adminpage = () => {
               text: "Analytics",
               badge: null,
             },
-            
           ].map((item) => (
             <button
               key={item.id}
@@ -166,7 +175,7 @@ const Adminpage = () => {
               )}
             </button>
           ))}
-          
+
           <div className="pt-4 mt-4 border-t border-[#394A9A]">
             <button
               onClick={handleLogout}
@@ -213,7 +222,7 @@ const Adminpage = () => {
         ) : error ? (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
             <p>{error}</p>
-            <button 
+            <button
               onClick={fetchData}
               className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
             >
@@ -247,7 +256,13 @@ const Adminpage = () => {
                       change: `${stats.pendingApprovals > 0 ? "Needs attention" : "All clear"}`,
                       color: "red",
                     },
-                    
+                    {
+                      icon: faChartLine,
+                      title: "Active Customers",
+                      value: stats.activeCustomers,
+                      change: "Based on active status",
+                      color: "yellow",
+                    },
                   ].map((card, index) => (
                     <div
                       key={index}
@@ -255,17 +270,25 @@ const Adminpage = () => {
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="text-gray-500 text-sm font-medium">{card.title}</p>
-                          <p className="text-3xl font-bold text-gray-800 mt-1">{card.value}</p>
-                          <p className={`text-xs mt-2 ${
-                            card.color === "red" && card.value > 0 
-                              ? "text-red-500" 
-                              : "text-green-500"
-                          }`}>
+                          <p className="text-gray-500 text-sm font-medium">
+                            {card.title}
+                          </p>
+                          <p className="text-3xl font-bold text-gray-800 mt-1">
+                            {card.value}
+                          </p>
+                          <p
+                            className={`text-xs mt-2 ${
+                              card.color === "red" && card.value > 0
+                                ? "text-red-500"
+                                : "text-green-500"
+                            }`}
+                          >
                             {card.change}
                           </p>
                         </div>
-                        <div className={`p-3 rounded-full bg-${card.color}-100 text-${card.color}-600`}>
+                        <div
+                          className={`p-3 rounded-full bg-${card.color}-100 text-${card.color}-600`}
+                        >
                           <FontAwesomeIcon icon={card.icon} size="lg" />
                         </div>
                       </div>
@@ -274,24 +297,39 @@ const Adminpage = () => {
                 </div>
 
                 <div className="bg-white rounded-xl shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    Recent Activity
+                  </h3>
                   <div className="space-y-4">
                     {[...customerData, ...showroomData]
-                      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                      .sort(
+                        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                      )
                       .slice(0, 5)
                       .map((item, index) => (
-                        <div key={index} className="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                          <div className={`p-2 rounded-full mr-3 ${
-                            item.isApproved === 0 ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-blue-600'
-                          }`}>
-                            <FontAwesomeIcon icon={item.email ? faUsers : faCar} />
+                        <div
+                          key={index}
+                          className="flex items-center p-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <div
+                            className={`p-2 rounded-full mr-3 ${
+                              item.isApproved === 0
+                                ? "bg-yellow-100 text-yellow-600"
+                                : "bg-blue-100 text-blue-600"
+                            }`}
+                          >
+                            <FontAwesomeIcon
+                              icon={item.email ? faUsers : faCar}
+                            />
                           </div>
                           <div className="flex-1">
                             <p className="font-medium text-gray-800">
-                              {item.name || item.email}
+                              {item.name || item.showroomName || item.email}
                             </p>
                             <p className="text-sm text-gray-500">
-                              {item.email ? 'New customer registered' : 'New showroom added'}
+                              {item.email
+                                ? "New customer registered"
+                                : "New showroom added"}
                             </p>
                           </div>
                           <span className="text-sm text-gray-400">
@@ -305,30 +343,26 @@ const Adminpage = () => {
             )}
 
             {activeTab === "customers" && (
-              <Customers 
-                data={searchTerm ? filteredCustomers : customerData} 
-                onRefresh={fetchData} 
+              <Customers
+                data={searchTerm ? filteredCustomers : customerData}
+                onRefresh={fetchData}
               />
             )}
 
             {activeTab === "showrooms" && (
-              <Showroom 
-                value={searchTerm ? filteredShowrooms : showroomData} 
-                onRefresh={fetchData} 
+              <Showroom
+                value={searchTerm ? filteredShowrooms : showroomData}
+                refectch={fetchData} // Kept as is, but consider renaming to 'onRefresh' for consistency
                 pendingCount={stats.pendingApprovals}
               />
             )}
 
             {activeTab === "analytics" && (
-              <div className="bg-white rounded-xl shadow p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Analytics Dashboard</h3>
-                <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-                  Analytics charts will be displayed here
-                </div>
-                <p className="mt-4 text-gray-600">
-                  This section will contain detailed analytics and reports about your platform's performance.
-                </p>
-              </div>
+              <Analytics
+                customerData={customerData}
+                showroomData={showroomData}
+                onRefresh={fetchData}
+              />
             )}
           </>
         )}
