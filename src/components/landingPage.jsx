@@ -15,10 +15,10 @@ function LandingPage() {
         {/* Hero Section with Background Image */}
         <div 
           className="relative w-full h-screen flex items-center justify-center px-6 sm:px-12 bg-cover bg-center"
-          style={{ backgroundImage: "url('/src/assets/bg.png')" }}
+          style={{ backgroundImage: "url('/src/assets/background.png')" }}
         >
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/40"></div>
+          {/* Dark overlay
+          <div className="absolute inset-0 bg-black/40"></div> */}
           
           <div className="relative z-10 max-w-4xl text-center">
           <div className="text-center mb-10">
