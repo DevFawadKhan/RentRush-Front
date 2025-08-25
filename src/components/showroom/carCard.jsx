@@ -1,6 +1,7 @@
 import { CircleGauge, Fuel, GripHorizontal, Users } from "lucide-react";
 import { useState } from "react";
 
+const Base_Url = import.meta.env.VITE_API_URL;
 const CarCard = ({ car }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -21,7 +22,7 @@ const CarCard = ({ car }) => {
     <div className="bg-white shadow-md rounded-lg overflow-hidden w-72 relative flex flex-col">
       <div className="relative w-full h-48">
         <img
-          src={`http://localhost:3000/uploads/${car.images[0]}`}
+          src={`${Base_Url}/uploads/${car.images[0]}`}
           alt={car.carBrand + " " + car.carModel}
           className="w-full h-full object-contain p-2" // <- use "object-contain" instead of "object-cover"
         />
@@ -120,7 +121,7 @@ const CarCard = ({ car }) => {
                     ? car.images.map((img, index) => (
                         <img
                           key={index}
-                          src={`http://localhost:3000/uploads/${img}`}
+                          src={`${Base_Url}/uploads/${img}`}
                           alt={`Car ${index}`}
                           className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
                         />
@@ -211,7 +212,7 @@ const CarCard = ({ car }) => {
             </h2>
 
             <img
-              src={`http://localhost:3000/uploads/${car.images[0]}`}
+              src={`${Base_Url}/uploads/${car.images[0]}`}
               alt={car.carBrand + " " + car.carModel}
               className="w-full h-48 object-contain bg-gray-100 mb-4 rounded"
             />

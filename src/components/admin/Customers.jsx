@@ -121,7 +121,7 @@ const Customers = ({ data }) => {
             <div className="flex flex-col items-center text-center space-y-4">
               {selectedUser.images?.[0] ? (
                 <img
-                  src={`http://localhost:3000/uploads/${selectedUser.images[0]}`}
+                  src={`${Base_Url}/uploads/${selectedUser.images[0]}`}
                   alt="Customer"
                   className="w-24 h-24 rounded-full object-cover border-4 border-[#394A9A]"
                 />

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import EditBookingModal from "./EditBooking";
-
+const Base_Url = import.meta.env.VITE_API_URL;
 function BookingCard({
   booking,
   handleSeeDetails,
@@ -38,7 +38,7 @@ const userEndTime = new Date(`${booking.rentalEndDate} ${booking.EndTime}`);
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col w-[380px] transition duration-300 hover:shadow-lg border border-gray-200">
       <img
-        src={`http://localhost:3000/uploads/${booking.carDetails.images[0]}`}
+        src={`${Base_Url}/uploads/${booking.carDetails.images[0]}`}
         alt={`${booking.carDetails.carBrand} ${booking.carDetails.carModel}`}
         className="w-full h-55 object-cover bg-gray-100"
       />

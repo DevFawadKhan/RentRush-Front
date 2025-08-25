@@ -192,7 +192,7 @@ const CarDetailsScreen = () => {
           <div className="relative h-64 w-full">
             {image[0] && (
               <img
-                src={`http://localhost:3000/uploads/${image[0]}`}
+                src={`${Base_Url}/uploads/${image[0]}`}
                 alt="Car"
                 className="w-full h-full object-cover"
               />

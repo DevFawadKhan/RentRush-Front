@@ -514,7 +514,7 @@ const UserBookings = () => {
                       {car.images?.map((img, index) => (
                         <img
                           key={index}
-                          src={`http://localhost:3000/uploads/${img}`}
+                          src={`${Base_Url}/uploads/${img}`}
                           alt={`Car ${index}`}
                           className="w-full h-40 object-cover rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
                         />

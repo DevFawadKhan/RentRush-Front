@@ -13,7 +13,7 @@ const ShowroomCard = ({ value }) => {
       >
         <div className="relative">
           <img
-            src={`http://localhost:3000/uploads/${value.images[0]}`}
+            src={`${Base_Url}/uploads/${value.images[0]}`}
             alt={`Showroom: ${value.showroomName}`}
             className="w-full h-40 object-cover"
             onError={(e) => {

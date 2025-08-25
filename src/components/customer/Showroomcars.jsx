@@ -58,7 +58,7 @@ function Showroomcars() {
             <div className="w-full lg:w-2/5">
               <div className="relative h-80 rounded-xl shadow-lg overflow-hidden">
                 <img
-                  src={`http://localhost:3000/uploads/${showroom.images[0]}`}
+                  src={`${Base_Url}/uploads/${showroom.images[0]}`}
                   alt={showroom.showroomName}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   onError={(e) => {

@@ -210,7 +210,7 @@ function ShowroomInventory() {
                       </td>
                       <td className="px-4 py-2 border-b border-gray-700">
                         <img
-                          src={`http://localhost:3000/uploads/${vehicle.images[0]}`}
+                          src={`${Base_Url}/uploads/${vehicle.images[0]}`}
                           alt={vehicle.carBrand + " " + vehicle.carModel}
                           className="w-16 h-16 object-cover"
                         />

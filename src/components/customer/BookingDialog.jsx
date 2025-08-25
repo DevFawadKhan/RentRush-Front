@@ -1,5 +1,5 @@
 // import PropTypes from 'prop-types';
-
+const Base_Url = import.meta.env.VITE_API_URL;
 const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
   if (!isOpen) return null;
   return (
@@ -29,7 +29,7 @@ const Dialog = ({ isOpen, onClose, car, bookingDetails }) => {
           {car.images?.map((img, index) => (
             <img
               key={index}
-              // src={`http://localhost:3000/uploads/${img}`}
+              // src={`${Base_Url}/uploads/${img}`}
               alt={`Car ${index}`}
               className="w-full max-w-md h-48 object-cover rounded-lg border shadow-md cursor-pointer hover:scale-105 transition-transform"
             />
